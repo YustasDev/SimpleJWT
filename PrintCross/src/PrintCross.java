@@ -5,6 +5,7 @@ public class PrintCross {
   public static void main(String[] args) {
     Scanner s = new Scanner(System.in);
     System.out.println("Введите количество строк, из которых будет состоять крестик");
+    //hello git
     int n = s.nextInt();
     s.close();
 
