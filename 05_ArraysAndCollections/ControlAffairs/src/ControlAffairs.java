@@ -84,10 +84,41 @@ public class ControlAffairs {
           System.out.println("Вы ввели не все аргументы ADD. Введите еще раз.");
           break;
         }
-
         else { manageList.add(x - 1, subStr[2]);}
         System.out.println(manageList);
         break;
+
+      case "EDIT":
+        if (subStr.length == 1){
+          System.out.println("Команда EDIT должна быть с аргументами. Введите еще раз.");
+          break;
+        }
+        else if (x == null) {
+          System.out.println("Вы ввели не все аргументы EDIT. Введите еще раз.");
+          break;
+        }
+        else if (subStr.length == 2){
+          System.out.println("Вы ввели не все аргументы EDIT. Введите еще раз.");
+          break;
+        }
+        else { manageList.set(x - 1, subStr[2]);}
+        System.out.println(manageList);
+        break;
+
+      case "DELETE":
+        if (subStr.length == 1){
+          System.out.println("Команда DELETE должна быть с аргументом. Введите еще раз.");
+          break;
+        }
+        else if (x == null) {
+          System.out.println("Вы не ввели числовой аргумент EDIT. Введите еще раз.");
+          break;
+        }
+        else { manageList.remove(x - 1);}
+        System.out.println(manageList);
+        break;
+
+
 
       default:
         System.out.println("Ошибка при вводе команды. Введите еще раз.");
