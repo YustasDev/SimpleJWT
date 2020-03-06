@@ -9,25 +9,26 @@ public class Methods {
   }
 
   public static void addToListIndex() {
-    Integer indexOfCommand = null;     // индекс команды
+    Integer x = null;
 
     Pattern prototype = Pattern.compile(ControlAffairs.COMMAND_ADD_TO_INDEX);
     Matcher m = prototype.matcher(ControlAffairs.command);
 
     while (m.find()) {
-      for (int i = 0; i <= m.groupCount(); i++) {
-        //    System.out.println(i + "  ВСЕ ЭЛЕМЕНТЫ: " + m.group(i));
-        // техническая распечатка, потом убрать
+   for (int i = 0; i <= m.groupCount(); i++) {
+ //    System.out.println(i + "  ВСЕ ЭЛЕМЕНТЫ: " + m.group(i));
+     // техническая распечетка, потом убрать
 
-      }
-      indexOfCommand = Integer.parseInt(m.group(2));
-      if (indexOfCommand <= ControlAffairs.manageList.size()) {
-        ControlAffairs.manageList.add(indexOfCommand - 1, m.group(3));
-        System.out.println(ControlAffairs.manageList);
-      } else {
-        System.out.println("Параметр команды ADD введен неправильно. Введите еще раз");
-      }
-    }
+   }
+      x = Integer.parseInt(m.group(2));
+   if (x <= ControlAffairs.manageList.size()) {
+     ControlAffairs.manageList.add(x - 1, m.group(3));
+     System.out.println(ControlAffairs.manageList);
+   }
+   else {
+     System.out.println("Параметр команды ADD введен неправильно. Введите еще раз");
+  }
+  }
   }
 
   public static void addText() {
@@ -37,57 +38,14 @@ public class Methods {
     while (m.find()) {
       for (int i = 0; i <= m.groupCount(); i++) {
         //    System.out.println(i + "  ВСЕ ЭЛЕМЕНТЫ: " + m.group(i));
-        // техническая распечатка, потом убрать
+        // техническая распечетка, потом убрать
       }
       ControlAffairs.manageList.add(m.group(2));
       System.out.println(ControlAffairs.manageList);
     }
   }
 
-  public static void editList() {
-    Integer indexOfCommand = null;
 
-    Pattern prototype = Pattern.compile(ControlAffairs.COMMAND_EDIT);
-    Matcher m = prototype.matcher(ControlAffairs.command);
 
-    while (m.find()) {
-      for (int i = 0; i <= m.groupCount(); i++) {
-        //    System.out.println(i + "  ВСЕ ЭЛЕМЕНТЫ: " + m.group(i));
-        // техническая распечатка, потом убрать
-
-      }
-      indexOfCommand = Integer.parseInt(m.group(2));
-      if (indexOfCommand <= ControlAffairs.manageList.size()) {
-        ControlAffairs.manageList.set(indexOfCommand - 1, m.group(3));
-        System.out.println(ControlAffairs.manageList);
-      } else {
-        System.out.println("Параметр команды EDIT введен неправильно. Введите еще раз");
-      }
-    }
   }
-
-  public static void deleteList() {
-    Integer indexOfCommand = null;
-
-    Pattern prototype = Pattern.compile(ControlAffairs.COMMAND_DELETE);
-    Matcher m = prototype.matcher(ControlAffairs.command);
-
-    while (m.find()) {
-      for (int i = 0; i <= m.groupCount(); i++) {
-        //    System.out.println(i + "  ВСЕ ЭЛЕМЕНТЫ: " + m.group(i));
-        // техническая распечатка, потом убрать
-
-      }
-      indexOfCommand = Integer.parseInt(m.group(2));
-      if (indexOfCommand <= ControlAffairs.manageList.size()) {
-        ControlAffairs.manageList.remove(indexOfCommand - 1);
-        System.out.println(ControlAffairs.manageList);
-      } else {
-        System.out.println("Параметр команды DELETE введен неправильно. Введите еще раз");
-      }
-    }
-  }
-}
-
-
 
