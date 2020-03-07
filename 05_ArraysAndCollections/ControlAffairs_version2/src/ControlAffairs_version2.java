@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 import java.util.*;
 
 
-
 public class ControlAffairs_version2 {
 
   public static void main(String[] args) throws IOException {
@@ -82,8 +81,7 @@ public class ControlAffairs_version2 {
           indexOfCommand = Integer.parseInt(m.group(2));
           if (indexOfCommand <= todoList.manageList.size()) {
             todoList.editList(indexOfCommand - 1, m.group(3));
-          }
-          else {
+          } else {
             System.out.println("Параметр команды EDIT введен неправильно. Введите еще раз");
           }
         }
@@ -104,16 +102,14 @@ public class ControlAffairs_version2 {
             System.out.println("Параметр команды DELETE введен неправильно. Введите еще раз");
           }
         }
-      }
-          else if (command.matches(COMMAND_END)) {
-          System.out.println("Работа программы окончена");
-          return;
-          }
-      else {
-          System.out.println("Команда не распознана. Введите еще раз.");
-        }
+      } else if (command.matches(COMMAND_END)) {
+        System.out.println("Работа программы окончена");
+        return;
+      } else {
+        System.out.println("Команда не распознана. Введите еще раз.");
       }
     }
+  }
 
   public static void printUsage() {
     System.out.println("Перечень возможных команд: LIST, ADD, EDIT, DELETE ");
