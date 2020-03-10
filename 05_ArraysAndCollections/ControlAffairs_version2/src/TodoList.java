@@ -4,29 +4,37 @@ public class TodoList {
 
   ArrayList<String> manageList = new ArrayList<>();
 
-
   public void printList() {
     System.out.println("Полный список дел: " + manageList);
   }
 
-  public void addToListIndex(int i, String group) {
+  public boolean addToListIndex(int i, String group) {
+    if (i < 0 || i >= manageList.size()) {
+      return false;
+    }
     manageList.add(i, group);
-    System.out.println(manageList);
-  }
+    return true;
+   }
 
   public void addText(String group) {
     manageList.add(group);
     System.out.println(manageList);
   }
 
-  public void editList(int i, String group) {
+  public boolean editList(int i, String group) {
+    if (i < 0 || i >= manageList.size()) {
+      return false;
+    }
     manageList.set(i, group);
-    System.out.println(manageList);
+    return true;
   }
 
-  public void deleteList(int i) {
+  public boolean deleteList(int i) {
+    if (i < 0 || i >= manageList.size()) {
+    return false;
+    }
     manageList.remove(i);
-    System.out.println(manageList);
+    return true;
   }
 }
 
