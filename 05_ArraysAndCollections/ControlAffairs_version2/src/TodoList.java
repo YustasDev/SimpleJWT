@@ -14,7 +14,7 @@ public class TodoList {
     }
     manageList.add(i, group);
     return true;
-   }
+  }
 
   public void addText(String group) {
     manageList.add(group);
@@ -29,18 +29,13 @@ public class TodoList {
     return true;
   }
 
-  public boolean deleteList(int i) {
-    if (i < 0 || i >= manageList.size()) {
-    return false;
+  public String deleteList(int i) {
+    try {
+      return manageList.remove(i);
+    } catch (IndexOutOfBoundsException e) {
+      System.out.println("Ошибка при вводе команды DELETE  " + e.getMessage());
     }
-    manageList.remove(i);
-    return true;
+    return null;
   }
 }
-
-
-
-
-
-
 

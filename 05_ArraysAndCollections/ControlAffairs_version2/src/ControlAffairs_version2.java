@@ -73,8 +73,7 @@ public class ControlAffairs_version2 {
           indexOfCommand = Integer.parseInt(m.group(2));
           if (todoList.editList(indexOfCommand - 1, m.group(3))) {
             System.out.println(todoList.manageList);
-          }
-          else {
+          } else {
             System.out.println("Параметр команды EDIT указан неправильно. Введите еще раз");
           }
         }
@@ -87,10 +86,14 @@ public class ControlAffairs_version2 {
         while (m.find()) {
 
           indexOfCommand = Integer.parseInt(m.group(2));
-          if (todoList.deleteList(indexOfCommand - 1)) {
-            System.out.println(todoList.manageList);
-          }
-          else {System.out.println("Параметр команды DELETE указан неправильно. Введите еще раз");}
+          //        if (todoList.deleteList(indexOfCommand - 1) != null) {
+          System.out
+              .println("Удаленный элемент списка  " + todoList.deleteList(indexOfCommand - 1));
+          System.out.println("Полный список дел" + todoList.manageList);
+          //    System.out.println("Удаленный элемент списка  " + todoList.deleteList(indexOfCommand-1));
+          //          System.out.println(todoList.manageList);
+//          }
+//          else {System.out.println("Параметр команды DELETE указан неправильно. Введите еще раз");}
         }
       } else if (command.matches(COMMAND_END)) {
         System.out.println("Работа программы окончена");
