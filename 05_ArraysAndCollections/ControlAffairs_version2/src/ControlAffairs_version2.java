@@ -34,7 +34,7 @@ public class ControlAffairs_version2 {
 
     while (true) {
 
-      Scanner scanner = new Scanner(System.in);   // Организуем ввод команды с клавиатуры
+      Scanner scanner = new Scanner(System.in);
       command = scanner.nextLine();
 
       if (command.matches(COMMAND_LIST)) {
@@ -49,7 +49,7 @@ public class ControlAffairs_version2 {
         while (m.find()) {
 
           indexOfCommand = Integer.parseInt(m.group(2));
-          if (todoList.addToListIndex(indexOfCommand - 1, m.group(3))) {
+          if (todoList.add(indexOfCommand - 1, m.group(3))) {
             System.out.println(todoList.manageList);
           } else {
             System.out.println("Параметр команды ADD введен неправильно. Введите еще раз");
@@ -60,7 +60,7 @@ public class ControlAffairs_version2 {
         Matcher m = prototype.matcher(command);
 
         while (m.find()) {
-          todoList.addText(m.group(2));
+          todoList.add(m.group(2));
         }
       } else if (command.matches(COMMAND_EDIT)) {
         Integer indexOfCommand = null;
@@ -86,14 +86,8 @@ public class ControlAffairs_version2 {
         while (m.find()) {
 
           indexOfCommand = Integer.parseInt(m.group(2));
-          //        if (todoList.deleteList(indexOfCommand - 1) != null) {
-          System.out
-              .println("Удаленный элемент списка  " + todoList.deleteList(indexOfCommand - 1));
+          System.out.println("Удаленный элемент списка:  " + todoList.delete(indexOfCommand - 1));
           System.out.println("Полный список дел" + todoList.manageList);
-          //    System.out.println("Удаленный элемент списка  " + todoList.deleteList(indexOfCommand-1));
-          //          System.out.println(todoList.manageList);
-//          }
-//          else {System.out.println("Параметр команды DELETE указан неправильно. Введите еще раз");}
         }
       } else if (command.matches(COMMAND_END)) {
         System.out.println("Работа программы окончена");
