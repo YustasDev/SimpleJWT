@@ -30,13 +30,7 @@ public class TodoList {
   }
 
   public String delete(int i) {
-    String fault = "Удаление элемента массива не было осуществлено";
-    try {
-      return manageList.remove(i);
-    } catch (IndexOutOfBoundsException e) {
-      System.out.println("Ошибка при вводе команды DELETE  " + e.getMessage());
-    }
-    return fault;
+    return manageList.remove(i);
   }
 }
 

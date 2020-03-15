@@ -9,9 +9,9 @@ public class ControlAffairs_version2 {
 
   public static void main(String[] args) throws IOException {
 
-    final String COMMAND_ADD_TO_INDEX = "(ADD\\s+)(\\d+)(\\s+.+)";
-    final String COMMAND_TEXT = "(ADD)(\\s+.+)";
-    final String COMMAND_EDIT = "(EDIT\\s+)(\\d+)(\\s+.+)";
+    final String COMMAND_ADD_TO_INDEX = "(ADD\\s+)(\\d+)\\s+(.+)";
+    final String COMMAND_TEXT = "(ADD)\\s+(.+)";
+    final String COMMAND_EDIT = "(EDIT\\s+)(\\d+)\\s+(.+)";
     final String COMMAND_DELETE = "(DELETE\\s+)(\\d+)";
     final String COMMAND_LIST = "LIST";
     final String COMMAND_END = "END";
@@ -41,54 +41,37 @@ public class ControlAffairs_version2 {
         todoList.printList();
       } else if (command.matches(COMMAND_ADD_TO_INDEX)) {
 
-        Integer indexOfCommand = null;
+        int indexOfCommand = Integer.parseInt(command.replaceAll(COMMAND_ADD_TO_INDEX, "$2"));
+        String todoText = command.replaceAll(COMMAND_ADD_TO_INDEX, "$3");
 
-        Pattern prototype = Pattern.compile(COMMAND_ADD_TO_INDEX);
-        Matcher m = prototype.matcher(command);
-
-        while (m.find()) {
-
-          indexOfCommand = Integer.parseInt(m.group(2));
-          if (todoList.add(indexOfCommand - 1, m.group(3))) {
-            System.out.println(todoList.manageList);
-          } else {
-            System.out.println("Параметр команды ADD введен неправильно. Введите еще раз");
-          }
+        if (todoList.add(indexOfCommand - 1, todoText)) {
+          System.out.println(todoList.manageList);
+        } else {
+          System.out.println("Параметр команды ADD введен неправильно. Введите еще раз");
         }
       } else if (command.matches(COMMAND_TEXT)) {
-        Pattern prototype = Pattern.compile(COMMAND_TEXT);
-        Matcher m = prototype.matcher(command);
+        String todoText = command.replaceAll(COMMAND_TEXT, "$2");
+        todoList.add(todoText);
 
-        while (m.find()) {
-          todoList.add(m.group(2));
-        }
       } else if (command.matches(COMMAND_EDIT)) {
-        Integer indexOfCommand = null;
 
-        Pattern prototype = Pattern.compile(COMMAND_EDIT);
-        Matcher m = prototype.matcher(command);
-
-        while (m.find()) {
-
-          indexOfCommand = Integer.parseInt(m.group(2));
-          if (todoList.editList(indexOfCommand - 1, m.group(3))) {
-            System.out.println(todoList.manageList);
-          } else {
-            System.out.println("Параметр команды EDIT указан неправильно. Введите еще раз");
-          }
+        int indexOfCommand = Integer.parseInt(command.replaceAll(COMMAND_EDIT, "$2"));
+        String todoText = command.replaceAll(COMMAND_EDIT, "$3");
+        if (todoList.editList(indexOfCommand - 1, todoText)) {
+          System.out.println(todoList.manageList);
+        } else {
+          System.out.println("Параметр команды EDIT указан неправильно. Введите еще раз");
         }
       } else if (command.matches(COMMAND_DELETE)) {
-        Integer indexOfCommand = null;
-
-        Pattern prototype = Pattern.compile(COMMAND_DELETE);
-        Matcher m = prototype.matcher(command);
-
-        while (m.find()) {
-
-          indexOfCommand = Integer.parseInt(m.group(2));
+        int indexOfCommand = Integer.parseInt(command.replaceAll(COMMAND_DELETE, "$2"));
+        try {
           System.out.println("Удаленный элемент списка:  " + todoList.delete(indexOfCommand - 1));
-          System.out.println("Полный список дел" + todoList.manageList);
+        } catch (IndexOutOfBoundsException e) {
+          e.printStackTrace();
+          String fault = "Ошибка ввода команды DELETE. Удаление элемента массива не было осуществлено";
+          System.out.println(fault);
         }
+        System.out.println("Полный список дел" + todoList.manageList);
       } else if (command.matches(COMMAND_END)) {
         System.out.println("Работа программы окончена");
         return;
