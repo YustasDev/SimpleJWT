@@ -11,8 +11,8 @@ public class Bootloader {
 
     //final String COMMAND_TEXT = "(ADD\\s+)(.+[@]{1}(^[^@]{1}.+$)[.]{1}.+)";
     //final String COMMAND_TEXT = "((@{1})([^@]{1}.+$))";
-   // final String COMMAND_TEXT = "(ADD\\s+)(^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$)";
-   // final String COMMAND_TEXT = "(ADD)\\s+(^(.+)@(.+)$)";
+    final String COMMAND_TEXT = "(ADD)\\s+(^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$)";
+   // final String COMMAND_TEXT = "(ADD)\\s+(.+)";  - работает
     final String COMMAND_LIST = "LIST";
     final String COMMAND_END = "END";
     String command = null;
