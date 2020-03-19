@@ -1,5 +1,4 @@
 import java.util.TreeSet;
-import javax.management.AttributeList;
 
 public class EmailList {
 
@@ -11,12 +10,10 @@ public class EmailList {
 
   public void addEmail(String email) {
     emailList.add(email);
-    System.out.println("Вывод списка в столбмк");
-    for (String emails : emailList)
-    {
+    System.out.println("Указанный e-mail адрес добавлен в список адресов");
+    System.out.println("Вывод полного списка e-mail адресов: ");
+    for (String emails : emailList) {
       System.out.println(emails);
     }
-
-    System.out.println("Полный список e-mail адресов:  " + emailList);
   }
 }

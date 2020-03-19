@@ -3,16 +3,15 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Bootloader {
 
   public static void main(String[] args) throws IOException {
 
-    //final String COMMAND_TEXT = "(ADD\\s+)(.+[@]{1}(^[^@]{1}.+$)[.]{1}.+)";
-    //final String COMMAND_TEXT = "((@{1})([^@]{1}.+$))";
-    final String COMMAND_TEXT = "(ADD)\\s+(^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$)";
-   // final String COMMAND_TEXT = "(ADD)\\s+(.+)";  - работает
+    final String COMMAND_TEXT_EMAIL = "(ADD)\\s+(.+)";
     final String COMMAND_LIST = "LIST";
     final String COMMAND_END = "END";
     String command = null;
@@ -38,9 +37,19 @@ public class Bootloader {
 
       if (command.matches(COMMAND_LIST)) {
         myEmailList.printList();
-      } else if (command.matches(COMMAND_TEXT)) {
-        String emailText = command.replaceAll(COMMAND_TEXT, "$2");
-        myEmailList.addEmail(emailText);
+      } else if (command.startsWith("ADD")) {
+        String emailText = command.replaceAll(COMMAND_TEXT_EMAIL, "$2");
+
+        String regexEmail = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+
+        Pattern pattern = Pattern.compile(regexEmail);
+        Matcher matcher = pattern.matcher(emailText);
+        if (matcher.matches()) {
+          myEmailList.addEmail(emailText);
+        } else {
+          System.out.println("Вы не указали или неправильно указали e-mail адрес. Попробуйте еще раз");
+        }
+
       } else if (command.matches(COMMAND_END)) {
         System.out.println("Работа программы окончена");
         return;
