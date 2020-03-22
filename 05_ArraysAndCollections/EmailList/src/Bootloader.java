@@ -11,9 +11,10 @@ public class Bootloader {
 
   public static void main(String[] args) throws IOException {
 
-    final String COMMAND_TEXT_EMAIL = "(ADD)\\s+(.+)";
-    final String COMMAND_LIST = "LIST";
-    final String COMMAND_END = "END";
+    final String COMMAND_TEXT_EMAIL = "(?i)(ADD)\\s+(.+)";
+    final String COMMAND_LIST = "(?i)LIST";
+    final String COMMAND_END = "(?i)END";
+    final String REGEXEMAIL = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     String command = null;
 
     printUsage();
@@ -37,14 +38,10 @@ public class Bootloader {
 
       if (command.matches(COMMAND_LIST)) {
         myEmailList.printList();
-      } else if (command.startsWith("ADD")) {
+      } else if (command.matches(COMMAND_TEXT_EMAIL)) {
         String emailText = command.replaceAll(COMMAND_TEXT_EMAIL, "$2");
 
-        String regexEmail = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-
-        Pattern pattern = Pattern.compile(regexEmail);
-        Matcher matcher = pattern.matcher(emailText);
-        if (matcher.matches()) {
+        if (emailText.matches(REGEXEMAIL)) {
           myEmailList.addEmail(emailText);
         } else {
           System.out.println("Вы не указали или неправильно указали e-mail адрес. Попробуйте еще раз");
