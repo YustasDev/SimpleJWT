@@ -8,7 +8,6 @@ public class PhoneBook {
   TreeMap<String, String> phoneBook = new TreeMap<>();
 
   public static void main(String[] args) throws IOException {
-
     PhoneBook phoneBook = new PhoneBook();
     phoneBook.run();
   }
@@ -26,7 +25,7 @@ public class PhoneBook {
     phoneBook.put("Пенелопа Икарьевна Телегонова", "555555");
 
     System.out.println("Вы пользуетесь программой <Телефонная книга>");
-    System.out.println("Если Вы хотите увидеть все данные <Телефонной книги> ввелите команду LIST");
+    System.out.println("Если Вы хотите увидеть все данные <Телефонной книги> введите команду LIST");
     System.out.println("Если Вы хотите добавить в <Телефонную книгу> контакт:" + "\n"
             + "введите ФИО и если абонента с такими данными не существует - номер телефона");
     System.out.println("Введите команду:");
