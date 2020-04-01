@@ -45,25 +45,14 @@ public class PhoneBookModule1 {
         if (phoneBook.containsKey(input)) {
           printAbonentByName(input);
         } else {
-          System.out.println("Контакта с такими данными не существует");
-          System.out.println("Введите номер телефона указанного абонента");
-          String command_input2 = scanner.nextLine();
-          if (command_input2.matches(COMMAND_NUMBER)) {
-            phoneBook.put(input, getUserInput(command_input2));
-            printMap(phoneBook);
-          } else {
-            System.out.println("Вы не указали правильный номер телефона. Введите команду еще раз.");
-          }
+          phoneBook.put(input, getUserInput(COMMAND_NUMBER));
+          printMap(phoneBook);
         }
-
       } else if (input.matches(COMMAND_NUMBER)) {
         if (phoneBook.containsValue(input)) {
           printAbonentByNumber(input);
         } else {
-          System.out.println("Контакта с таким номером не существует");
-          System.out.println("Введите ФИО указанного абонента");
-          String command_input2 = scanner.nextLine();
-          phoneBook.put(getUserInput(command_input2), input);
+          phoneBook.put(getUserInput(COMMAND_NAME), input);
           printMap(phoneBook);
         }
       } else {
@@ -72,9 +61,18 @@ public class PhoneBookModule1 {
     }
   }
 
-  private String getUserInput(String command_input2) {
-    System.out.println("Данные абонента добавлены в телефонный справочник");
-    return command_input2;
+  private String getUserInput(String regex) {
+    String input = "";
+    Scanner scanner = new Scanner(System.in);
+    while (true) {
+      input = scanner.nextLine();
+      if (input.matches(regex)) {
+        break;
+      } else {
+        System.out.println("неверный формат ввода, попробуйте еще раз");
+      }
+    }
+    return input;
   }
 
   private void printAbonentByName(String input) {
