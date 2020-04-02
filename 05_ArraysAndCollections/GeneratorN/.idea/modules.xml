@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/GeneratorAutoN/GeneratorAutoN.iml" filepath="$PROJECT_DIR$/GeneratorAutoN/GeneratorAutoN.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GeneratorN.iml" filepath="$PROJECT_DIR$/GeneratorN.iml" />
+    </modules>
+  </component>
+</project>
