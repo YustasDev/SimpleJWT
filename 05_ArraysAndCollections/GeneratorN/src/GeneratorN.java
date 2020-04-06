@@ -14,7 +14,7 @@ public class GeneratorN {
 
     ArrayList<String> carNumbers = new ArrayList<>();
     HashSet<String> carNumHashSet = new HashSet<>();
-    TreeSet<String> carNumTreeSet = new TreeSet<>();
+    TreeSet<String> carNumTreeSet = new TreeSet<>(); 
 
     long start = System.currentTimeMillis();
 
@@ -72,7 +72,7 @@ public class GeneratorN {
     if (isFound4) {
       System.out.println("Поиск в TreeSet: номер найден, поиск занял " + time4 + "  ns");
     } else {
-      System.out.println("Поиск в TreeSet: номер найден, поиск занял " + time4 + "  ms");
+      System.out.println("Поиск в TreeSet: номер не найден, поиск занял " + time4 + "  ns");
     }
 
   }
