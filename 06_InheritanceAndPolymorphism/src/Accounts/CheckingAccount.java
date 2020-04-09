@@ -43,7 +43,7 @@ import java.util.Scanner;
     Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_GET, "$2"));
     account = account - indexOfCommand;
     if (account >= 0){
-      System.out.println("Вы сняли:  "+indexOfCommand+"рублей");
+      System.out.println("Вы сняли:  " + indexOfCommand + "рублей");
       System.out.println("На Вашем расчетном счете:  " + account + "рублей");
     } else{
       account += indexOfCommand;
