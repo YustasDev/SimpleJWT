@@ -25,11 +25,13 @@ public class Loader {
 
     access = scanner.nextLine();
     if (access.equals("0001")) {
-      CheckingAccount checkingAccount = new CheckingAccount();
+      CheckingAccount checkingAccount = new CheckingAccount(0);
+      checkingAccount.printUsage();
       checkingAccount.run();
     } else if (access.equals("0002")) {
-      DepositaryAccount depositaryAccountAccount = new DepositaryAccount();
-      depositaryAccountAccount.run();
+      DepositaryAccount depositaryAccount = new DepositaryAccount(0);
+      depositaryAccount.printUsage();
+      depositaryAccount.run();
     } else if (access.equals("0003")) {
       BankCardAccount bankCardAccount = new BankCardAccount();
       bankCardAccount.run();
