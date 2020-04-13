@@ -3,55 +3,18 @@ package Accounts;
 import java.util.Scanner;
 
   public class CheckingAccount extends Account {
-  final String COMMAND_PUT = "(?i)(PUT\\s+)(\\d+)";
-  final String COMMAND_GET = "(?i)(GET\\s+)(\\d+)";
-  final String COMMAND_CHECK = "(?i)CHECK";
-    final String COMMAND_END = "(?i)END";
+
 
       public CheckingAccount(double balance) {
       super(balance);
     }
 
-
-      public void run() {
-
-    Scanner scanner = new Scanner(System.in);
-    String input;
-
-    while (true) {
-
-      input = scanner.nextLine();
-
-      if (input.matches(COMMAND_CHECK)) {
-        System.out.println("На Вашем расчетном счете:  " + getBalance() + "рублей");
-
-      } else if (input.matches(COMMAND_PUT)) {
-        putInCheckingAccount(input);
-      }
-
-      else if (input.matches(COMMAND_GET)) {
-        getFromCheckingAccount(input);
-      }
-
-      else if (input.matches(COMMAND_END)) {
-        System.out.println("Работа программы окончена");
-        return;
-      }
-
-      else {
-        System.out.println("Команда не распознана. Введите еще раз.");
-      }
-
-    }
-  }
-
-    public double getBalance() {
+      public double getBalance() {
+      System.out.println("На Вашем расчетном счете:  " + balance + "рублей");
       return balance;
     }
 
-
-  public void getFromCheckingAccount(String input) {
-    Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_GET, "$2"));
+  public void getFromCheckingAccount(Double indexOfCommand) {
     balance = balance - indexOfCommand;
     if (balance >= 0){
       System.out.println("Вы сняли:  " + indexOfCommand + "рублей");
@@ -63,8 +26,7 @@ import java.util.Scanner;
     }
   }
 
-  public void putInCheckingAccount(String input) {
-    Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_PUT, "$2"));
+  public void putInCheckingAccount(Double indexOfCommand) {
     balance += indexOfCommand;
     System.out.println("Вы внесли:  " + indexOfCommand + "рублей");
     System.out.println("На Вашем расчетном счете:  " + balance + "рублей");
