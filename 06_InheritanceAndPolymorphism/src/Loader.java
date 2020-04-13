@@ -31,25 +31,21 @@ public class Loader {
         input = scanner.nextLine();
 
         if (input.matches(COMMAND_CHECK)) {
-        checkingAccount.getBalance();
-        }
-       else if (input.matches(COMMAND_PUT)) {
-        Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_PUT, "$2"));
-        checkingAccount.putInCheckingAccount(indexOfCommand);
-      }
-        else if (input.matches(COMMAND_GET)) {
+          checkingAccount.getBalance();
+        } else if (input.matches(COMMAND_PUT)) {
+          Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_PUT, "$2"));
+          checkingAccount.putInCheckingAccount(indexOfCommand);
+        } else if (input.matches(COMMAND_GET)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_GET, "$2"));
           checkingAccount.getFromCheckingAccount(indexOfCommand);
-        }
-        else if (input.matches(COMMAND_END)) {
+        } else if (input.matches(COMMAND_END)) {
           System.out.println("Работа программы окончена");
           return;
-        }
-        else {
+        } else {
           System.out.println("Команда не распознана. Введите еще раз.");
         }
       }
-      } else if (access.equals("0002")) {
+    } else if (access.equals("0002")) {
       DepositaryAccount depositaryAccount = new DepositaryAccount(0);
       depositaryAccount.printUsage();
       scanner = new Scanner(System.in);
@@ -61,23 +57,21 @@ public class Loader {
 
         if (input.matches(COMMAND_CHECK)) {
           depositaryAccount.getBalance();
-        }
-        else if (input.matches(COMMAND_PUT)) {
+        } else if (input.matches(COMMAND_PUT)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_PUT, "$2"));
           depositaryAccount.putInCheckingAccount(indexOfCommand);
-        }
-        else if (input.matches(COMMAND_GET)) {
+        } else if (input.matches(COMMAND_GET)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_GET, "$2"));
           if (depositaryAccount.ensureMonthFromLastDepositElapsed()) {
-          depositaryAccount.getFromCheckingAccount(indexOfCommand);
-          } else {System.out.println("Операция не может быть выполнена. Внесение денежных средств было осуществлено менее месяца назад");
+            depositaryAccount.getFromCheckingAccount(indexOfCommand);
+          } else {
+            System.out.println(
+                "Операция не может быть выполнена. Внесение денежных средств было осуществлено менее месяца назад");
           }
-        }
-        else if (input.matches(COMMAND_END)) {
+        } else if (input.matches(COMMAND_END)) {
           System.out.println("Работа программы окончена");
           return;
-        }
-        else {
+        } else {
           System.out.println("Команда не распознана. Введите еще раз.");
         }
       }
@@ -107,8 +101,7 @@ public class Loader {
           System.out.println("Команда не распознана. Введите еще раз.");
         }
       }
-    }
-    else {
+    } else {
       System.out.println("Код доступа не распознан, доступ запрещен");
     }
   }

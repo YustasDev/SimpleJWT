@@ -10,17 +10,18 @@ public class BankCardAccount extends CheckingAccount {
 
   public void getFromCheckingAccount(Double indexOfCommand) {
     balance = balance - (indexOfCommand * COMMISSION);
-    if (balance >= 0){
-      System.out.println("Снято:  " + indexOfCommand + "  комиссия  " + (indexOfCommand * 0.01) + "рублей");
+    if (balance >= 0) {
+      System.out.println(
+          "Снято:  " + indexOfCommand + "  комиссия  " + (indexOfCommand * 0.01) + "рублей");
       System.out.println("На Вашем расчетном счете:  " + balance + "рублей");
-    } else{
+    } else {
       balance += indexOfCommand * COMMISSION;
-      System.out.println("Указанная Вами сумма " + indexOfCommand + "рублей, больше размера депозита");
-      System.out.println("Операция не может быть выполнена. На Вашем расчетном счете:  " + balance + "рублей");
+      System.out
+          .println("Указанная Вами сумма " + indexOfCommand + "рублей, больше размера депозита");
+      System.out.println(
+          "Операция не может быть выполнена. На Вашем расчетном счете:  " + balance + "рублей");
     }
   }
-
-
 
 
   public void printUsage() {

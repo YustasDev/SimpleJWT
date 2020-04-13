@@ -22,7 +22,7 @@ public class DepositaryAccount extends CheckingAccount {
     boolean permit = false;
 
     LocalDate timeOfGet = null;
-    LocalDate date  = null;
+    LocalDate date = null;
     try {
       timeOfGet = LocalDate.now();
       date = timeOfGet.minusMonths(1);
@@ -37,17 +37,17 @@ public class DepositaryAccount extends CheckingAccount {
   }
 
 
-    public void printUsage () {
-      System.out.println("Правила использования Вашего расчетного депозитарного счета: ");
-      System.out.println(
-          "Если Вы хотите внести деньги, наберите команду: PUT и через пробел вносимую сумму");
-      System.out.println(
-          "Если Вы хотите снять деньги, наберите команду: GET и через пробел снимаемую сумму. "
-              + "\n"
-              + "Учтите, что деньги можно снять не ранее, чем через месяц после последнего внесения");
-      System.out.println(
-          "Если Вы хотите проверить, сколько денег на расчетном счёте, наберите команду: CHECK");
-      System.out.println("Если Вы хотите прекратить работу со счетом, наберите команду: END");
-      System.out.println("Вызовите команду : ");
-    }
+  public void printUsage() {
+    System.out.println("Правила использования Вашего расчетного депозитарного счета: ");
+    System.out.println(
+        "Если Вы хотите внести деньги, наберите команду: PUT и через пробел вносимую сумму");
+    System.out.println(
+        "Если Вы хотите снять деньги, наберите команду: GET и через пробел снимаемую сумму. "
+            + "\n"
+            + "Учтите, что деньги можно снять не ранее, чем через месяц после последнего внесения");
+    System.out.println(
+        "Если Вы хотите проверить, сколько денег на расчетном счёте, наберите команду: CHECK");
+    System.out.println("Если Вы хотите прекратить работу со счетом, наберите команду: END");
+    System.out.println("Вызовите команду : ");
   }
+}
