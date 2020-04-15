@@ -2,22 +2,37 @@ package Accounts;
 
 abstract class Account {
 
-     double balance;
+  double balance;
 
-    Account(double balance) {
-      this.balance = balance;
-    }
+  Account(double balance) {
+    this.balance = balance;
+  }
 
-    void putInCheckingAccount(double amount) {
-      this.balance += amount;
-    }
 
-    void getFromCheckingAccount(double amount) {
-      this.balance -= amount;
-    }
+  public double getBalance() {
+    System.out.println("На Вашем расчетном счете:  " + balance + "рублей");
+    return balance;
+  }
 
-    double getBalance() {
-      return balance;
+  public void putInAccount(Double indexOfCommand) {
+    balance += indexOfCommand;
+    System.out.println("Вы внесли:  " + indexOfCommand + " рублей");
+    System.out.println("На Вашем расчетном счете:  " + balance + " рублей");
+  }
+
+
+  public void getFromAccount(Double indexOfCommand) {
+    balance = balance - indexOfCommand;
+    if (balance >= 0) {
+      System.out.println("Вы сняли:  " + indexOfCommand + " рублей");
+      System.out.println("На Вашем расчетном счете:  " + balance + "  рублей");
+    } else {
+      balance += indexOfCommand;
+      System.out
+          .println("Указанная Вами сумма " + indexOfCommand + " рублей, больше размера депозита");
+      System.out.println(
+          "Операция не может быть выполнена. На Вашем расчетном счете:  " + balance + " рублей");
     }
   }
+}
 

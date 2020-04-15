@@ -3,7 +3,7 @@ package Accounts;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 
-public class DepositaryAccount extends CheckingAccount {
+public class DepositaryAccount extends Account {
 
   public ChronoLocalDate timeOfPut = LocalDate.MIN;
 
@@ -11,7 +11,7 @@ public class DepositaryAccount extends CheckingAccount {
     super(balance);
   }
 
-  public void putInCheckingAccount(Double indexOfCommand) {
+  public void putInAccount(Double indexOfCommand) {
     timeOfPut = LocalDate.now();
     balance += indexOfCommand;
     System.out.println("Вы внесли:  " + indexOfCommand + "рублей");
@@ -20,7 +20,6 @@ public class DepositaryAccount extends CheckingAccount {
 
   public boolean ensureMonthFromLastDepositElapsed() {
     boolean permit = false;
-
     LocalDate timeOfGet = null;
     LocalDate date = null;
     try {

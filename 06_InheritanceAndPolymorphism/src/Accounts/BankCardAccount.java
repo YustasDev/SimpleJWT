@@ -1,28 +1,16 @@
 package Accounts;
 
-public class BankCardAccount extends CheckingAccount {
+public class BankCardAccount extends Account {
 
-  final double COMMISSION = 1.01;
+  final double COMMISSION = 0.01;
 
   public BankCardAccount(double balance) {
     super(balance);
   }
 
-  public void getFromCheckingAccount(Double indexOfCommand) {
-    balance = balance - (indexOfCommand * COMMISSION);
-    if (balance >= 0) {
-      System.out.println(
-          "Снято:  " + indexOfCommand + "  комиссия  " + (indexOfCommand * 0.01) + "рублей");
-      System.out.println("На Вашем расчетном счете:  " + balance + "рублей");
-    } else {
-      balance += indexOfCommand * COMMISSION;
-      System.out
-          .println("Указанная Вами сумма " + indexOfCommand + "рублей, больше размера депозита");
-      System.out.println(
-          "Операция не может быть выполнена. На Вашем расчетном счете:  " + balance + "рублей");
-    }
+  public void getFromAccount(Double indexOfCommand) {
+    super.getFromAccount(indexOfCommand * COMMISSION + indexOfCommand);
   }
-
 
   public void printUsage() {
     System.out.println("Правила использования Вашего банковского карточного счета: ");

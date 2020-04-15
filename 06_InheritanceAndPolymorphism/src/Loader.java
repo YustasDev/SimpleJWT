@@ -34,10 +34,10 @@ public class Loader {
           checkingAccount.getBalance();
         } else if (input.matches(COMMAND_PUT)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_PUT, "$2"));
-          checkingAccount.putInCheckingAccount(indexOfCommand);
+          checkingAccount.putInAccount(indexOfCommand);
         } else if (input.matches(COMMAND_GET)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_GET, "$2"));
-          checkingAccount.getFromCheckingAccount(indexOfCommand);
+          checkingAccount.getFromAccount(indexOfCommand);
         } else if (input.matches(COMMAND_END)) {
           System.out.println("Работа программы окончена");
           return;
@@ -59,11 +59,11 @@ public class Loader {
           depositaryAccount.getBalance();
         } else if (input.matches(COMMAND_PUT)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_PUT, "$2"));
-          depositaryAccount.putInCheckingAccount(indexOfCommand);
+          depositaryAccount.putInAccount(indexOfCommand);
         } else if (input.matches(COMMAND_GET)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_GET, "$2"));
           if (depositaryAccount.ensureMonthFromLastDepositElapsed()) {
-            depositaryAccount.getFromCheckingAccount(indexOfCommand);
+            depositaryAccount.getFromAccount(indexOfCommand);
           } else {
             System.out.println(
                 "Операция не может быть выполнена. Внесение денежных средств было осуществлено менее месяца назад");
@@ -90,10 +90,10 @@ public class Loader {
           bankCardAccount.getBalance();
         } else if (input.matches(COMMAND_PUT)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_PUT, "$2"));
-          bankCardAccount.putInCheckingAccount(indexOfCommand);
+          bankCardAccount.putInAccount(indexOfCommand);
         } else if (input.matches(COMMAND_GET)) {
           Double indexOfCommand = Double.parseDouble(input.replaceAll(COMMAND_GET, "$2"));
-          bankCardAccount.getFromCheckingAccount(indexOfCommand);
+          bankCardAccount.getFromAccount(indexOfCommand);
         } else if (input.matches(COMMAND_END)) {
           System.out.println("Работа программы окончена");
           return;
