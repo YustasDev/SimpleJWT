@@ -10,9 +10,6 @@ abstract class Client {
     this.balance = balance;
   }
 
-  protected Client() {
-  }
-
   public BigDecimal getBalance() {
     System.out.println("На Вашем расчетном счете:  " + balance + " рублей");
     return balance;
