@@ -1,0 +1,84 @@
+Index: 06_InheritanceAndPolymorphism/src/Loader.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- 06_InheritanceAndPolymorphism/src/Loader.java	(revision e1e615d08ac811bd0a577ec8b1e2f420d98664f3)
++++ 06_InheritanceAndPolymorphism/src/Loader.java	(date 1587111855600)
+@@ -118,3 +118,5 @@
+     System.out.println("Введите код доступа:  ");
+   }
+ }
++
++// new branch
+\ No newline at end of file
+Index: 06_InheritanceAndPolymorphism/src/Accounts/CheckingAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- 06_InheritanceAndPolymorphism/src/Accounts/CheckingAccount.java	(revision e1e615d08ac811bd0a577ec8b1e2f420d98664f3)
++++ 06_InheritanceAndPolymorphism/src/Accounts/CheckingAccount.java	(date 1587111998676)
+@@ -21,3 +21,4 @@
+     System.out.println("Вызовите команду : ");
+   }
+ }
++// new branch
+\ No newline at end of file
+Index: 06_InheritanceAndPolymorphism/src/Accounts/DepositaryAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- 06_InheritanceAndPolymorphism/src/Accounts/DepositaryAccount.java	(revision e1e615d08ac811bd0a577ec8b1e2f420d98664f3)
++++ 06_InheritanceAndPolymorphism/src/Accounts/DepositaryAccount.java	(date 1587111998643)
+@@ -50,3 +50,4 @@
+     System.out.println("Вызовите команду : ");
+   }
+ }
++// new branch
+\ No newline at end of file
+Index: 06_InheritanceAndPolymorphism/.idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- 06_InheritanceAndPolymorphism/.idea/modules.xml	(revision e1e615d08ac811bd0a577ec8b1e2f420d98664f3)
++++ 06_InheritanceAndPolymorphism/.idea/modules.xml	(date 1587051905205)
+@@ -4,6 +4,7 @@
+     <modules>
+       <module fileurl="file://$PROJECT_DIR$/CheckingAccount.iml" filepath="$PROJECT_DIR$/CheckingAccount.iml" />
+       <module fileurl="file://$PROJECT_DIR$/CheckingAccount1.iml" filepath="$PROJECT_DIR$/CheckingAccount1.iml" />
++      <module fileurl="file://$PROJECT_DIR$/CustomerAccount/CustomerAccount.iml" filepath="$PROJECT_DIR$/CustomerAccount/CustomerAccount.iml" />
+     </modules>
+   </component>
+ </project>
+\ No newline at end of file
+Index: 06_InheritanceAndPolymorphism/src/Accounts/BankCardAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- 06_InheritanceAndPolymorphism/src/Accounts/BankCardAccount.java	(revision e1e615d08ac811bd0a577ec8b1e2f420d98664f3)
++++ 06_InheritanceAndPolymorphism/src/Accounts/BankCardAccount.java	(date 1587111998607)
+@@ -26,6 +26,6 @@
+     System.out.println("Вызовите команду : ");
+   }
+ }
+-
++// new branch
+ 
+ 
+Index: 06_InheritanceAndPolymorphism/src/Accounts/Account.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- 06_InheritanceAndPolymorphism/src/Accounts/Account.java	(revision e1e615d08ac811bd0a577ec8b1e2f420d98664f3)
++++ 06_InheritanceAndPolymorphism/src/Accounts/Account.java	(date 1587111998718)
+@@ -36,3 +36,4 @@
+   }
+ }
+ 
++// new branch
+\ No newline at end of file
