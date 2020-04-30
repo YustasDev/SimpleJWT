@@ -29,14 +29,14 @@ import employee.TopManager;
 
   private static Operator newOperator() {
     Long id = nextEmployeeId++;
-    String name = "Вася";
+    String name = "Operator";
     Double baseSalary = 20000 + 20000 * random.nextDouble();
-    return new Operator(id, "Вася", baseSalary);
+    return new Operator(id, "Operator", baseSalary);
   }
 
   private static Manager newManager() {
     Long id = nextEmployeeId++;
-    String name = "Коля";
+    String name = "Manager";
     Double baseSalary = 50000 + 20000 * random.nextDouble();
     Double earnedMoney = 10_000_000 * random.nextDouble();
     return new Manager(id, name, baseSalary, earnedMoney);
@@ -44,7 +44,7 @@ import employee.TopManager;
 
   private static TopManager newTopManager() {
     Long id = nextEmployeeId++;
-    String name = "Виталий";
+    String name = "Top_Manager";
     Double baseSalary = 250000 + 250000 * random.nextDouble();
     return new TopManager(id, name, baseSalary);
   }
@@ -74,11 +74,11 @@ import employee.TopManager;
 
     // Распечатайте список состоящий из 10-15 самых высоких зарплат в компании
     List<Employee> top10 = company.getTopSalaryStaff(10);
-    printSalaries("список состоящий из 10 самых высоких зарплат в компании", top10);
+    printSalaries("Список состоящий из 10 самых высоких зарплат в компании", top10);
 
     // Распечатайте список из 30 самых низких зарплат в компании
     List<Employee> low30 = company.getLowestSalaryStaff(30);
-    printSalaries("список из 30 самых низких зарплат в компании", low30);
+    printSalaries("Список из 30 самых низких зарплат в компании", low30);
 
     // Увольте 50% сотрудников
     List<Employee> staff = company.getStaff();
@@ -88,21 +88,25 @@ import employee.TopManager;
       }
     }
 
+    System.out.println("\n После увольнения 50% сотрудников: \n");
+
     // Распечатайте список состоящий из 10-15 самых высоких зарплат в компании
     top10 = company.getTopSalaryStaff(10);
-    printSalaries("список состоящий из 10 самых высоких зарплат в компании", top10);
+    printSalaries("Список состоящий из 10 самых высоких зарплат в компании", top10);
 
     // Распечатайте список из 30 самых низких зарплат в компании
     low30 = company.getLowestSalaryStaff(30);
-    printSalaries("список из 30 самых низких зарплат в компании", low30);
+    printSalaries("Список из 30 самых низких зарплат в компании", low30);
 
   }
 
   static void printSalaries(String title, List<Employee> employees) {
     System.out.println(title);
-
+    int n = 1;
     for (Employee employee : employees) {
+      System.out.print(n + ".  ");
       System.out.println(SALARY_FORMATTER.format(employee.getMonthSalary()));
+      ++n;
     }
   }
 }

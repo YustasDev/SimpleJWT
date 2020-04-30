@@ -1,6 +1,7 @@
 package employee;
 
 public class Manager extends AbstractEmployee {
+
   public static final Double MANAGER_BONUS_PERCENT = 0.05D;
   protected Double earnedMoney;
 

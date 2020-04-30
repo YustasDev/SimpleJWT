@@ -59,7 +59,7 @@ public class Company {
   private List<Employee> getTop(int count, Comparator<Employee> comparator) {
     List<Employee> list = new ArrayList<>(staff.values());
     list.sort(comparator);
-    return list.subList(0, Math.min(list.size(), count) - 1);
+    return list.subList(0, Math.min(list.size(), count));
   }
 
 }
