@@ -1,6 +1,6 @@
 package employee;
 
-public class Manager extends AbstractEmployee {
+public class Manager extends AbstractEmployee implements IncomeReceiveable {
 
   public static final Double MANAGER_BONUS_PERCENT = 0.05D;
   protected Double earnedMoney;
@@ -11,7 +11,8 @@ public class Manager extends AbstractEmployee {
   }
 
   /**
-   * зарплата складывается из фиксированной части и бонуса в виде 5% от заработанных денег для компании
+   * зарплата складывается из фиксированной части и бонуса в виде 5% от заработанных денег для
+   * компании
    */
   @Override
   public Double getMonthSalary() {
@@ -25,6 +26,12 @@ public class Manager extends AbstractEmployee {
   public void setEarnedMoney(Double earnedMoney) {
     this.earnedMoney = earnedMoney;
   }
+
+  @Override
+  public Double getIncome() {
+    return this.earnedMoney;
+  }
 }
+
 
 

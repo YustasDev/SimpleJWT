@@ -20,7 +20,7 @@ import employee.TopManager;
   private static Random random = new Random();
   private static long nextEmployeeId = 1;
 
-  private static NumberFormat salaryFormatter() {
+    private static NumberFormat salaryFormatter() {
     DecimalFormatSymbols unusualSymbols = new DecimalFormatSymbols(Locale.getDefault());
     unusualSymbols.setGroupingSeparator(' ');
     unusualSymbols.setCurrencySymbol("руб.");
@@ -61,7 +61,7 @@ import employee.TopManager;
   public static void main(String[] args) {
 
     // Создайте и наймите в компанию:180 операторов Operator, 80 менеджеров по продажам Manager, 10 топ менеджеров TopManager
-    Company company = new Company(25_000_000D);
+    Company company = new Company();
     List<Operator> operators = generate(180, EnterpriseOne::newOperator);
 
     company.hireAll(operators);
@@ -99,6 +99,8 @@ import employee.TopManager;
     printSalaries("Список из 30 самых низких зарплат в компании", low30);
 
   }
+
+
 
   static void printSalaries(String title, List<Employee> employees) {
     System.out.println(title);

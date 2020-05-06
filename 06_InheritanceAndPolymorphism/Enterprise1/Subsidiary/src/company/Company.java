@@ -1,5 +1,7 @@
 package company;
 
+import employee.Employee;
+import employee.IncomeReceiveable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -7,19 +9,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import employee.Employee;
-
 public class Company {
 
   private static final Comparator<Employee> BY_SALARY_ASC = Comparator.comparingDouble(Employee::getMonthSalary);
   private static final Comparator<Employee> BY_SALARY_DESC = BY_SALARY_ASC.reversed();
 
-  private final Map<Long, Employee> staff = new HashMap<>();
-  private Double income;
+  public final Map<Long, Employee> staff = new HashMap<>();
 
-  public Company(Double income) {
-    this.income = income;
+  public Company() {
   }
+
+  public Double calculatedGetIncome(){
+     Double income = 0.0D;
+      for (Employee employee: staff.values()){
+        if(employee instanceof IncomeReceiveable) {
+          IncomeReceiveable incomeReceiveable = (IncomeReceiveable)employee;
+          income += incomeReceiveable.getIncome();
+        }
+      }
+      return income;
+    }
 
   public void hire(Employee employee) {
     staff.put(employee.getId(), employee);
@@ -37,11 +46,6 @@ public class Company {
     employee.setCompany(null);
   }
 
-
-
-  public Double getIncome(){
-    return income;
-  }
 
   public List<Employee> getTopSalaryStaff(int count) {
     return getTop(count, BY_SALARY_DESC);
@@ -61,7 +65,6 @@ public class Company {
     list.sort(comparator);
     return list.subList(0, Math.min(list.size(), count));
   }
-
 }
 
 

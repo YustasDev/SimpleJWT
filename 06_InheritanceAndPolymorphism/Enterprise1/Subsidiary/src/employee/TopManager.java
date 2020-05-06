@@ -14,7 +14,7 @@ public class TopManager extends AbstractEmployee {
    */
   @Override
   public Double getMonthSalary() {
-    if (company.getIncome() > COMPANY_INCOME_BONUS_THRESHOLD) {
+    if (company.calculatedGetIncome() > COMPANY_INCOME_BONUS_THRESHOLD) {
       return baseMonthSalary + baseMonthSalary * BONUS_PERCENT;
     } else {
       return baseMonthSalary;
