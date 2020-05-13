@@ -14,6 +14,27 @@ public class Main
     {
         ArrayList<Employee> staff = loadStaffFromFile();
 
+        System.out.println("Список до сортировки:  \n");
+
+        for(int i= 0; i < staff.size(); i++){
+        System.out.println(staff.get(i));}
+
+        Collections.sort(staff, (e1, e2) -> {
+            int alphabetSorting = e1.getName().compareTo(e2.getName());
+            if (alphabetSorting != 0)
+                return alphabetSorting;
+            return e1.getSalary() - e2.getSalary();
+        });
+
+        System.out.println("\nСписок после сортировки, где первым условием сортировки является Name:  \n");
+        for (Employee employee : staff)
+            System.out.println(employee);
+
+        Collections.sort(staff,
+            Comparator.comparingInt(Employee::getSalary).thenComparing(Employee::getName));
+        System.out.println("\nСписок после сортировки, где первым условием сортировки является Salary:  \n");
+        for (Employee employee : staff)
+            System.out.println(employee);
 
     }
 
@@ -42,4 +63,5 @@ public class Main
         }
         return staff;
     }
-}
+
+   }
