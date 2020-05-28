@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LambdaExpressions.iml" filepath="$PROJECT_DIR$/LambdaExpressions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Max_2017/Max_2017.iml" filepath="$PROJECT_DIR$/Max_2017/Max_2017.iml" />
     </modules>
   </component>
 </project>
