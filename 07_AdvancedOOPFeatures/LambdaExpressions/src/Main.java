@@ -9,7 +9,7 @@ public class Main
 {
     private static String staffFile = "data/staff.txt";
     private static String dateFormat = "dd.MM.yyyy";
-
+// проверка проверка
     public static void main(String[] args)
     {
         ArrayList<Employee> staff = loadStaffFromFile();
