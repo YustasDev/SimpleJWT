@@ -19,6 +19,7 @@ public abstract class AbstractEmployee implements Employee {
 
   protected Company company;
 
+
   public AbstractEmployee(Long id, String name, Double baseMonthSalary) {
     this.id = id;
     this.name = name;

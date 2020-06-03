@@ -3,11 +3,12 @@ package company;
 import employee.Employee;
 import employee.IncomeReceiveable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 public class Company {
 
@@ -30,18 +31,32 @@ public class Company {
       return income;
     }
 
-  public void hire(Employee employee) {
+  public Consumer<Entry<Long, Employee>> hire(Employee employee) {
     staff.put(employee.getId(), employee);
     employee.setCompany(this);
+    return null;
   }
 
-  public void hireAll(Collection<? extends Employee> employees) {
-    for(Employee employee: employees) {
-      hire(employee);
+//  public void hireAll(Collection<? extends Employee> employees) {
+//    for(Employee employee: employees) {
+//      hire(employee);
+//    }
+//  }
+
+  public void hireAll(Employee employee) {
+    Consumer<Entry<Long, Employee>> action = hire(employee);
+    staff.entrySet().forEach(action);
+
+
+
+//    for(Employee employee: employees) {
+//      hire(employee);
     }
-  }
 
-  public void fire(Employee employee) {
+
+
+
+    public void fire(Employee employee) {
     staff.remove(employee.getId());
     employee.setCompany(null);
   }

@@ -63,7 +63,6 @@ import employee.TopManager;
     // Создайте и наймите в компанию:180 операторов Operator, 80 менеджеров по продажам Manager, 10 топ менеджеров TopManager
     Company company = new Company();
     List<Operator> operators = generate(180, EnterpriseOne::newOperator);
-
     company.hireAll(operators);
 
     List<Manager> managers = generate(80, EnterpriseOne::newManager);

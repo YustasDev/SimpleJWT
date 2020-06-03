@@ -6,7 +6,7 @@ public class Operator extends AbstractEmployee {
     super(id, name, monthSalary);
   }
 
-  }
+}
 
 
 

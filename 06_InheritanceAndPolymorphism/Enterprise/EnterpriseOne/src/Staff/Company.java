@@ -1,12 +1,20 @@
 package Staff;
 
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Company {
 
+  ArrayList<Employee> employees = new ArrayList<>();
 
 
+  public void hire() {
+
+
+    employees.add(new Operator(String name, int id, double salary);
+
+  }
 
 
 
@@ -21,7 +29,6 @@ public class Company {
 
     return income;
   }
-
 
 
 }

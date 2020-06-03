@@ -14,7 +14,7 @@ public class GeneratorN {
 
     ArrayList<String> carNumbers = new ArrayList<>();
     HashSet<String> carNumHashSet = new HashSet<>();
-    TreeSet<String> carNumTreeSet = new TreeSet<>(); 
+    TreeSet<String> carNumTreeSet = new TreeSet<>();
 
     long start = System.currentTimeMillis();
 

@@ -7,9 +7,7 @@ public class TopManager extends Specialist {
   double topManagerSalary;
   static int countOfTopManagers;
 
-  if (Company.getIncome() > 10000000) {
 
-  }
 
 
 
