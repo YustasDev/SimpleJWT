@@ -35,7 +35,7 @@ public class Flight {
 
   public String toString() {
     String var10000 = HOUR_FORMAT.format(this.date);
-    return var10000 + " / " + this.code + " / " + this.type;
+    return var10000 + " / " + this.code + " / " + this.type + " / " + this.aircraft;
   }
 
   public static enum Type {
