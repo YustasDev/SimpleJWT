@@ -1,33 +1,23 @@
 
 import java.util.Arrays;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 public class AverageTemperature {
+  static final double TEMP_MAX = 40.0;
+  static final double TEMP_MIN = 32.0;
+  static final int PATIENTS = 30;
 
   public static void main(String[] args) {
-    int z = 0;
-    double result = 0;
-    double[] temperature = new double[30];
 
-    for (int i = 0; i < temperature.length; i++) {
-      temperature[i] = 32.0 + 8.0 * Math.random();
+    double[] patients = DoubleStream.generate(() -> Math.random() * (TEMP_MAX - TEMP_MIN) + TEMP_MIN)
+        .limit(PATIENTS).toArray();
 
-      result = result + temperature[i];
+    Double averageTemperature = Arrays.stream(patients).average().getAsDouble();
+    System.out.printf("Средняя температура по больнице: " + "%.1f", averageTemperature);
 
-      if (temperature[i] >= 36.2 && temperature[i] <= 36.9) {
-        z++;
-      }
-    }
-
-    result = result / temperature.length;
-    System.out.printf("Средняя температура по больнице (циклом for): " + "%.1f", result);
-    System.out.println();
-    System.out.println("Количество здоровых пациентов: " + z);
-
-    Double averageTemperature = Arrays.stream(temperature).average().getAsDouble();
-    System.out.printf("Средняя температура по больнице (stream): " + "%.1f", averageTemperature);
-
-    long healthy = Arrays.stream(temperature).filter(p -> p >= 36.2).filter(p -> p <= 36.9).count();
-    System.out.println("\nКоличество здоровых пациентов (stream): " + healthy);
+    long healthy = Arrays.stream(patients).filter(p -> p >= 36.2).filter(p -> p <= 36.9).count();
+    System.out.println("\nКоличество здоровых пациентов: " + healthy);
   }
 }
 
