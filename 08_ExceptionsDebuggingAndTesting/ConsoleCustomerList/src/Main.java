@@ -8,7 +8,7 @@ public class Main
             "\tlist\n\tcount\n\tremove Василий Петров";
     private static String commandError = "Wrong command! Available command examples: \n" +
             commandExamples;
-    private static String helpText = "Command examples:\n" + commandExamples;
+    protected static String helpText = "Command examples:\n" + commandExamples;
 
     public static void main(String[] args)
     {
