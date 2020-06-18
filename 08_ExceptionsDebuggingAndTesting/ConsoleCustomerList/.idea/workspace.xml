@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f368384a-e66f-46cb-aa05-8a5865081856" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/../../07_AdvancedOOPFeatures/NewMavenProject/NewMavenProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/CustomerStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CustomerStorage.java" afterDir="false" />
@@ -75,25 +74,45 @@
       <option name="presentableId" value="Default" />
       <updated>1559106634874</updated>
     </task>
+    <task id="LOCAL-00001" summary="Home_work 8.4 with Exception">
+      <created>1592401808518</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1592401808518</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Home_work 8.4 with Exception" />
+    <option name="LAST_COMMIT_MESSAGE" value="Home_work 8.4 with Exception" />
+  </component>
   <component name="WindowStateProjectService">
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1592401242621">
+    <state x="489" y="118" key="CommitChangelistDialog2" timestamp="1592401800654">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592401242621" />
-    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1592401242621">
+    <state x="489" y="118" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1592401800654" />
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1592502727552">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592401242621" />
-    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1592401242621">
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592502727552" />
+    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1592502727552">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592401242621" />
-    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1592401242621">
+    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592502727552" />
+    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1592502727552">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592401242621" />
+    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592502727552" />
+    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1592502727552">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592502727552" />
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2" timestamp="1592401817696">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1592401817696" />
   </component>
   <component name="masterDetails">
     <states>
