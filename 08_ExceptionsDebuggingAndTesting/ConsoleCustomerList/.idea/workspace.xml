@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f368384a-e66f-46cb-aa05-8a5865081856" name="Default Changelist" comment="">
+    <list default="true" id="f368384a-e66f-46cb-aa05-8a5865081856" name="Default Changelist" comment="Home_work 8.4 with Exceptions in Main &amp;&amp; using Maven">
       <change afterPath="$PROJECT_DIR$/../../07_AdvancedOOPFeatures/NewMavenProject/NewMavenProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/MyExceptions/NotValidEmailException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/MyExceptions/NotValidNameException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/MyExceptions/NotValidPhoneException.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../SPBMetro/.idea/vcs.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../SPBMetro/target/classes/map.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConsoleCustomerList.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ConsoleCustomerList.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CustomerStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CustomerStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CustomerStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CustomerStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../SPBMetro/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../SPBMetro/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -99,48 +97,60 @@
       <option name="project" value="LOCAL" />
       <updated>1592503288112</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Home_work 8.4 with Exceptions in Main &amp;&amp; using Maven">
+      <created>1592509487237</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1592509487299</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Home_work 8.4 with Exception" />
     <MESSAGE value="Home_work 8.4 with Exceptions in Main" />
-    <option name="LAST_COMMIT_MESSAGE" value="Home_work 8.4 with Exceptions in Main" />
+    <MESSAGE value="Home_work 8.4 with Exceptions in Main &amp;&amp; using Maven" />
+    <option name="LAST_COMMIT_MESSAGE" value="Home_work 8.4 with Exceptions in Main &amp;&amp; using Maven" />
   </component>
   <component name="WindowStateProjectService">
     <state x="687" y="215" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog" timestamp="1592508001846">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="687" y="215" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1592508001846" />
-    <state x="489" y="118" key="CommitChangelistDialog2" timestamp="1592503281882">
+    <state x="489" y="118" key="CommitChangelistDialog2" timestamp="1592509480606">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="489" y="118" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1592503281882" />
+    <state x="489" y="118" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1592509480606" />
     <state x="740" y="281" key="FileChooserDialogImpl" timestamp="1592507356062">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="281" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1592507356062" />
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1592509052917">
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1592818182908">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592509052917" />
-    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1592509052917">
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592818182908" />
+    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1592818182907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592509052917" />
-    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1592509052916">
+    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592818182907" />
+    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1592818182907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592509052916" />
-    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1592509052917">
+    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592818182907" />
+    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1592818182907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592509052917" />
-    <state x="552" y="259" key="Vcs.Push.Dialog.v2" timestamp="1592503306124">
+    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592818182907" />
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2" timestamp="1592509511141">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1592503306124" />
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1592509511141" />
+    <state x="668" y="351" key="com.intellij.ide.util.TipDialog" timestamp="1592817022713">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="668" y="351" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1592817022713" />
   </component>
   <component name="masterDetails">
     <states>

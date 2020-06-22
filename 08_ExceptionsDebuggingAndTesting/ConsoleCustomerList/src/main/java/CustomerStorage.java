@@ -1,3 +1,6 @@
+import MyExceptions.NotValidEmailException;
+import MyExceptions.NotValidNameException;
+import MyExceptions.NotValidPhoneException;
 import java.util.HashMap;
 
 public class CustomerStorage {
@@ -13,13 +16,19 @@ public class CustomerStorage {
   public void addCustomer(String data) throws Exception {
     String[] components = data.split("\\s+");
     if (components.length > 4 || components.length < 4) {
-      throw new Exception("The number of elements in a command is not equal to four!");
+      throw new NotValidNameException("The number of elements in a command is not equal to four!",
+          data);
     } else if (components.length == 4) {
       String name = components[0] + " " + components[1];
       if (components[3].matches(TELEFONNUMBER) && components[2].matches(REGEXEMAIL)) {
         storage.put(name, new Customer(name, components[3], components[2]));
+      } else if (components[2].matches(REGEXEMAIL) && !(components[3].matches(TELEFONNUMBER))) {
+        throw new NotValidPhoneException("Incorrect phone number", components[3]);
+      } else if (components[3].matches(TELEFONNUMBER) && !(components[2].matches(REGEXEMAIL))) {
+        throw new NotValidEmailException("Incorrect email address", components[2]);
       } else {
-        throw new Exception("Incorrect phone number or email address");
+        System.out.println("Incorrect phone number and email address"
+            + ", enter the information again");
       }
     }
   }
