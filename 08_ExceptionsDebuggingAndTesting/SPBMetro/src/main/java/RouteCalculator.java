@@ -20,15 +20,16 @@ public class RouteCalculator
     public List<Station> getShortestRoute(Station from, Station to)
     {
         List<Station> route = getRouteOnTheLine(from, to);
-        if(route != null) {
+        if(route != null) {  System.err.println("launch onTheLine");
             return route;
         }
 
         route = getRouteWithOneConnection(from, to);
-        if(route != null) {
+        if(route != null) {  System.err.println("launch oneConnection");
             return route;
         }
 
+        System.err.println("launch twoConnection");
         route = getRouteWithTwoConnections(from, to);
         return route;
     }
@@ -70,6 +71,9 @@ public class RouteCalculator
                     direction = -1;
                 }
             }
+            System.err.println(station);
+            System.err.println("direction =  " + direction);
+
 
             if(direction != 0) {
                 route.add(station);
@@ -83,6 +87,7 @@ public class RouteCalculator
         if(direction == -1) {
             Collections.reverse(route);
         }
+        System.err.println("direction_итог =  " + direction);
         return route;
     }
 
@@ -98,17 +103,25 @@ public class RouteCalculator
         List<Station> toLineStations = to.getLine().getStations();
         for(Station srcStation : fromLineStations)
         {
+            System.err.println("srcStation =  " + srcStation);
             for(Station dstStation : toLineStations)
             {
+              System.err.println("dstStation =  " + dstStation);
+
                 if(isConnected(srcStation, dstStation))
-                {
+                {   System.err.println("isConnected = " + isConnected(srcStation, dstStation));
                     ArrayList<Station> way = new ArrayList<>();
                     way.addAll(getRouteOnTheLine(from, srcStation));
+                    System.err.println("way1 =  " + way);
+
                     way.addAll(getRouteOnTheLine(dstStation, to));
+                    System.err.println("upshot =  " + way);
+
                     if(route.isEmpty() || route.size() > way.size())
                     {
                         route.clear();
-                        route.addAll(way);
+
+                        //route.addAll(way);
                     }
                 }
             }
@@ -157,6 +170,9 @@ public class RouteCalculator
                 if(connectedLineRoute == null) {
                     continue;
                 }
+                System.err.println("connectedLineRoute =  " + connectedLineRoute);
+
+
                 ArrayList<Station> way = new ArrayList<>();
                 way.addAll(getRouteOnTheLine(from, srcStation));
                 way.addAll(connectedLineRoute);
