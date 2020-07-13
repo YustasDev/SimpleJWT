@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8a5e1234-1100-4917-9bdf-687150e205e8" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/../../07_AdvancedOOPFeatures/NewMavenProject/NewMavenProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/RouteCalculatorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/map.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/SPBMetroWithTest.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/misc.xml" afterDir="false" />
@@ -28,8 +25,8 @@
       <change beforePath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ConsoleCustomerList/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ConsoleCustomerList/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/RouteCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/RouteCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/RouteCalculatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/RouteCalculatorTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +81,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.RouteCalculatorTest.testGetShortestRoute">
+  <component name="RunManager" selected="JUnit.RouteCalculatorTest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="SPBMetro" />
@@ -130,9 +127,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.RouteCalculatorTest.testGetShortestRoute" />
         <item itemvalue="JUnit.RouteCalculatorTest" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.RouteCalculatorTest.testGetShortestRoute" />
         <item itemvalue="JUnit.RouteCalculatorTest1" />
         <item itemvalue="JUnit.All in SPBMetro" />
       </list>
@@ -161,10 +158,20 @@
       <option name="presentableId" value="Default" />
       <updated>1559569584327</updated>
     </task>
+    <task id="LOCAL-00001" summary="uncompleted code">
+      <created>1594501568033</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1594501568033</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="uncompleted code" />
+    <option name="LAST_COMMIT_MESSAGE" value="uncompleted code" />
   </component>
   <component name="WindowStateProjectService">
     <state x="100" y="108" width="1720" height="832" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1594495176623">
@@ -175,26 +182,30 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="233" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1593680999357" />
+    <state x="543" y="118" key="CommitChangelistDialog2" timestamp="1594501558659">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="543" y="118" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1594501558659" />
     <state x="740" y="281" key="FileChooserDialogImpl" timestamp="1593615237418">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="281" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1593615237418" />
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1594501068022">
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1594631140278">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594501068022" />
-    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1594501068022">
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140278" />
+    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1594631140277">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594501068022" />
-    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1594501068021">
+    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140277" />
+    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1594631140277">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594501068021" />
-    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1594501068022">
+    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140277" />
+    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1594631140278">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594501068022" />
+    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140278" />
     <state x="490" y="181" key="Maven.ArtifactSearchDialog" timestamp="1593888044375">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -203,5 +214,16 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="440" y="101" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1593615160484" />
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2" timestamp="1594501581378">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1594501581378" />
+    <state x="668" y="351" key="com.intellij.ide.util.TipDialog" timestamp="1594543140218">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="668" y="351" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594543140218" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/SPBMetro$RouteCalculatorTest.ic" NAME="RouteCalculatorTest Coverage Results" MODIFIED="1594503024987" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

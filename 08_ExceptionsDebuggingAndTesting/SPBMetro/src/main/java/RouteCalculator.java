@@ -25,8 +25,9 @@ public class RouteCalculator
         }
 
         route = getRouteWithOneConnection(from, to);
-        if(route != null) {  System.err.println("launch oneConnection");
-            return route;
+        if(route != null & !route.isEmpty()) {  System.err.println("launch oneConnection");
+            System.err.println("route = " + route);
+        return route;
         }
 
         System.err.println("launch twoConnection");
@@ -121,7 +122,7 @@ public class RouteCalculator
                     {
                         route.clear();
 
-                        //route.addAll(way);
+                        route.addAll(way);
                     }
                 }
             }

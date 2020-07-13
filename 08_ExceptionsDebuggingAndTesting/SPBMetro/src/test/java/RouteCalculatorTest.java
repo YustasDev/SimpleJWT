@@ -77,39 +77,42 @@ public class RouteCalculatorTest extends TestCase {
   }
 
 
-  public void testCalculateDuration() {
+  public void testCalculateDurationNoTransferRoute() {
 
     double actual = RouteCalculator.calculateDuration(noTransferRoute);
     double expected = 12.5;
     assertEquals(expected, actual);
+  }
 
-    double actual1 = RouteCalculator.calculateDuration(oneTransferRoute);
-    double expected1 = 13.5;
-    assertEquals(expected1, actual1);
+    public void testCalculateDurationOneTransferRoute() {
+      double actual1 = RouteCalculator.calculateDuration(oneTransferRoute);
+      double expected1 = 13.5;
+      assertEquals(expected1, actual1);
+    }
 
+    public void testCalculateDurationTwoTransferRoute() {
     double actual2 = RouteCalculator.calculateDuration(twoTransferRoutes);
     double expected2 = 22;
     assertEquals(expected2, actual2);
   }
 
-    public void testGetShortestRoute() {
-      List<Station> actualNoTransfer = calculator.getShortestRoute(A,F);
-      List<Station> actualOneTransfer = calculator.getShortestRoute(A,L);
-      List<Station> actualTwoTransfers = calculator.getShortestRoute(A,H);
-
+    public void testGetShortestRouteNoTransfer() {
+      List<Station> actualNoTransfer = calculator.getShortestRoute(A, F);
       List<Station> expectedNoTransfers = noTransferRoute;
-      List<Station> expectedOneTransfers = oneTransferRoute;
-      List<Station> expectedTwoTransfers = twoTransferRoutes;
-
       assertEquals(actualNoTransfer, expectedNoTransfers);
-      assertEquals(actualOneTransfer, expectedOneTransfers);
-      assertEquals(actualTwoTransfers, expectedTwoTransfers);
     }
 
+    public void testGetShortestRouteOneTransfer() {
+      List<Station> actualOneTransfer = calculator.getShortestRoute(A, L);
+      List<Station> expectedOneTransfers = oneTransferRoute;
+      assertEquals(actualOneTransfer, expectedOneTransfers);
+    }
 
-
-
-
+    public void testGetShortestRouteTwoTransfer() {
+      List<Station> actualTwoTransfers = calculator.getShortestRoute(A,H);
+      List<Station> expectedTwoTransfers = twoTransferRoutes;
+      assertEquals(actualTwoTransfers, expectedTwoTransfers);
+    }
 
   @Override
   protected void tearDown() throws Exception {
