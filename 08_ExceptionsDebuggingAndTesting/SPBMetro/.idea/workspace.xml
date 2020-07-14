@@ -2,29 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8a5e1234-1100-4917-9bdf-687150e205e8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../07_AdvancedOOPFeatures/NewMavenProject/NewMavenProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/SPBMetroWithTest.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/SPBMetro.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/src/main/java/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/src/main/java/RouteCalculator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/src/main/java/StationIndex.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/src/main/java/core/Line.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/src/main/java/core/Station.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/SPBMetro/src/main/resources/map.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../SPBMetroWithTest/__MACOSX/SPBMetro/._.DS_Store" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/src/Loader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ConsoleCustomerList/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ConsoleCustomerList/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/RouteCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/RouteCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/RouteCalculatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/RouteCalculatorTest.java" afterDir="false" />
     </list>
@@ -165,13 +146,21 @@
       <option name="project" value="LOCAL" />
       <updated>1594501568033</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="working code with isEmpty()">
+      <created>1594633595654</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1594633595654</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="uncompleted code" />
-    <option name="LAST_COMMIT_MESSAGE" value="uncompleted code" />
+    <MESSAGE value="working code with isEmpty()" />
+    <option name="LAST_COMMIT_MESSAGE" value="working code with isEmpty()" />
   </component>
   <component name="WindowStateProjectService">
     <state x="100" y="108" width="1720" height="832" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1594495176623">
@@ -182,30 +171,30 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="233" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1593680999357" />
-    <state x="543" y="118" key="CommitChangelistDialog2" timestamp="1594501558659">
+    <state x="536" y="231" width="834" height="660" key="CommitChangelistDialog2" timestamp="1594633584083">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="543" y="118" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1594501558659" />
+    <state x="536" y="231" width="834" height="660" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1594633584082" />
     <state x="740" y="281" key="FileChooserDialogImpl" timestamp="1593615237418">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="281" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1593615237418" />
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1594631140278">
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom" timestamp="1594652215412">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140278" />
-    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1594631140277">
+    <state width="1860" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594652215412" />
+    <state width="1860" height="276" key="GridCell.Tab.0.center" timestamp="1594652215411">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140277" />
-    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1594631140277">
+    <state width="1860" height="276" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594652215411" />
+    <state width="1860" height="276" key="GridCell.Tab.0.left" timestamp="1594652215411">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140277" />
-    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1594631140278">
+    <state width="1860" height="276" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594652215411" />
+    <state width="1860" height="276" key="GridCell.Tab.0.right" timestamp="1594652215412">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594631140278" />
+    <state width="1860" height="276" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594652215412" />
     <state x="490" y="181" key="Maven.ArtifactSearchDialog" timestamp="1593888044375">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -214,10 +203,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="440" y="101" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1593615160484" />
-    <state x="552" y="259" key="Vcs.Push.Dialog.v2" timestamp="1594501581378">
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2" timestamp="1594633610428">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1594501581378" />
+    <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1594633610428" />
     <state x="668" y="351" key="com.intellij.ide.util.TipDialog" timestamp="1594543140218">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

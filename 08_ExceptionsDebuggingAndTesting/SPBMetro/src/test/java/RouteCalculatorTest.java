@@ -64,10 +64,6 @@ public class RouteCalculatorTest extends TestCase {
 
     stationIndex.addConnection(Stream.of(D,M).collect(Collectors.toList()));
     stationIndex.addConnection(Stream.of(I,P).collect(Collectors.toList()));
-    stationIndex.getConnectedStations(D);
-    stationIndex.getConnectedStations(I);
-    stationIndex.getConnectedStations(M);
-    stationIndex.getConnectedStations(P);
 
 //тестовые маршруты
     noTransferRoute = Stream.of(A,B,C,D,E,F).collect(Collectors.toList());
