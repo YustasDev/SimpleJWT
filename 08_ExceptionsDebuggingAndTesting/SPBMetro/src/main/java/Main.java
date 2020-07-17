@@ -21,7 +21,7 @@ public class Main {
 
   private static StationIndex stationIndex;
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     RouteCalculator calculator = getRouteCalculator();
 
     logger = LogManager.getRootLogger();
