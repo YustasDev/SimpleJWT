@@ -6,34 +6,29 @@
     <File name="SearchFile" fileName="logs/search.log">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
       <Filters>
-        <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL" />
+        <MarkerFilter marker="INPUT_HISTORY" />
       </Filters>
     </File>
 
     <File name="InputErrorsFile" fileName="logs/input_errors.log">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
       <Filters>
-        <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL" />
+        <MarkerFilter marker="INVALID_STATIONS" />
       </Filters>
     </File>
 
     <File name="ExceptionFile" fileName="logs/exceptions.log">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-      <Filters>
-        <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL" />
-      </Filters>
     </File>
-
 
   </appenders>
 
   <loggers>
     <root level="info">
-      <appender-ref ref="SearchFile" level="info"/>
-      <appender-ref ref="InputErrorsFile" level="warn"/>
+      <appender-ref ref="SearchFile"/>
+      <appender-ref ref="InputErrorsFile"/>
       <appender-ref ref="ExceptionFile" level="error"/>
-    </root>
+   </root>
   </loggers>
-
 
 </configuration>

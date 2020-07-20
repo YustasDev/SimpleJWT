@@ -1,7 +1,11 @@
 import core.Line;
 import core.Station;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,7 +18,10 @@ import java.util.Scanner;
 
 public class Main {
 
-  private static Logger logger;
+  private static final Logger LOGGER = LogManager.getLogger(Main.class);
+
+  private static final Marker INPUT_HISTORY_MARKER = MarkerManager.getMarker("INPUT_HISTORY");
+  private static final Marker INVALID_STATIONS_MARKER = MarkerManager.getMarker("INVALID_STATIONS");
 
   private static String dataFile = "src/main/resources/map.json";
   private static Scanner scanner;
@@ -24,12 +31,11 @@ public class Main {
   public static void main(String[] args) {
     RouteCalculator calculator = getRouteCalculator();
 
-    logger = LogManager.getRootLogger();
-
     System.out.println("Программа расчёта маршрутов метрополитена Санкт-Петербурга\n");
     scanner = new Scanner(System.in);
 
     for (; ; ) {
+      double duration = 0;
       try {
         Station from = takeStation("Введите станцию отправления:");
         Station to = takeStation("Введите станцию назначения:");
@@ -41,15 +47,14 @@ public class Main {
         if (RouteCalculator.calculateDuration(route) < 20) {
           System.out.println("Длительность: " +
               RouteCalculator.calculateDuration(route) + " минут");
-        }
-        else {
-          System.out.println("Длительность: " +
-              RouteCalculator.calculateDuration(route) + " минут");
+        } else {
+          duration = RouteCalculator.calculateDuration(route);
+          System.out.println("Длительность: " + duration + " минут");
           throw new Exception("Исключительная длительность поездки");
         }
-       } catch (Exception e) {
+      } catch (Exception e) {
         e.printStackTrace();
-        logger.error("An exceptional situation has occurred:  " + e);
+        LOGGER.error("The duration of the trip {}, situation is {} ", duration, e);
       }
     }
   }
@@ -82,10 +87,10 @@ public class Main {
       String line = scanner.nextLine().trim();
       Station station = stationIndex.getStation(line);
       if (station != null) {
-       logger.info("Станция найдена:  " + station);
+        LOGGER.info(INPUT_HISTORY_MARKER, "Пользователь ввел станцию: {}", station);
         return station;
       }
-      logger.warn("Станция не найдена:  " + line);
+      LOGGER.info(INVALID_STATIONS_MARKER, "Станция не найдена: {}", line);
       System.out.println("Станция не найдена :(");
     }
   }
