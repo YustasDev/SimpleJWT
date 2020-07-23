@@ -24,6 +24,12 @@ public class Main {
          break mark1;
        }
 
+
+       for (File f : files)
+         System.out.println("Элемент" + files);
+
+
+
        //List<Long> collect =
            Stream.of(files).map(x -> x.getTotalSpace()).forEach(x -> System.out.println(x));
        Stream.of(files).forEach(x -> System.out.println(x));
