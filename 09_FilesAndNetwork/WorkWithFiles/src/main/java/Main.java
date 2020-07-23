@@ -9,18 +9,29 @@ public class Main {
 
   public static void main(String[] args) {
 
-    scanner = new Scanner(System.in);
+   for (; ;) {
+     scanner = new Scanner(System.in);
+     mark1:
+     {
+       String path = receivePath("Введите путь к папке. Образец: D:/Games");
+       File folder = new File(path);
 
-    String path = receivePath("Введите путь к папке. Образец: D:/Games");
-    File folder = new File(path);
-    File[] files = folder.listFiles();
+       File[] files;
+       if (folder.isDirectory()) {
+         files = folder.listFiles();
+       } else {
+         System.out.println("Указан неправильный путь к папке");
+         break mark1;
+       }
 
-    // Stream<File> streamArr = Stream.of(files);
-    //streamArr.forEach(x -> System.out.println(x));
+       //List<Long> collect =
+           Stream.of(files).map(x -> x.getTotalSpace()).forEach(x -> System.out.println(x));
+       Stream.of(files).forEach(x -> System.out.println(x));
+         //  collect(Collectors.toList());
+      // System.out.println(collect);
 
-    Stream.of(files).forEach(x -> System.out.println(x));
-
-
+     }
+   }
   }
 
   private static String receivePath(String message) {
