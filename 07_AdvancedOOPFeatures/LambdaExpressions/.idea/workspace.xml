@@ -2,47 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8af3af67-8288-4cfc-87da-2125e57fdf0e" name="Default Changelist" comment="Home_work 7.8 _ проверка">
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/05_ArraysAndCollections.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/CA/CA.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/ControlAffairs/ControlAffairs.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/ControlAffairs_version2/ControlAffairs_version2.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/EmailList/EmailList.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/ManageAffairs/ManageAffairs.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Mess/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Mess/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Mess/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Mess/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Mess/Mess.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Mess/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Mess/src/Mess.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/PhoneBook/PhoneBook.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/PhoneBook/PhoneBook1/PhoneBook1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/PhoneBook/PhoneBookNew/PhoneBookNew.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/PrintCross/PrintCross.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Rainbow/Rainbow.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Razdolbai/Razdolbai.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/Temperature/Temperature.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/s1/s1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Accountss/Accountss.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airport 2020/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airport 2020/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airport 2020/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Airport 2020/Airport 2020.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../05_ArraysAndCollections/GeneratorN/src/GeneratorN.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../05_ArraysAndCollections/GeneratorN/src/GeneratorN.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise/EnterpriseOne/src/Staff/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise/EnterpriseOne/src/Staff/Company.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise/EnterpriseOne/src/Staff/TopManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise/EnterpriseOne/src/Staff/TopManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/EnterpriseOne.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/EnterpriseOne.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/company/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/company/Company.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/employee/AbstractEmployee.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/employee/AbstractEmployee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/employee/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/employee/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/employee/Operator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../06_InheritanceAndPolymorphism/Enterprise1/Subsidiary/src/employee/Operator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../09_FilesAndNetwork/CSVReading/data/movementList.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../09_FilesAndNetwork/CSVReading/src/main/java/BankStatement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../09_FilesAndNetwork/CSVReading/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
