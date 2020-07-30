@@ -1,6 +1,8 @@
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,51 +21,36 @@ public class Main {
   private static ArrayList<BankStatement> loadExtractFromFile() {
 
     ArrayList<BankStatement> extract = new ArrayList<>();
+
     try {
-      List<String> lines = Files.readAllLines(Paths.get(dataFile));
-      for (String line : lines) {
-        String[] fragments = line.split(",");
-        if (fragments.length != 8) {
-          System.out.println("Wrong line: " + line);
-          continue;
-        }
-        ArrayList<String> columnList = new ArrayList<String>();
-        for (int i = 0; i < fragments.length; i++) {
-          //Если колонка начинается на кавычки или заканчиваеться на кавычки
-          if (IsColumnPart(fragments[i])) {
-            String lastText = columnList.get(columnList.size() - 1);
-            columnList.set(columnList.size() - 1, lastText + "," + fragments[i]);
-          } else {
-            columnList.add(fragments[i]);
-          }
 
-          try {
-            extract.add(new BankStatement(
-                fragments[5],
-                Double.parseDouble(fragments[6]),
-                Double.parseDouble(fragments[7])
-            ));
-          } catch (Exception e) {
-            e.printStackTrace();
-            System.out
-                .println("fragments[6]) = " + fragments[6] + "fragments[7]) = " + fragments[7]);
+      FileReader filereader = new FileReader(dataFile);
+
+      // создаем объект csvReader и пропускаем первую строку
+      CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+      CSVReader csvReader = new CSVReaderBuilder(filereader).withCSVParser(parser).withSkipLines(1)
+          .build();
+      List<String[]> lines = csvReader.readAll();
+
+      for (String[] row : lines) {
+        // System.out.print("Длина строки = " + row.length + "\t");
+        for (int i = 0; i < row.length; i++) {
+          // System.out.print("i = " + i + "  " + row[i] + "\t");
+          if (row.length != 8) {
+            System.out.println("Wrong line: " + row);
+            continue;
           }
+          extract.add(new BankStatement(
+              row[5],
+              Double.parseDouble(row[6]),
+              Double.parseDouble(row[7])
+          ));
         }
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    catch(Exception ex){
-        ex.printStackTrace();
-      }
-      return extract;
-    }
-
-
-
-  //Проверка является ли колонка частью предыдущей колонки
-  private static boolean IsColumnPart(String text) {
-    String trimText = text.trim();
-    //Если в тексте одна ковычка и текст на нее заканчивается значит это часть предыдущей колонки
-    return trimText.indexOf("\"") == trimText.lastIndexOf("\"") && trimText.endsWith("\"");
+    return extract;
   }
 }
 

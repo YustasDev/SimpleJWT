@@ -37,7 +37,7 @@ public class BankStatement {
   }
 
   public String toString() {
-    return "От организации: " + organization + "Доход = " + income + " Расход =  " + expense;
+    return "От организации: " + organization + "  Доход = " + income + "  Расход =  " + expense;
 
   }
 }
