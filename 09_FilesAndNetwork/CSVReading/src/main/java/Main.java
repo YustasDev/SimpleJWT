@@ -13,9 +13,20 @@ public class Main {
 
   public static void main(String[] args) {
 
-    ArrayList<BankStatement> extract = loadExtractFromFile();
+    ArrayList<BankStatement> extract = loadExtractFromFile(); // формируем список из элементов класса BankStatement
 
     extract.stream().forEach(System.out::println);
+
+    Double sumIncome = extract.stream()
+        .mapToDouble(BankStatement::getIncome).sum();
+    System.out.println("Сумма доходов : " + sumIncome + " руб.");
+
+    Double sumExpense = extract.stream()
+        .mapToDouble(BankStatement::getExpense).sum();
+    System.out.println("Сумма расходов : " + sumExpense + " руб.");
+
+
+
   }
 
   private static ArrayList<BankStatement> loadExtractFromFile() {
@@ -26,27 +37,30 @@ public class Main {
 
       FileReader filereader = new FileReader(dataFile);
 
-      // создаем объект csvReader и пропускаем первую строку
+      // создаем объект csvReader и пропускаем первую строку (заголовок)
       CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
       CSVReader csvReader = new CSVReaderBuilder(filereader).withCSVParser(parser).withSkipLines(1)
           .build();
-      List<String[]> lines = csvReader.readAll();
+      List<String[]> lines = csvReader.readAll(); // читаем все строки файла и записываем в список
 
-      for (String[] row : lines) {
-        // System.out.print("Длина строки = " + row.length + "\t");
-        for (int i = 0; i < row.length; i++) {
-          // System.out.print("i = " + i + "  " + row[i] + "\t");
-          if (row.length != 8) {
+      for (String[] row : lines) {           // перебираем элементы каждой строки, проверяем, парсим и прибавляем к extract
+       if (row.length != 8) {
             System.out.println("Wrong line: " + row);
             continue;
           }
-          extract.add(new BankStatement(
-              row[5],
-              Double.parseDouble(row[6]),
-              Double.parseDouble(row[7])
+       // некоторые элементы имеют вид "ххх,хх", поэтому заменяем запятую на точку
+       String element_6 = row[6].replace(',','.');
+       String element_7 = row[7].replace(',','.');
+
+        String[] fragments = row[5].split("\t");
+        String element_5 = fragments[0];
+
+        extract.add(new BankStatement(
+              element_5,
+              Double.parseDouble(element_6),
+              Double.parseDouble(element_7)
           ));
         }
-      }
     } catch (Exception e) {
       e.printStackTrace();
     }
