@@ -19,7 +19,7 @@ public class BankStatement {
   }
 
   public Double getExpense() {
-        return expense;
+    return expense;
   }
 
   public void setExpense(Double expense) {
@@ -36,7 +36,6 @@ public class BankStatement {
 
   public String toString() {
     return "От организации: " + organization + "  Доход = " + income + "  Расход =  " + expense;
-
   }
 }
 
