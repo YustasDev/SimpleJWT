@@ -5,6 +5,8 @@ import com.opencsv.CSVReaderBuilder;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -48,18 +50,32 @@ public class Main {
             System.out.println("Wrong line: " + row);
             continue;
           }
-       // некоторые элементы имеют вид "ххх,хх", поэтому заменяем запятую на точку
+       // некоторые элементы колонок в исходном файле имеют вид "ххх,хх", поэтому заменяем запятую на точку
        String element_6 = row[6].replace(',','.');
        String element_7 = row[7].replace(',','.');
 
-        String[] fragments = row[5].split("\t");
-        String element_5 = fragments[0];
+       String s55 = row[5].replaceAll("[^a-zA-Z]", "");
+        System.out.println("s55 = " + s55);
 
-        extract.add(new BankStatement(
-              element_5,
-              Double.parseDouble(element_6),
-              Double.parseDouble(element_7)
-          ));
+
+
+          String s5 = row[5];
+
+        Pattern p = Pattern.compile("[a-zA-Z]+");
+
+        Matcher m5 = p.matcher(s5);
+
+       System.out.println("Words from string \"" + s5 + "\" : ");
+
+        while (m5.find()) {
+
+          System.out.println(m5.group());}
+
+//        extract.add(new BankStatement(
+//              element_5,
+//              Double.parseDouble(element_6),
+//              Double.parseDouble(element_7)
+//          ));
         }
     } catch (Exception e) {
       e.printStackTrace();
