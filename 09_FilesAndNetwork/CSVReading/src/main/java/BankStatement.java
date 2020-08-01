@@ -1,5 +1,3 @@
-
-
 public class BankStatement {
 
   private Double income;
@@ -21,7 +19,7 @@ public class BankStatement {
   }
 
   public Double getExpense() {
-    return expense;
+        return expense;
   }
 
   public void setExpense(Double expense) {

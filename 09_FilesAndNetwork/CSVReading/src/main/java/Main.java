@@ -5,19 +5,21 @@ import com.opencsv.CSVReaderBuilder;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.BaseStream;
+import java.util.stream.Stream;
 
 public class Main {
 
   private static String dataFile = "data/movementList.csv";
-
+  private static Set<String> listOrg = new TreeSet <>();
 
   public static void main(String[] args) {
 
     ArrayList<BankStatement> extract = loadExtractFromFile(); // формируем список из элементов класса BankStatement
 
-    extract.stream().forEach(System.out::println);
+   // extract.stream().forEach(System.out::println);
 
     Double sumIncome = extract.stream()
         .mapToDouble(BankStatement::getIncome).sum();
@@ -28,8 +30,16 @@ public class Main {
     System.out.println("Сумма расходов : " + sumExpense + " руб.");
 
 
+   // listOrg = extract.stream().map(BankStatement::getOrganization).collect(Collectors.toSet());
+   // listOrg.forEach(System.out::println);
+
+    extract.stream()
+        .map(BankStatement::getOrganization)
+        .distinct().flatMapToDouble(BankStatement::getExpense).sum().forEach(System.out::println);
 
   }
+
+
 
   private static ArrayList<BankStatement> loadExtractFromFile() {
 
@@ -45,7 +55,7 @@ public class Main {
           .build();
       List<String[]> lines = csvReader.readAll(); // читаем все строки файла и записываем в список
 
-      for (String[] row : lines) {           // перебираем элементы каждой строки, проверяем, парсим и прибавляем к extract
+      for (String[] row : lines) {   // перебираем элементы каждой строки, проверяем, приводим к читаемому формату
        if (row.length != 8) {
             System.out.println("Wrong line: " + row);
             continue;
@@ -54,28 +64,13 @@ public class Main {
        String element_6 = row[6].replace(',','.');
        String element_7 = row[7].replace(',','.');
 
-       String s55 = row[5].replaceAll("[^a-zA-Z]", "");
-        System.out.println("s55 = " + s55);
+       String element_5 = row[5].replaceAll("[^a-zA-Z]", "");  // преобразуем колонку "описание операции" в колонку "организация"
 
-
-
-          String s5 = row[5];
-
-        Pattern p = Pattern.compile("[a-zA-Z]+");
-
-        Matcher m5 = p.matcher(s5);
-
-       System.out.println("Words from string \"" + s5 + "\" : ");
-
-        while (m5.find()) {
-
-          System.out.println(m5.group());}
-
-//        extract.add(new BankStatement(
-//              element_5,
-//              Double.parseDouble(element_6),
-//              Double.parseDouble(element_7)
-//          ));
+        extract.add(new BankStatement(    //  парсим и прибавляем к extract
+              element_5,
+              Double.parseDouble(element_6),
+              Double.parseDouble(element_7)
+          ));
         }
     } catch (Exception e) {
       e.printStackTrace();
