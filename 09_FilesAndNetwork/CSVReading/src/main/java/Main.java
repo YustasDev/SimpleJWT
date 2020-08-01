@@ -4,10 +4,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class Main {
 
   private static String dataFile = "data/movementList.csv";
-  private static Set<String> listOrg = new TreeSet <>();
+  private static Map <String, Double> sumExpOrg = new TreeMap<>();
 
 
   public static void main(String[] args) {
@@ -25,23 +25,35 @@ public class Main {
 
    // extract.stream().forEach(System.out::println);
 
-        Double sumExpense = extract.stream()
-        .mapToDouble(BankStatement::getExpense).sum();
-    System.out.println("Сумма расходов : " + sumExpense + " руб.");
-
     Double sumIncome = extract.stream()
         .mapToDouble(BankStatement::getIncome).sum();
     System.out.println("Сумма доходов : " + sumIncome + " руб.");
 
+    Double sumExpense = extract.stream()
+        .mapToDouble(BankStatement::getExpense).sum();
+    System.out.println("Сумма расходов : " + sumExpense + " руб.");
 
-    Map<String, Double> sumExpOrg = new HashMap<>();
-    for (BankStatement bankStatement : extract) {
-      sumExpOrg.merge(bankStatement.getOrganization(), bankStatement.getExpense(), Double::sum);
+    String [] denominationOrganizations = extract.stream()
+        .map(BankStatement::getOrganization)
+        .distinct().toArray(String[]::new);
+
+    Map <String, Double> sumExpOrg = extract.stream()     // группируем расходы по организациям
+        .collect(Collectors.groupingBy(BankStatement::getOrganization,
+            Collectors.summingDouble(BankStatement::getExpense)));
+
+    System.out.println("Суммы расходов по организациям: ");
+    for (Map.Entry entry: sumExpOrg.entrySet()) {
+      System.out.println(entry);
     }
-      System.out.println("sumExpOrg = " + sumExpOrg);
+
+//    mapNeed = extract.stream()
+//        .collect(Collectors.groupingBy(BankStatement::getOrganization),
+
+            //Collectors.groupingBy(BankStatement::getExpense));
+//
 
 
-    }
+  }
 
 
 
