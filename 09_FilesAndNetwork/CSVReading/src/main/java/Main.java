@@ -4,10 +4,13 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.BaseStream;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
@@ -15,29 +18,30 @@ public class Main {
   private static String dataFile = "data/movementList.csv";
   private static Set<String> listOrg = new TreeSet <>();
 
+
   public static void main(String[] args) {
 
     ArrayList<BankStatement> extract = loadExtractFromFile(); // формируем список из элементов класса BankStatement
 
    // extract.stream().forEach(System.out::println);
 
+        Double sumExpense = extract.stream()
+        .mapToDouble(BankStatement::getExpense).sum();
+    System.out.println("Сумма расходов : " + sumExpense + " руб.");
+
     Double sumIncome = extract.stream()
         .mapToDouble(BankStatement::getIncome).sum();
     System.out.println("Сумма доходов : " + sumIncome + " руб.");
 
-    Double sumExpense = extract.stream()
-        .mapToDouble(BankStatement::getExpense).sum();
-    System.out.println("Сумма расходов : " + sumExpense + " руб.");
+
+    Map<String, Double> sumExpOrg = new HashMap<>();
+    for (BankStatement bankStatement : extract) {
+      sumExpOrg.merge(bankStatement.getOrganization(), bankStatement.getExpense(), Double::sum);
+    }
+      System.out.println("sumExpOrg = " + sumExpOrg);
 
 
-   // listOrg = extract.stream().map(BankStatement::getOrganization).collect(Collectors.toSet());
-   // listOrg.forEach(System.out::println);
-
-    extract.stream()
-        .map(BankStatement::getOrganization)
-        .distinct().flatMapToDouble(BankStatement::getExpense).sum().forEach(System.out::println);
-
-  }
+    }
 
 
 
