@@ -12,23 +12,34 @@ import java.util.stream.Collectors;
 
 public class Main {
 
+  private static final int INDEX_ORGANIZATION = 5;
+  private static final int INDEX_INCOM = 6;
+  private static final int INDEX_EXPENSE = 7;
   private static String dataFile = "data/movementList.csv";
+  private static ArrayList<BankStatement> extract;
 
   public static void main(String[] args) {
+    extract = loadExtractFromFile(); // формируем список из элементов класса BankStatement
+    printSumExpense();
+    printSumIncome();
+    printAmountExpensesByOrganization();
+  }
 
-    ArrayList<BankStatement> extract = loadExtractFromFile(); // формируем список из элементов класса BankStatement
-
+  private static void printSumExpense() {
     Double sumExpense = extract.stream()
         .mapToDouble(BankStatement::getExpense).sum();
     System.out.println("Сумма расходов : " + sumExpense + " руб.");
+  }
 
+  private static void printSumIncome() {
     Double sumIncome = extract.stream()
         .mapToDouble(BankStatement::getIncome).sum();
     System.out.println("Сумма доходов : " + sumIncome + " руб.");
+  }
 
-    Map<String, Double> sumExpenseOrg = new TreeMap<>();
-    sumExpenseOrg = extract    // группируем расходы по организациям и суммируем для каждой
-        .stream().collect(Collectors.groupingBy(BankStatement::getOrganization,
+  private static void printAmountExpensesByOrganization() {
+    Map<String, Double> sumExpenseOrg = extract
+        .stream().collect(Collectors.groupingBy(BankStatement::getOrganization, TreeMap::new,
             Collectors.summingDouble(BankStatement::getExpense)));
 
     System.out.println(
@@ -42,7 +53,6 @@ public class Main {
   private static ArrayList<BankStatement> loadExtractFromFile() {
 
     ArrayList<BankStatement> extract = new ArrayList<>();
-
     try {
       FileReader filereader = new FileReader(dataFile);
 
@@ -58,16 +68,16 @@ public class Main {
           continue;
         }
         // некоторые элементы колонок в исходном файле имеют вид "ххх,хх", поэтому заменяем запятую на точку
-        String element_6 = row[6].replace(',', '.');
-        String element_7 = row[7].replace(',', '.');
+        String elementIncome = row[INDEX_INCOM].replace(',', '.');
+        String elementExpense = row[INDEX_EXPENSE].replace(',', '.');
 
-        String element_5 = row[5].replaceAll("[^a-zA-Z]",
+        String elementOrganization = row[INDEX_ORGANIZATION].replaceAll("[^a-zA-Z]",
             "");  // преобразуем колонку "описание операции" в колонку "организация"
 
         extract.add(new BankStatement(    //  парсим и прибавляем к extract
-            element_5,
-            Double.parseDouble(element_6),
-            Double.parseDouble(element_7)
+            elementOrganization,
+            Double.parseDouble(elementIncome),
+            Double.parseDouble(elementExpense)
         ));
       }
     } catch (Exception e) {
