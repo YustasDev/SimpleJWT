@@ -1,8 +1,6 @@
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,15 +12,17 @@ import org.jsoup.nodes.Element;
 
 public class Main {
 
-  private static final String IMAGE_DESTINATION_FOLDER = "c:/images";
+  private static final String IMAGE_DESTINATION_FOLDER = "c:/Users/Yustas/java_basics/09_FilesAndNetwork/HtmlParsing/images";
   private static final String URL_NEED = "https://lenta.ru/";
+  private static int i = 1;
 
   public static void main(String[] args) {
 
-    new File(String.valueOf(IMAGE_DESTINATION_FOLDER)).mkdirs();
+    new File(String.valueOf(IMAGE_DESTINATION_FOLDER))
+        .mkdirs();   // создаем директорию определенную заданием
     Document docLenta = null;
-    try {
-           docLenta = Jsoup
+    try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
+      docLenta = Jsoup
           .connect(URL_NEED)
           .userAgent("Mozilla/5.0")
           .timeout(10 * 1000)
@@ -33,54 +33,44 @@ public class Main {
 
     ArrayList<String> listImg = new ArrayList<>();
 
-    for(Element docs : docLenta.select("img"))
+    for (Element docs : docLenta  // в коде страницы
+        .select("img"))  // осуществляем поиск элементов соответствующих требованию
     {
-      listImg.add(docs.attr("abs:src")+"\n");
+      listImg.add(docs.attr("abs:src")); // прибавляем найденные элементы в список
     }
 
-    for (String e : listImg) {
-      downloadImage(e);
+    for (String e : listImg) {       // для всех элементов списка вызываем метод загрузки картинок
+      downloadImage(e);             // в который передаем абсолютный путь к ним, указанный на сайте
+      ++i;
     }
   }
 
   private static void downloadImage(String strImageURL) {
-    //get file name from image path
-    String strImageName =
-        strImageURL.substring( strImageURL.lastIndexOf("/") + 1 );
-
-    System.out.println("Saving: " + strImageName + ", from: " + strImageURL);
+    //получаем имя файла находящегося по указанному пути
+    String preStrImageName =
+        strImageURL.substring(strImageURL.lastIndexOf("/") + 1);
 
     try {
       URL urlImage = new URL(strImageURL);
-      InputStream input = urlImage.openStream();
+      InputStream input = urlImage.openStream();  // открываем поток из указанного URL
 
-      String s = IMAGE_DESTINATION_FOLDER + "/" + strImageName;
-      System.out.println(s);
+      System.out.println("Saving: " + preStrImageName + ", from: " + strImageURL);
 
-      Path path = Path.of(s);
-      Files.copy(input, path, StandardCopyOption.REPLACE_EXISTING);
+      String regexNameFile = "[^a-zA-Z0-9._ -]"; // получаем допустимое имя для записываемого файла
+      String strImageName = preStrImageName.replaceAll(regexNameFile, "");
 
+      String destination = IMAGE_DESTINATION_FOLDER + "/" + strImageName;
+      System.out.println("Into  " + destination);
 
-//
-//      byte[] buffer = new byte[4096];
-//      int n = -1;
-//
-//      OutputStream os =
-//          new FileOutputStream( IMAGE_DESTINATION_FOLDER + "/" + strImageName );
-//
-//      //write bytes to the output stream
-//      while ( (n = in.read(buffer)) != -1 ){
-//        os.write(buffer, 0, n);
-//      }
-//
-//      //close the stream
-//      os.close();
+      Path path = Path.of(destination);
+      Files.copy(input, path,
+          StandardCopyOption.REPLACE_EXISTING);  // записываем файл в заданную папку
 
-      System.out.println("Image saved");
+      System.out
+          .println("Image " + i + " saved");    // печатаем значение счетчика скачанных файлов
 
     } catch (IOException e) {
       e.printStackTrace();
     }
-
   }
 }
