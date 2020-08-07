@@ -29,6 +29,7 @@ public class Main {
           .get();
     } catch (IOException e) {
       e.printStackTrace();
+      System.out.println("Ошибка при парсинге страницы");
     }
 
     ArrayList<String> listImg = new ArrayList<>();
@@ -71,6 +72,7 @@ public class Main {
 
     } catch (IOException e) {
       e.printStackTrace();
+      System.out.println("Ошибка сохранения файла");
     }
   }
 }
