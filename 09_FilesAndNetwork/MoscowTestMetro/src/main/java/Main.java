@@ -48,25 +48,31 @@ public class Main {
 //      element.stream().filter(tr -> !tr.select("div.js-metro-stations").text().isEmpty())
 //          .forEach(tr -> lineNumbers.add(tr.select("div.js-metro-stations").text()));
 
+//      element.stream().filter(tr -> !tr.select("div.js-toggle-depend").isEmpty())
+//          .forEach(tr -> SetNumbers.add(tr.select("div.js-toggle-depend")));
 
-      ArrayList<Elements> SetNumbers = new ArrayList<>();
+      HashSet<Elements> setNumbers = new HashSet<>();
 
-      element.stream().filter(tr -> !tr.select("div.js-toggle-depend[data-line]").isEmpty())
-          .forEach(tr -> SetNumbers.add(tr.select("div.js-toggle-depend[data-line]")));
+      element.stream().filter(tr -> !tr.select("span.js-metro-line").isEmpty())
+          .forEach(tr -> setNumbers.add(tr.select("span.js-metro-line")));
 
-      SetNumbers.stream().forEach(System.out::println);
+      setNumbers.stream().forEach(System.out::println);
+      System.out.println(setNumbers.size());
 
-      ArrayList<String> listNumber = new ArrayList<>();
-      for (Element e : element)
+      ArrayList<String> listNumberN = new ArrayList<>();
+
+      for (Elements e : setNumbers)
       {
-        listNumber.add(e.attr("toggle-slide"));
+       listNumberN.add(e.attr("data-line"));
+       String needN = e.attr("data-line");
+       System.out.println(needN);
       }
-        listNumber.stream().forEach(System.out::println);
+        listNumberN.stream().forEach(System.out::println);
 
 
 //      element.stream().filter(tr -> !tr.select("[data-line]").text().isEmpty())
 //          .forEach(tr -> lineNumbers.add(tr.select("[data-line]").text()));
-      lineNumbers.stream().forEach(System.out::println);
+    //  lineNumbers.stream().forEach(System.out::println);
 
 
 }
