@@ -51,37 +51,61 @@ public class Main {
 //      element.stream().filter(tr -> !tr.select("div.js-toggle-depend").isEmpty())
 //          .forEach(tr -> SetNumbers.add(tr.select("div.js-toggle-depend")));
 
-      HashSet<Elements> setNumbers = new HashSet<>();
 
-      element.stream().filter(tr -> !tr.select("span.js-metro-line").isEmpty())
-          .forEach(tr -> setNumbers.add(tr.select("span.js-metro-line")));
 
-      setNumbers.stream().forEach(System.out::println);
-      System.out.println(setNumbers.size());
+        List<MetroLine> lines = new ArrayList<>();
 
-      ArrayList<String> listNumberN = new ArrayList<>();
+      element.select("span.js-metro-line").forEach(el -> {
+            String number = el.attributes().get("data-line");
+            String name = el.text();
+            lines.add(new MetroLine(number, name));
+          });
 
-      for (Elements e : setNumbers)
-      {
-       listNumberN.add(e.attr("data-line"));
-       String needN = e.attr("data-line");
-       System.out.println(needN);
+
+
+          lines.forEach(System.out::println);
       }
-        listNumberN.stream().forEach(System.out::println);
+
+    }
+
+
+
+
+//
+//
+//      HashSet<Element> setNumbers = new HashSet<>();
+//
+//      element.select("span.js-metro-line").forEach(setNumbers::add);
+//
+//     // element.stream().filter(tr -> !tr.select("span.js-metro-line").isEmpty())
+//     //     .forEach(tr -> setNumbers.add(tr.select("span.js-metro-line")));
+//
+//      setNumbers.stream().forEach(System.out::println);
+//      System.out.println(setNumbers.size());
+//
+//      ArrayList<String> listNumberN = new ArrayList<>();
+//
+//      for (Element e : setNumbers)
+//      {
+//      // listNumberN.add(e.attr("data-line"));
+//       String needN = e.attr("data-line");
+//       System.out.println(needN);
+//      }
+       // listNumberN.stream().forEach(System.out::println);
 
 
 //      element.stream().filter(tr -> !tr.select("[data-line]").text().isEmpty())
 //          .forEach(tr -> lineNumbers.add(tr.select("[data-line]").text()));
     //  lineNumbers.stream().forEach(System.out::println);
 
-
-}
-
-
-
-
-
-      }
+//
+//}
+//
+//
+//
+//
+//
+//      }
 
 
 
