@@ -4,16 +4,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jsoup.select.Elements;
 
 
 public class Main {
 
 
   private static final String URL_NEED = "https://www.moscowmap.ru/metro.html#lines";
-  private static final String JSON_DESTINATION_FOLDER = "c:/Users/Yustas/java_basics/09_FilesAndNetwork/MetroParser/data/metro.json";
 
-
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
 
     Document docMetro = null;
     try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
@@ -29,9 +28,9 @@ public class Main {
       System.exit(13);
     }
 
+    Elements elementDocMetro = docMetro.select("#metrodata"); // работает и без этого, но сокращает время поиска
 
-
-    List<MetroLine> lines = docMetro.select("span.js-metro-line")
+    List<MetroLine> lines = elementDocMetro.select("span.js-metro-line")
         .stream()
         .map(el -> {
           String lineNo = el.attributes().get("data-line");
@@ -44,7 +43,14 @@ public class Main {
         })
         .collect(Collectors.toList());
 
-    lines.forEach(System.out::println);
+
+    ConverterToJSON.toJSON(lines);
+
+
+//
+//
+//    elementDocMetro.forEach(System.out::println);
+//    lines.forEach(System.out::println);
   }
 
 }
