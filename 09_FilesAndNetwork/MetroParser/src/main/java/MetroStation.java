@@ -10,12 +10,13 @@ public class MetroStation {
   @JsonProperty("Name Station")
   private String name;
 
-  public MetroStation() {}
+  public MetroStation() {
+  }
 
-    public MetroStation(String number, String name) {
-      this.number = number;
-      this.name = name;
-    }
+  public MetroStation(String number, String name) {
+    this.number = number;
+    this.name = name;
+  }
 
   public String getNumber() {
     return number;
@@ -33,11 +34,11 @@ public class MetroStation {
     this.name = name;
   }
 
-    @Override
-    public String toString() {
-      return "MetroStation{" +
-          "number='" + number + '\'' +
-          ", name='" + name + '\'' +
-          '}';
-    }
+  @Override
+  public String toString() {
+    return "MetroStation{" +
+        "number='" + number + '\'' +
+        ", name='" + name + '\'' +
+        '}';
   }
+}

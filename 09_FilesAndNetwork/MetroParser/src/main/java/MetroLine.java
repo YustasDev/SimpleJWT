@@ -14,7 +14,8 @@ public class MetroLine {
   private List<MetroStation> stations;
 
 
-  public MetroLine(){}
+  public MetroLine() {
+  }
 
   public MetroLine(String number, String name, List<MetroStation> stations) {
     this.number = number;

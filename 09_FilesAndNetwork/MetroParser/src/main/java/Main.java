@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
@@ -17,10 +16,17 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
 
+    Converter.toJSON(parsingMetroToList(URL_NEED));
+    Converter.countigStations(Converter.jsonReader(JSON_FILE));
+
+  }
+
+  private static List<MetroLine> parsingMetroToList(String oneUrl) {
+
     Document docMetro = null;
     try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
       docMetro = Jsoup
-          .connect(URL_NEED)
+          .connect(oneUrl)
           .maxBodySize(0)
           .userAgent("Mozilla/5.0")
           .timeout(10 * 1000)
@@ -34,6 +40,7 @@ public class Main {
     Elements elementDocMetro = docMetro
         .select("#metrodata"); // работает и без этого, но сокращает время поиска
 
+    // парсим номера и названия линий, номера и названия станций, записываем в список объектов <MetroLine>
     List<MetroLine> lines = elementDocMetro.select("span.js-metro-line")
         .stream()
         .map(el -> {
@@ -46,15 +53,7 @@ public class Main {
           return new MetroLine(lineNo, el.text(), stations);
         })
         .collect(Collectors.toList());
-
-    Converter.toJSON(lines);
-    System.out.println(Converter.jsonReader(JSON_FILE));
-
-  }
-
-  private static void parsingMetroToList(String oneUrl) {
-
-
+    return lines;
   }
 }
 
