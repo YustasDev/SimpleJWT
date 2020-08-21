@@ -31,7 +31,6 @@ public class Converter {
   }
 
   public static void countigStations(List<MetroLine> list) {
-    int i = 0;
     for (MetroLine line : list) {
       System.out.println(
           "На линии метро '" + line.getName() + "':" + " количество станций составляет - " + line
