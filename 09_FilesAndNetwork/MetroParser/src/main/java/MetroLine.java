@@ -3,19 +3,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class MetroLine {
+
+  @JsonProperty("Number Line")
   private String number;
+
+  @JsonProperty("Name Line")
   private String name;
+
+  @JsonProperty("Stations")
   private List<MetroStation> stations;
-
-
-//  @JsonProperty("Number Line")
-//  private String number;
-//
-//  @JsonProperty("Name Line")
-//  private String name;
-//
-//  @JsonProperty("Stations")
-//  private List<MetroStation> stations;
 
 
   public MetroLine(){}

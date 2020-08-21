@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
@@ -11,6 +12,8 @@ public class Main {
 
 
   private static final String URL_NEED = "https://www.moscowmap.ru/metro.html#lines";
+  private static final File JSON_FILE = new File(
+      "c:/Users/Yustas/java_basics/09_FilesAndNetwork/MetroParser/data/metro.json");
 
   public static void main(String[] args) throws Exception {
 
@@ -28,7 +31,8 @@ public class Main {
       System.exit(13);
     }
 
-    Elements elementDocMetro = docMetro.select("#metrodata"); // работает и без этого, но сокращает время поиска
+    Elements elementDocMetro = docMetro
+        .select("#metrodata"); // работает и без этого, но сокращает время поиска
 
     List<MetroLine> lines = elementDocMetro.select("span.js-metro-line")
         .stream()
@@ -43,16 +47,15 @@ public class Main {
         })
         .collect(Collectors.toList());
 
+    Converter.toJSON(lines);
+    System.out.println(Converter.jsonReader(JSON_FILE));
 
-    ConverterToJSON.toJSON(lines);
-
-
-//
-//
-//    elementDocMetro.forEach(System.out::println);
-//    lines.forEach(System.out::println);
   }
 
+  private static void parsingMetroToList(String oneUrl) {
+
+
+  }
 }
 
 

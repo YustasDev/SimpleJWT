@@ -3,18 +3,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MetroStation {
-    private String number;
-    private String name;
 
+  @JsonProperty("Number Station")
+  private String number;
 
-//  @JsonProperty("Number Station")
-//  private String number;
-//
-//  @JsonProperty("Name Station")
-//  private String name;
+  @JsonProperty("Name Station")
+  private String name;
 
   public MetroStation() {}
-
 
     public MetroStation(String number, String name) {
       this.number = number;
