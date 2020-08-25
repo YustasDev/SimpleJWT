@@ -63,7 +63,7 @@ public class Main {
               TreeMap::new,
               Collectors.toList(el.parent().parent().select("[data-line].js-metro-station")
               .stream()
-              .map(stationEl -> new MetroStation(stationEl.child(1).text()));
+              .map(stationEl -> new MetroStation(stationEl.child(1).text())));
 
           return new PrototypeMetro(stations, metroLines);
         })
