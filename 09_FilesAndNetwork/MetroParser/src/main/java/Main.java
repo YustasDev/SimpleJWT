@@ -1,9 +1,13 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
@@ -42,21 +46,26 @@ public class Main {
         .select("#metrodata"); // работает и без этого, но сокращает время поиска
 
     // парсим номера и названия линий, номера и названия станций, записываем в список объектов <MetroLine>
-    List<PrototypeMetro> prototype = elementDocMetro.select("span.js-metro-line")
+    List<PrototypeMetro> prototype = elementDocMetro.select("[data-line]")
         .stream()
         .map(el -> {
-          String lineNo = el.attributes().get("data-line");
 
-          List<MetroLines> metroLines = el.select("span.js-metro-line")
-              .stream().map(ml -> new MetroLines(ml.attributes().get("data-line"), ml.text()))
+          List<MetroStation> metroStationsList = el.select(".js-metro-stations")
+              .stream().map(stationEl -> new MetroStation(stationEl.child(1).text())).collect(Collectors.toList());
+
+          List<MetroLine> metroLines = el.select(".js-metro-line")
+              .stream().map(ml -> new MetroLine(ml.attributes().get("data-line"), ml.text()))
               .collect(Collectors.toList());
 
-          List<MetroStation> stations = el.parent().parent().select(
-              "div[data-depend-set=lines-" + lineNo
-                  + "]>div.js-metro-stations.t-metrostation-list-table>p>a")
-              .stream().map(stationEl -> new MetroStation(stationEl.child(0).text(),
-                  stationEl.child(1).text())).collect(Collectors.toList());
-          return new PrototypeMetro(lineNo, stations, metroLines);
+          Map<String, List<MetroStation>> stations = el.select("  ")
+              .stream().collect(Collectors.groupingBy(el.attributes().get("data-line"),
+                  TreeMap::new,
+                  );
+
+     
+
+
+          return new PrototypeMetro();
         })
         .collect(Collectors.toList());
     return prototype;
@@ -65,40 +74,40 @@ public class Main {
 
 
 
-  private static List<MetroLine> parsingMetroToList(String oneUrl) {
-
-    Document docMetro = null;
-    try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
-      docMetro = Jsoup
-          .connect(oneUrl)
-          .maxBodySize(0)
-          .userAgent("Mozilla/5.0")
-          .timeout(10 * 1000)
-          .get();
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.out.println("Ошибка при парсинге страницы");
-      System.exit(13);
-    }
-
-    Elements elementDocMetro = docMetro
-        .select("#metrodata"); // работает и без этого, но сокращает время поиска
-
-    // парсим номера и названия линий, номера и названия станций, записываем в список объектов <MetroLine>
-    List<MetroLine> lines = elementDocMetro.select("span.js-metro-line")
-        .stream()
-        .map(el -> {
-          String lineNo = el.attributes().get("data-line");
-          List<MetroStation> stations = el.parent().parent().select(
-              "div[data-depend-set=lines-" + lineNo
-                  + "]>div.js-metro-stations.t-metrostation-list-table>p>a")
-              .stream().map(stationEl -> new MetroStation(stationEl.child(0).text(),
-                  stationEl.child(1).text())).collect(Collectors.toList());
-          return new MetroLine(lineNo, el.text(), stations);
-        })
-        .collect(Collectors.toList());
-    return lines;
-  }
+//  private static List<MetroLine> parsingMetroToList(String oneUrl) {
+//
+//    Document docMetro = null;
+//    try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
+//      docMetro = Jsoup
+//          .connect(oneUrl)
+//          .maxBodySize(0)
+//          .userAgent("Mozilla/5.0")
+//          .timeout(10 * 1000)
+//          .get();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//      System.out.println("Ошибка при парсинге страницы");
+//      System.exit(13);
+//    }
+//
+//    Elements elementDocMetro = docMetro
+//        .select("#metrodata"); // работает и без этого, но сокращает время поиска
+//
+//    // парсим номера и названия линий, номера и названия станций, записываем в список объектов <MetroLine>
+//    List<MetroLine> lines = elementDocMetro.select("span.js-metro-line")
+//        .stream()
+//        .map(el -> {
+//          String lineNo = el.attributes().get("data-line");
+//          List<MetroStation> stations = el.parent().parent().select(
+//              "div[data-depend-set=lines-" + lineNo
+//                  + "]>div.js-metro-stations.t-metrostation-list-table>p>a")
+//              .stream().map(stationEl -> new MetroStation(stationEl.child(0).text(),
+//                  stationEl.child(1).text())).collect(Collectors.toList());
+//          return new MetroLine(lineNo, el.text(), stations);
+//        })
+//        .collect(Collectors.toList());
+//    return lines;
+//  }
 }
 
 

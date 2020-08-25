@@ -10,17 +10,13 @@ public class MetroLine {
   @JsonProperty("Name Line")
   private String name;
 
-  @JsonProperty("Stations")
-  private List<MetroStation> stations;
-
 
   public MetroLine() {
   }
 
-  public MetroLine(String number, String name, List<MetroStation> stations) {
+  public MetroLine(String number, String name) {
     this.number = number;
     this.name = name;
-    this.stations = stations;
   }
 
   public String getNumber() {
@@ -39,21 +35,11 @@ public class MetroLine {
     this.name = name;
   }
 
-  public List<MetroStation> getStations() {
-    return stations;
-  }
-
-  public void setStations(List<MetroStation> stations) {
-    this.stations = stations;
-  }
-
-
   @Override
   public String toString() {
     return "MetroLine{" +
         "number='" + number + '\'' +
         ", name='" + name + '\'' +
-        ", stations='" + stations + '\'' +
         '}';
   }
 }

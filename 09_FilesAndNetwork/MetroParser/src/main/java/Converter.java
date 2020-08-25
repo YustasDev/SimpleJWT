@@ -38,11 +38,11 @@ public class Converter {
     return metroLineList;
   }
 
-  public static void countingStations(List<MetroLine> list) {
-    for (MetroLine line : list) {
-      System.out.println(
-          "На линии метро '" + line.getName() + "':" + " количество станций составляет - " + line
-              .getStations().size() + "\n");
+//  public static void countingStations(List<MetroLine> list) {
+//    for (MetroLine line : list) {
+//      System.out.println(
+//          "На линии метро '" + line.getName() + "':" + " количество станций составляет - " + line
+//              .getStations().size() + "\n");
     }
-  }
-}
+//  }
+//}
