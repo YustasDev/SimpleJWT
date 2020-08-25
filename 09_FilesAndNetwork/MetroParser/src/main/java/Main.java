@@ -46,26 +46,26 @@ public class Main {
         .select("#metrodata"); // работает и без этого, но сокращает время поиска
 
     // парсим номера и названия линий, номера и названия станций, записываем в список объектов <MetroLine>
-    List<PrototypeMetro> prototype = elementDocMetro.select("[data-line]")
+    List<PrototypeMetro> prototype = elementDocMetro.select("span.js-metro-line")
         .stream()
         .map(el -> {
 
-          List<MetroStation> metroStationsList = el.select(".js-metro-stations")
-              .stream().map(stationEl -> new MetroStation(stationEl.child(1).text())).collect(Collectors.toList());
-
-          List<MetroLine> metroLines = el.select(".js-metro-line")
+//          List<MetroStation> metroStationsList = el.select(".js-metro-stations")
+//              .stream().map(stationEl -> new MetroStation(stationEl.child(1).text())).collect(Collectors.toList());
+//
+          List<MetroLine> metroLines = el.select("span.js-metro-line")
               .stream().map(ml -> new MetroLine(ml.attributes().get("data-line"), ml.text()))
               .collect(Collectors.toList());
 
-          Map<String, List<MetroStation>> stations = el.select("  ")
+          Map<String, List<MetroStation>> stations = el
+              .select("span.js-metro-line")
               .stream().collect(Collectors.groupingBy(el.attributes().get("data-line"),
-                  TreeMap::new,
-                  );
+              TreeMap::new,
+              Collectors.toList(el.parent().parent().select("[data-line].js-metro-station")
+              .stream()
+              .map(stationEl -> new MetroStation(stationEl.child(1).text()));
 
-     
-
-
-          return new PrototypeMetro();
+          return new PrototypeMetro(stations, metroLines);
         })
         .collect(Collectors.toList());
     return prototype;
