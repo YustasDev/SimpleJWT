@@ -20,13 +20,13 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
 
-    //Converter.toJSON(parsingMetroToList(URL_NEED));
-    Converter.toJSON(parsingMetroToPrototype(URL_NEED));
+    Converter.fromMetroLineAndStationToJSON(parsingMetroLineAndStations(URL_NEED));
+   // Converter.toJSON(parsingMetroToPrototype(URL_NEED));
     //Converter.countingStations(Converter.jsonReader(JSON_FILE));
-
+    //System.out.println(parsingMetroLineAndStations(URL_NEED));
   }
 
-  private static List<PrototypeMetro> parsingMetroToPrototype(String oneUrl) {
+  private static List<MetroLineAndStations> parsingMetroLineAndStations(String oneUrl) {
 
     Document docMetro = null;
     try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
@@ -45,31 +45,63 @@ public class Main {
     Elements elementDocMetro = docMetro
         .select("#metrodata"); // работает и без этого, но сокращает время поиска
 
-    // парсим номера и названия линий, номера и названия станций, записываем в список объектов <MetroLine>
-    List<PrototypeMetro> prototype = elementDocMetro.select("span.js-metro-line")
+    List<MetroLineAndStations> lines = elementDocMetro.select("span.js-metro-line")
         .stream()
         .map(el -> {
+          String lineNo = el.attributes().get("data-line");
 
-//          List<MetroStation> metroStationsList = el.select(".js-metro-stations")
-//              .stream().map(stationEl -> new MetroStation(stationEl.child(1).text())).collect(Collectors.toList());
-//
-          List<MetroLine> metroLines = el.select("span.js-metro-line")
-              .stream().map(ml -> new MetroLine(ml.attributes().get("data-line"), ml.text()))
-              .collect(Collectors.toList());
-
-          Map<String, List<MetroStation>> stations = el
-              .select("span.js-metro-line")
-              .stream().collect(Collectors.groupingBy(el.attributes().get("data-line"),
-              TreeMap::new,
-              Collectors.toList(el.parent().parent().select("[data-line].js-metro-station")
-              .stream()
-              .map(stationEl -> new MetroStation(stationEl.child(1).text())));
-
-          return new PrototypeMetro(stations, metroLines);
+          List<MetroStation> stations = el.parent().parent().select(
+              "div[data-depend-set=lines-" + lineNo
+                  + "]>div.js-metro-stations.t-metrostation-list-table>p>a")
+              .stream().map(stationEl -> new MetroStation(stationEl.child(1).text())).collect(Collectors.toList());
+          return new MetroLineAndStations(lineNo, el.text(), stations);
         })
         .collect(Collectors.toList());
-    return prototype;
+    return lines;
+
+    
   }
+
+
+//  private static List<PrototypeMetro> parsingMetroToPrototype(String oneUrl) {
+//
+//    Document docMetro = null;
+//    try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
+//      docMetro = Jsoup
+//          .connect(oneUrl)
+//          .maxBodySize(0)
+//          .userAgent("Mozilla/5.0")
+//          .timeout(10 * 1000)
+//          .get();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//      System.out.println("Ошибка при парсинге страницы");
+//      System.exit(13);
+//    }
+//
+//        List<PrototypeMetro> prototype = docMetro.select("[data-line]")
+//        .stream()
+//        .map(el -> {
+//
+////          List<MetroStation> metroStationsList = el.select(".js-metro-stations")
+////              .stream().map(stationEl -> new MetroStation(stationEl.child(1).text())).collect(Collectors.toList());
+////
+//          List<MetroLine> metroLines = el.select(".js-metro-line")
+//              .stream().map(ml -> new MetroLine(ml.attributes().get("data-line"), ml.text()))
+//              .collect(Collectors.toList());
+//
+//          List<MetroStation> list = new ArrayList<>();
+//          for (Element stationEl : el.select(".js-metro-station")) {
+//            MetroStation metroStation = new MetroStation(stationEl.child(1).text());
+//            list.add(metroStation);
+//          }
+//          Map<String, List<MetroStation>> stations =
+//
+//          return new PrototypeMetro(stations, metroLines);
+//        })
+//        .collect(Collectors.toList());
+//    return prototype;
+ // }
 
 
 

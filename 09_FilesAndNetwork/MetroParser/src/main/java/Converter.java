@@ -11,7 +11,7 @@ public class Converter {
   private static String baseFile = "c:/Users/Yustas/java_basics/09_FilesAndNetwork/MetroParser/data/metro.json";
 
   // используем Jackson Framework
-  public static void toJSON(List <PrototypeMetro> list) throws Exception {   // преобразуем из списка объектов в JSON
+  public static void fromPrototypeMetroToJSON(List <PrototypeMetro> list) throws Exception {   // преобразуем из списка объектов в JSON
     ObjectMapper mapper = new ObjectMapper();
     mapper.writeValue(new File(baseFile), list);
     System.out.println("json created!");
@@ -19,11 +19,11 @@ public class Converter {
 
 
 
-//  public static void toJSON(List <MetroLine> list) throws Exception {   // преобразуем из списка объектов в JSON
-//    ObjectMapper mapper = new ObjectMapper();
-//    mapper.writeValue(new File(baseFile), list);
-//    System.out.println("json created!");
-//  }
+  public static void fromMetroLineAndStationToJSON(List <MetroLineAndStations> list) throws Exception {   // преобразуем из списка объектов в JSON
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.writeValue(new File(baseFile), list);
+    System.out.println("json created!");
+  }
 
   public static List<MetroLine> jsonReader(File output)
       throws Exception {  // читаем файл и переводим в список
