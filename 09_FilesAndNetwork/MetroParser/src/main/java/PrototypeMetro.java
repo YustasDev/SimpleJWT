@@ -43,7 +43,7 @@ public class PrototypeMetro {
   public String toString() {
     return "MetroLine{" +
         "line = '" + lines + '\'' +
-        ", stations='" + stations + '\'' +
+        ", stations = '" + stations + '\'' +
         '}';
   }
 }

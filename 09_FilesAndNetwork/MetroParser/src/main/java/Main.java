@@ -1,13 +1,12 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
@@ -45,21 +44,38 @@ public class Main {
     Elements elementDocMetro = docMetro
         .select("#metrodata"); // работает и без этого, но сокращает время поиска
 
-    List<MetroLineAndStations> lines = elementDocMetro.select("span.js-metro-line")
+    List<MetroLineAndStations> linesAndStations = elementDocMetro.select("span.js-metro-line")
         .stream()
         .map(el -> {
           String lineNo = el.attributes().get("data-line");
 
-          List<MetroStation> stations = el.parent().parent().select(
+          List<MetroStation> onlyStations = el.parent().parent().select(
               "div[data-depend-set=lines-" + lineNo
                   + "]>div.js-metro-stations.t-metrostation-list-table>p>a")
               .stream().map(stationEl -> new MetroStation(stationEl.child(1).text())).collect(Collectors.toList());
-          return new MetroLineAndStations(lineNo, el.text(), stations);
+
+          return new MetroLineAndStations(lineNo, el.text(), onlyStations);
+          //return new PrototypeMetro()
         })
         .collect(Collectors.toList());
-    return lines;
 
-    
+    return linesAndStations;
+  }
+
+
+
+  private static void formingMap(String numberLine, List<String> enumerationStations) {
+    Map<String, List<MetroStation>> stations = new HashMap<>();
+    for (MetroLineAndStations metroLineAndStations : parsingMetroLineAndStations(URL_NEED)) {
+      stations.put(metroLineAndStations.getNumber(), metroLineAndStations.getStations());
+    }
+
+    Map<String, List<MetroStation>> stationsStream = parsingMetroLineAndStations(URL_NEED).stream()
+        .collect(Collectors.groupingBy(MetroLineAndStations::getNumber, TreeMap::new,
+            Collectors.(MetroLineAndStations::getStations)));
+
+
+
   }
 
 
