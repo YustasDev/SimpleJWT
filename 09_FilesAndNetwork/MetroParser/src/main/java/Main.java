@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import org.jsoup.Jsoup;
@@ -20,6 +19,7 @@ public class Main {
   public static void main(String[] args) throws Exception {
 
     Converter.fromMetroLineAndStationToJSON(parsingMetroLineAndStations(URL_NEED));
+    System.out.println(formingMap(parsingMetroLineAndStations(URL_NEED)));
    // Converter.toJSON(parsingMetroToPrototype(URL_NEED));
     //Converter.countingStations(Converter.jsonReader(JSON_FILE));
     //System.out.println(parsingMetroLineAndStations(URL_NEED));
@@ -64,19 +64,47 @@ public class Main {
 
 
 
-  private static void formingMap(String numberLine, List<String> enumerationStations) {
-    Map<String, List<MetroStation>> stations = new HashMap<>();
-    for (MetroLineAndStations metroLineAndStations : parsingMetroLineAndStations(URL_NEED)) {
-      stations.put(metroLineAndStations.getNumber(), metroLineAndStations.getStations());
-    }
+  private static TreeMap<String, List<MetroStation>> formingMap(List<MetroLineAndStations> lmlas) {
+//    Map<String, List<MetroStation>> stations = new HashMap<>();
+//    for (MetroLineAndStations metroLineAndStations : parsingMetroLineAndStations(URL_NEED)) {
+//      stations.put(metroLineAndStations.getNumber(), metroLineAndStations.getStations());
+//    }
 
-    Map<String, List<MetroStation>> stationsStream = parsingMetroLineAndStations(URL_NEED).stream()
-        .collect(Collectors.groupingBy(MetroLineAndStations::getNumber, TreeMap::new,
-            Collectors.(MetroLineAndStations::getStations)));
+//    Map<String, List<MetroStation>> stationsStream = new TreeMap<>();
+//    for (MetroLineAndStations metroLineAndStations : parsingMetroLineAndStations(URL_NEED)) {
+//      List<MetroStation> metroStations = metroLineAndStations.getStations();
+//      stationsStream.computeIfAbsent(metroLineAndStations.getNumber(), k -> new ArrayList<>())
+//          .add((MetroStation) metroStations);
+//    }
 
+    Map<String, List<MetroStation>> stationsStream1 = parsingMetroLineAndStations(URL_NEED).stream()
+        .collect(Collectors.toMap(MetroLineAndStations::getNumber, MetroLineAndStations::getStations));
+    return new TreeMap<>(stationsStream1);
 
+   // System.out.println("stations= " + stations);
+   // System.out.println("stationsStream= " + stationsStream);
+    //System.out.println("stationsStream1= " + stationsStream1);
+
+//    Map<String, List<MetroStation>> stationsStream2 = parsingMetroLineAndStations(URL_NEED).stream()
+//        .collect(Collectors.groupingBy(MetroLineAndStations::getNumber, TreeMap::new,
+//          Collectors.flatMapping(mals -> {
+//            List <MetroStation> metroStationList = mals.getStations();
+//
+//          })));
 
   }
+
+
+//  private static void printMap (Map<String, List<MetroStation>> needMap) {
+//
+//    System.out.println(
+//    needMap.entrySet()
+//        .stream()
+//        .sorted(Map.Entry.comparingByValue(Comparator.<T>reverseOrder()))
+//        .forEach(System.out::println);
+//  }
+
+
 
 
 //  private static List<PrototypeMetro> parsingMetroToPrototype(String oneUrl) {
