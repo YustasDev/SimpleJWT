@@ -17,8 +17,6 @@ public class Converter {
     System.out.println("json created!");
   }
 
-
-
   public static void fromMetroLineAndStationToJSON(List <MetroLineAndStations> list) throws Exception {   // преобразуем из списка объектов в JSON
     ObjectMapper mapper = new ObjectMapper();
     mapper.writeValue(new File(baseFile), list);
