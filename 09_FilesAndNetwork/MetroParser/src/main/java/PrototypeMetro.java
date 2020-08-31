@@ -9,24 +9,24 @@ import java.util.TreeMap;
 public class PrototypeMetro {
 
   @JsonProperty("stations")
-  public Map<String, List<MetroStation>> stations = new TreeMap<>();
+  public Map<String, List<String>> stations;
 
   @JsonProperty("lines")
-  public List<MetroLine> lines = new ArrayList<>();
+  public List<MetroLine> lines;
 
   public PrototypeMetro() {
   }
 
-  public PrototypeMetro(Map <String, List<MetroStation>> stations, List<MetroLine> lines) {
+  public PrototypeMetro(Map <String, List<String>> stations, List<MetroLine> lines) {
     this.stations = stations;
     this.lines = lines;
   }
 
-  public Map<String, List<MetroStation>> getStations() {
+  public Map<String, List<String>> getStations() {
     return stations;
   }
 
-  public void setStations(Map<String, List<MetroStation>> stations) {
+  public void setStations(Map<String, List<String>> stations) {
     this.stations = stations;
   }
 
@@ -37,7 +37,6 @@ public class PrototypeMetro {
   public void setLines(List<MetroLine> lines) {
     this.lines = lines;
   }
-
 
   @Override
   public String toString() {
