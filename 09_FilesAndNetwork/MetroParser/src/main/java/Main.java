@@ -79,16 +79,14 @@ public class Main {
     Set<List<Station>> connections = new LinkedHashSet<>();
     for (MetroLine line : lines) {
       List<Station> transitionStations = new ArrayList<>();
-      metrodata.select("div.js-metro-stations[data-line='%s'] span.name").stream()
+      metrodata.select("div.js-metro-stations p span.name").stream()
+          .map(st -> st.select(".js-metro-stations span.t-icon-metroln"))
 
-          .map(st -> st.select("span.t-icon-metroln"))
-          .map(e -> new Connections(line.getNumber(), e.attr("title"))).forEach(title -> {
-        transitionStations.add(title);
-        System.out.println(transitionStations);
+        //System.out.println(transitionStations);
       });
     }
     // возвращаем объект по форме соответствующий формату JSON-файла из проекта SPBMetro
-    return new PrototypeMetro(stations, lines, connections);
+    return new PrototypeMetro(stations, connections, lines);
   }
 }
 
