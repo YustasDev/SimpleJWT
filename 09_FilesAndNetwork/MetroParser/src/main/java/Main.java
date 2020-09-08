@@ -1,7 +1,11 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
@@ -12,35 +16,45 @@ import org.jsoup.select.Elements;
 public class Main {
 
   private static final String URL_NEED = "https://www.moscowmap.ru/metro.html#lines";
-  private static final File OUTPUT_FILE = new File(
+  public static final File OUTPUT_FILE = new File(
       "c:/Users/Yustas/java_basics/09_FilesAndNetwork/MetroParser/data/metro.json");
 
   public static void main(String[] args) throws Exception {
-    // парсим страницу «Список станций Московского метрополитена» и
+    // парсим страницу «Список станций Московского метрополитеsaна» и
     //записываем на диск JSON-файл со списком станций по линиям и списком линий
     // по формату JSON-файла из проекта SPBMetro
-    Converter.fromPrototypeMetroToJSON(parsingMetroToPrototype(URL_NEED));
+    for (int i = 0; i<5; i++)
+    try {
+      Converter.fromPrototypeMetroToJSON(parsingMetroToPrototype(URL_NEED));
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("Ошибка при парсинге страницы");
+      Thread.sleep(2000);
+      if (i>= 5) {
+      System.out.println("Критическая ошибка, дальнейшая работа невозможна");
+      return;
+      }
+    }
 
     // Читаем файл и выводим в консоль количество станций на каждой линии
-    Converter.printCountingStations(OUTPUT_FILE);
+//    for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
+//      System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
+//    }
   }
 
 
-  private static PrototypeMetro parsingMetroToPrototype(String oneUrl) {
+  private static PrototypeMetro parsingMetroToPrototype(String oneUrl) throws Exception {
 
     Document docMetro = null;
-    try {           // используя jsoup создаем объект Document содержащий код страницы по указанному URL
+     // используя jsoup создаем объект Document содержащий код страницы по указанному URL
       docMetro = Jsoup
           .connect(oneUrl)
           .maxBodySize(0)
           .userAgent("Mozilla/5.0")
           .timeout(10 * 1000)
           .get();
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.out.println("Ошибка при парсинге страницы");
-      System.exit(13);
-    }
+
     // можно и без этого, но так выборка из кода страницы осуществляется бустрее
     Elements metrodata = docMetro.select("#metrodata");
 
@@ -61,8 +75,20 @@ public class Main {
           .collect(Collectors.toList());
       stations.put(line.getNumber(), lineStations);
     }
+
+    Set<List<Station>> connections = new LinkedHashSet<>();
+    for (MetroLine line : lines) {
+      List<Station> transitionStations = new ArrayList<>();
+      metrodata.select("div.js-metro-stations[data-line='%s'] span.name").stream()
+
+          .map(st -> st.select("span.t-icon-metroln"))
+          .map(e -> new Connections(line.getNumber(), e.attr("title"))).forEach(title -> {
+        transitionStations.add(title);
+        System.out.println(transitionStations);
+      });
+    }
     // возвращаем объект по форме соответствующий формату JSON-файла из проекта SPBMetro
-    return new PrototypeMetro(stations, lines);
+    return new PrototypeMetro(stations, lines, connections);
   }
 }
 

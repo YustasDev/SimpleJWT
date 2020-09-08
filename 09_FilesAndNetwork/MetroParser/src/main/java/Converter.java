@@ -2,17 +2,17 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class Converter {
-
-  private static String baseFile = "c:/Users/Yustas/java_basics/09_FilesAndNetwork/MetroParser/data/metro.json";
 
   // используем Jackson Framework для преобразования из объекта в json.файл
   public static File fromPrototypeMetroToJSON(PrototypeMetro prototypeMetro)
       throws Exception {
     ObjectMapper mapper = new ObjectMapper();
-    File outputFile = new File(baseFile);
+    File outputFile = new File(String.valueOf(Main.OUTPUT_FILE));
     mapper.writeValue(outputFile, prototypeMetro);
     System.out.println("json created!");
     return outputFile;
@@ -24,14 +24,16 @@ public class Converter {
     return mapper.readValue(outputFile, PrototypeMetro.class);
   }
 
-  public static void printCountingStations(File outputFile) throws Exception {
-    // выводит в консоль количество станций на каждой линии
+  public static Map<String, Integer> returnCountingStations(File outputFile) throws Exception {
+
+    Map<String, Integer> countingStations = new LinkedHashMap<>();
     for (MetroLine line : jsonReaderFromFile(outputFile).getLines()) {
-      int stations = jsonReaderFromFile(outputFile).stations
+      Integer stations = jsonReaderFromFile(outputFile).stations
           .getOrDefault(line.getNumber(), Collections.emptyList())
           .size();
-      System.out.printf("Линия '%s' - станций: %d%n", line.getName(), stations);
+      countingStations.put(line.getName(), stations);
     }
+    return countingStations;
   }
 }
 
