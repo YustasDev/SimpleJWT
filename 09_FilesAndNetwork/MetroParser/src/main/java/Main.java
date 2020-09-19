@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
@@ -66,7 +67,8 @@ public class Main {
 
     // получаем Мар (номер линии + станции)
     Map<String, List<String>> stations = new LinkedHashMap<>(); // LinkedHashMap чтобы сохранить порядок вставки
-
+    Set<List<Station>> connections = new LinkedHashSet<>();
+    
     for (MetroLine line : lines) {
       List<String> lineStations = metrodata.select(String
           .format("div.js-metro-stations[data-line='%s'] span.name", line.getNumber()))
@@ -74,19 +76,26 @@ public class Main {
           .map(Element::text)
           .collect(Collectors.toList());
       stations.put(line.getNumber(), lineStations);
+
+      for (String station : lineStations) {
+      List<String> transitionStations = metrodata.select(".js-metro-stations span.t-icon-metroln").stream()
+          .
+
     }
 
-    Set<List<Station>> connections = new LinkedHashSet<>();
-    for (MetroLine line : lines) {
-      List<Station> transitionStations = new ArrayList<>();
-      metrodata.select("div.js-metro-stations p span.name").stream()
-          .map(st -> st.select(".js-metro-stations span.t-icon-metroln"))
 
-        //System.out.println(transitionStations);
-      });
-    }
-    // возвращаем объект по форме соответствующий формату JSON-файла из проекта SPBMetro
-    return new PrototypeMetro(stations, connections, lines);
+
+
+          .mao
+          .map(st -> st.text())
+         .collect(Collectors.toList());
+
+        System.out.println(transitionStations);
+      };
+    return null;
   }
-}
+    // возвращаем объект по форме соответствующий формату JSON-файла из проекта SPBMetro
+    //return new PrototypeMetro(stations, connections, lines);
+  }
+
 
