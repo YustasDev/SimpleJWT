@@ -25,13 +25,14 @@ public class Main {
 
 
   public static void main(String[] args) throws Exception {
-    // парсим страницу «Список станций Московского метрополитеsaна» и
-    //записываем на диск JSON-файл со списком станций по линиям и списком линий
-    // по формату JSON-файла из проекта SPBMetro
+    // парсим страницу «Список станций Московского метрополитеsaна»
+
     int i = 0;
+    PrototypeMetro metro = null;
+    
     while (true) {
       try {
-        Converter.fromPrototypeMetroToJSON(parsingMetroToPrototype(URL_NEED));
+        metro = parsingMetroToPrototype(URL_NEED);
       } catch (Exception e) {
         e.printStackTrace();
         System.out.println("Ошибка при парсинге страницы");
@@ -43,11 +44,25 @@ public class Main {
         }
       }
 
-      // Читаем файл и выводим в консоль количество станций на каждой линии
-      for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
-        System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
+      //записываем на диск JSON-файл со списком станций, линий и переходов
+      // по формату JSON-файла из проекта SPBMetro
+    File fileMM = Converter.fromPrototypeMetroToJSON(metro);
+      if (fileMM.exists()){
+        System.out.println("json created!");
       }
-    }
+      else {
+        System.out.println("Ошибка при создании файла *.json");
+        return;
+      }
+
+
+
+
+    // Читаем файл и выводим в консоль количество станций на каждой линии
+//      for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
+//        System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
+//      }
+  }
   }
 
 

@@ -14,7 +14,6 @@ public class Converter {
     ObjectMapper mapper = new ObjectMapper();
     File outputFile = new File(String.valueOf(Main.OUTPUT_FILE));
     mapper.writeValue(outputFile, prototypeMetro);
-    System.out.println("json created!");
     return outputFile;
   }
 
