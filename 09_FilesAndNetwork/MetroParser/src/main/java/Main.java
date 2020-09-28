@@ -1,13 +1,10 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -45,11 +42,12 @@ public class Main {
           return;
         }
       }
+
+      // Читаем файл и выводим в консоль количество станций на каждой линии
+      for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
+        System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
+      }
     }
-    // Читаем файл и выводим в консоль количество станций на каждой линии
-//    for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
-//      System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
-//    }
   }
 
 
@@ -72,7 +70,7 @@ public class Main {
         .stream()
         .map(e -> new MetroLine(e.attr("data-line"), e.text()))
         .collect(Collectors.toList());
-    // используем LinkedHashMap что бы сохранить порядок вставки
+    // используем LinkedHashMap, чтобы сохранить порядок вставки
     Map<String, List<String>> stations = new LinkedHashMap<>();
     List<Connections> connections = new ArrayList<>();
     //обходим линии, в линиях станции

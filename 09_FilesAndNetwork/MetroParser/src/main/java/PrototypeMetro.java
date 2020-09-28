@@ -15,16 +15,11 @@ public class PrototypeMetro {
   @JsonProperty("lines")
   public List<MetroLine> lines;
 
-//  public PrototypeMetro(Map<String, List<String>> stations, List<MetroLine> lines,
-//      Set<List<Transfers>> connections) {
-//  }
-
   public PrototypeMetro(Map <String, List<String>> stations, List<Connections> connections, List<MetroLine> lines) {
     this.stations = stations;
     this.connections = connections;
     this.lines = lines;
   }
-
 
   public Map<String, List<String>> getStations() {
     return stations;
@@ -34,11 +29,11 @@ public class PrototypeMetro {
     this.stations = stations;
   }
 
-  public List<Connections> getTransfers() {
+  public List<Connections> getConnections() {
     return connections;
   }
 
-  public void setTransfers(List<Connections> connections) {
+  public void setConnections(List<Connections> connections) {
     this.connections = connections;
   }
 
