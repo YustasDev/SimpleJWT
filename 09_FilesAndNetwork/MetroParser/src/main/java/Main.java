@@ -54,14 +54,12 @@ public class Main {
         System.out.println("Ошибка при создании файла *.json");
         return;
       }
-
-
-
-
+      
     // Читаем файл и выводим в консоль количество станций на каждой линии
-//      for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
-//        System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
-//      }
+      for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
+        System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
+      }
+      return;
   }
   }
 

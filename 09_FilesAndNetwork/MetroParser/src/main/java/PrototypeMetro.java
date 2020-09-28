@@ -15,6 +15,8 @@ public class PrototypeMetro {
   @JsonProperty("lines")
   public List<MetroLine> lines;
 
+  public PrototypeMetro() {}
+
   public PrototypeMetro(Map <String, List<String>> stations, List<Connections> connections, List<MetroLine> lines) {
     this.stations = stations;
     this.connections = connections;
