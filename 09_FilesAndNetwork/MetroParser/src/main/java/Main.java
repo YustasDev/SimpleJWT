@@ -70,6 +70,7 @@ public class Main {
             leftLine.getNumber(), leftLine.getName(), left.getTransferStation(), rightLine.getNumber(), rightLine.getName(),
             right.getTransferStation());
       }
+      System.out.println("Всего в Московском метро: " + metroFromFile.connections.size() + " переходов между станциями.");
     return;
   }
   }
@@ -132,9 +133,11 @@ public class Main {
           String transitionToStationName = extractStationFromTitle(title)
               .orElseThrow();
 
+          // отфильтруем пересадки, чтобы одна и таже пересадка не повторялась дважды
           Connections part1 = new Connections(line.getNumber(), stationName);
           Connections part2 = new Connections(transitionToLineNo, transitionToStationName);
-          connections.add(List.of(part1, part2));
+          if (!(connections.contains(part1) || connections.contains(part2))) {
+          connections.add(List.of(part1, part2));}
         }
       }
       stations.put(line.getNumber(), lineStations);
