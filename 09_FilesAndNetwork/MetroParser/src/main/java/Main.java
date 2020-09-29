@@ -1,13 +1,11 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -78,7 +76,7 @@ public class Main {
         .timeout(10 * 1000)
         .get();
 
-    // можно и без этого, но так выборка из кода страницы осуществляется бустрее
+    // можно и без этого, но так выборка из кода страницы осуществляется быстрее
     Elements metrodata = docMetro.select("#metrodata");
 
     // получаем список линий (номер +название)
@@ -86,7 +84,7 @@ public class Main {
         .stream()
         .map(e -> new MetroLine(e.attr("data-line"), e.text()))
         .collect(Collectors.toList());
-    // используем LinkedHashMap, чтобы сохранить порядок вставки
+    // используем LinkedHashMap и LinkedHashSet, чтобы сохранить порядок вставки
     Map<String, List<String>> stations = new LinkedHashMap<>();
     Set<List<Connections>> connections = new LinkedHashSet<>();
 
