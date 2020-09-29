@@ -10,14 +10,14 @@ public class PrototypeMetro {
   public Map<String, List<String>> stations;
 
   @JsonProperty("connections")
-  public List<Connections> connections;
+  public Set<List<Connections>> connections;
 
   @JsonProperty("lines")
   public List<MetroLine> lines;
 
   public PrototypeMetro() {}
 
-  public PrototypeMetro(Map <String, List<String>> stations, List<Connections> connections, List<MetroLine> lines) {
+  public PrototypeMetro(Map <String, List<String>> stations, Set<List<Connections>> connections, List<MetroLine> lines) {
     this.stations = stations;
     this.connections = connections;
     this.lines = lines;
@@ -31,11 +31,11 @@ public class PrototypeMetro {
     this.stations = stations;
   }
 
-  public List<Connections> getConnections() {
+  public Set<List<Connections>> getConnections() {
     return connections;
   }
 
-  public void setConnections(List<Connections> connections) {
+  public void setConnections(Set <List<Connections>> connections) {
     this.connections = connections;
   }
 

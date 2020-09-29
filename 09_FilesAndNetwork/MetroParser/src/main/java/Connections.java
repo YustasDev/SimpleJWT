@@ -4,60 +4,39 @@ import java.util.Set;
 
 public class Connections {
 
-  private String leftLineNo;
-  private String leftStation;
-  private String rightLineNo;
-  private String rightStation;
+  private String lineNo;
+  private String transferStation;
+
 
   public Connections() {
   }
 
-  public Connections(String leftLineNo, String leftStation, String rightLineNo, String rightStation) {
-    this.leftLineNo = leftLineNo;
-    this.leftStation = leftStation;
-    this.rightLineNo = rightLineNo;
-    this.rightStation = rightStation;
+  public Connections(String lineNo, String transferStation) {
+    this.lineNo = lineNo;
+    this.transferStation = transferStation;
   }
 
-  public String getLeftLineNo() {
-    return leftLineNo;
+  public String getLineNo() {
+    return lineNo;
   }
 
-  public void setLeftLineNo(String leftLineNo) {
-    this.leftLineNo = leftLineNo;
+  public void setLineNo(String lineNo) {
+    this.lineNo = lineNo;
   }
 
-  public String getLeftStation() {
-    return leftStation;
+  public String getTransferStation() {
+    return transferStation;
   }
 
-  public void setLeftStation(String leftStation) {
-    this.leftStation = leftStation;
-  }
-
-  public String getRightLineNo() {
-    return rightLineNo;
-  }
-
-  public void setRightLineNo(String rightLineNo) {
-    this.rightLineNo = rightLineNo;
-  }
-
-  public String getRightStation() {
-    return rightStation;
-  }
-
-  public void setRightStation(String rightStation) {
-    this.rightStation = rightStation;
+  public void setTransferStation(String transferStation) {
+    this.transferStation = transferStation;
   }
 
   @Override
   public String toString() {
     return "Connections{" +
-        "leftLineNo='" + leftLineNo + '\'' +
-        ", leftStation='" + leftStation + '\'' +
-        "rightLineNo='" + rightLineNo + '\'' +
-        ", rightStation='" + rightStation + '\'' +
+        "lineNo='" + lineNo + '\'' +
+        ", transferStation='" + transferStation + '\'' +
         '}';
   }
 }

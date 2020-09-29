@@ -1,10 +1,13 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -54,7 +57,7 @@ public class Main {
         System.out.println("Ошибка при создании файла *.json");
         return;
       }
-      
+
     // Читаем файл и выводим в консоль количество станций на каждой линии
       for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
         System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
@@ -85,7 +88,8 @@ public class Main {
         .collect(Collectors.toList());
     // используем LinkedHashMap, чтобы сохранить порядок вставки
     Map<String, List<String>> stations = new LinkedHashMap<>();
-    List<Connections> connections = new ArrayList<>();
+    Set<List<Connections>> connections = new LinkedHashSet<>();
+
     //обходим линии, в линиях станции
     for (MetroLine line : lines) {
       List<String> lineStations = new ArrayList<>();
@@ -112,9 +116,9 @@ public class Main {
           String transitionToStationName = extractStationFromTitle(title)
               .orElseThrow();
 
-          Connections connectionsPart = new Connections(line.getNumber(), stationName,
-              transitionToLineNo, transitionToStationName);
-          connections.add(connectionsPart);
+          Connections part1 = new Connections(line.getNumber(), stationName);
+          Connections part2 = new Connections(transitionToLineNo, transitionToStationName);
+          connections.add(List.of(part1, part2));
         }
       }
       stations.put(line.getNumber(), lineStations);
@@ -122,7 +126,6 @@ public class Main {
     // возвращаем объект по форме соответствующий формату JSON-файла из проекта SPBMetro
     return new PrototypeMetro(stations, connections, lines);
   }
-
 
   static Optional<String> extractStationFromTitle(String title) {
     Matcher matcher = TITLE_PATTERN.matcher(title);
