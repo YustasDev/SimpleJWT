@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.util.List;
@@ -47,22 +46,41 @@ public class Main {
 
       //записываем на диск JSON-файл со списком станций, линий и переходов
       // по формату JSON-файла из проекта SPBMetro
-    File fileMM = Converter.fromPrototypeMetroToJSON(metro);
-      if (fileMM.exists()){
+      File fileMM = Converter.fromPrototypeMetroToJSON(metro);
+      if (fileMM.exists()) {
         System.out.println("json created!");
-      }
-      else {
+      } else {
         System.out.println("Ошибка при создании файла *.json");
         return;
       }
 
-    // Читаем файл и выводим в консоль количество станций на каждой линии
+      // Читаем файл и выводим в консоль количество станций на каждой линии
       for (Map.Entry entry : Converter.returnCountingStations(OUTPUT_FILE).entrySet()) {
         System.out.println(entry.getKey() + "  содержит: " + entry.getValue() + " станций");
       }
-      return;
+      System.out.println();
+
+      PrototypeMetro metroFromFile = Converter.jsonReaderFromFile(OUTPUT_FILE);
+      for (List<Connections> connection : metroFromFile.connections) {
+        Connections left = connection.get(0);
+        Connections right = connection.get(1);
+        MetroLine leftLine = findLine(metroFromFile, left.getLineNo());
+        MetroLine rightLine = findLine(metroFromFile, right.getLineNo());
+        System.out.printf("Переход c линии %s.'%s' станция '%s' на линию %s.'%s' станцию '%s'%n",
+            leftLine.getNumber(), leftLine.getName(), left.getTransferStation(), rightLine.getNumber(), rightLine.getName(),
+            right.getTransferStation());
+      }
+    return;
   }
   }
+
+  private static MetroLine findLine(PrototypeMetro metro, String lineNo) {
+    return metro.getLines().stream()
+        .filter(l -> l.getNumber().equals(lineNo))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Can't find line - specified lineNo=" + lineNo));
+  }
+
 
 
   private static PrototypeMetro parsingMetroToPrototype(String oneUrl) throws Exception {
