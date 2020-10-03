@@ -39,4 +39,35 @@ public class Connections {
         ", transferStation='" + transferStation + '\'' +
         '}';
   }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+
+    if (!Connections.class.isAssignableFrom(obj.getClass())) {
+      return false;
+    }
+
+    final Connections other = (Connections) obj;
+    if ((this.lineNo == null) ? (other.lineNo != null) : !this.lineNo.equals(other.lineNo)) {
+      return false;
+    }
+
+    if ((this.transferStation == null) ? (other.transferStation != null) : !this.transferStation.equals(other.transferStation)) {
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((lineNo == null) ? 0 : lineNo.hashCode());
+    result = prime * result + ((transferStation == null) ? 0 : transferStation.hashCode());
+    return result;
+  }
 }

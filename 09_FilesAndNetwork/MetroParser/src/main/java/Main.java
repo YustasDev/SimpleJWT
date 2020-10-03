@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -136,8 +137,9 @@ public class Main {
           // отфильтруем пересадки, чтобы одна и таже пересадка не повторялась дважды
           Connections part1 = new Connections(line.getNumber(), stationName);
           Connections part2 = new Connections(transitionToLineNo, transitionToStationName);
-          if (!(connections.contains(part1) || connections.contains(part2))) {
-          connections.add(List.of(part1, part2));}
+          if (!(connections.contains(List.of(part1, part2)) || connections.contains(List.of(part2, part1)))) {
+            connections.add(List.of(part1, part2));
+          }
         }
       }
       stations.put(line.getNumber(), lineStations);
