@@ -135,6 +135,7 @@ public class Main {
               .orElseThrow();
 
           // отфильтруем пересадки, чтобы одна и таже пересадка не повторялась дважды
+          // и уникальные станции пересадок прибавим в коллекцию пересадок
           Connections part1 = new Connections(line.getNumber(), stationName);
           Connections part2 = new Connections(transitionToLineNo, transitionToStationName);
           if (!(connections.contains(List.of(part1, part2)) || connections.contains(List.of(part2, part1)))) {
