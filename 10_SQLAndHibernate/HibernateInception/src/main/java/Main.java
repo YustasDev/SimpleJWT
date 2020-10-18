@@ -1,3 +1,4 @@
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -16,10 +17,16 @@ public class Main {
 
     SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
 
-    
+    Session session = sessionFactory.openSession();
+
+    Course course = session.get(Course.class, 1);
+
+    System.out.println(course.getName());
 
 
 
+
+    sessionFactory.close();
 
   }
 }
