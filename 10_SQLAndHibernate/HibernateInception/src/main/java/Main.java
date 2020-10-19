@@ -29,23 +29,14 @@ public class Main {
 
     Session session1 = sessionFactory.openSession();
 
-    CriteriaBuilder builder = session1.getCriteriaBuilder();
+    String hql = "SELECT studentsCount " + " From " + Course.class.getSimpleName() + " WHERE id = 1";
 
-    CriteriaQuery<Course> query = builder.createQuery(Course.class);
+    Integer countStudents = (Integer) session1.createQuery(hql).getSingleResult();
 
-    Root<Course> root = query.from(Course.class);
+    System.out.println("На курсе:  " + course.getName() + "  обучаются: " + countStudents + " студентов");
 
-    query.select(root).where((builder.equal(root.<Integer>get("studentsCount")
-            ......
-
-
-
-    System.out.println("На курсе:  " + course.getName() + "  обучаются: " + countStudents);
-
-
-
-
+    session.close();
+    session1.close();
     sessionFactory.close();
-
   }
 }
