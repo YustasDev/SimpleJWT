@@ -2,6 +2,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -10,8 +12,9 @@ import javax.persistence.Table;
 @Table(name = "subscriptions")
 public class Subscription {
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  private Student student;
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "id")
+  private Integer studentId;
 
   @Column(name = "course_id")
   private Integer courseId;
@@ -22,18 +25,18 @@ public class Subscription {
   public Subscription() {
   }
 
-  public Subscription(Student student, Integer courseId, Date subscriptionDate) {
-    this.student = student;
+  public Subscription(Integer studentId, Integer courseId, Date subscriptionDate) {
+    this.studentId = studentId;
     this.courseId = courseId;
     this.subscriptionDate = subscriptionDate;
   }
 
-  public Student getStudentId() {
-    return student;
+  public Integer getStudentId() {
+    return studentId;
   }
 
-  public void setStudentId(Student student) {
-    this.student = student;
+  public void setStudentId(Integer student) {
+    this.studentId = studentId;
   }
 
   public Integer getCourseId() {
