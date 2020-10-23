@@ -1,4 +1,6 @@
 import com.mysql.cj.protocol.ColumnDefinition;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -6,6 +8,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
@@ -27,8 +33,8 @@ public class Course {
 
   private String description;
 
-  @Column(name = "teacher_id")
-  private int teacherId;
+  @ManyToOne(cascade = CascadeType.ALL)
+  private Teacher teacher;
 
   @Column(name = "students_count", nullable = true)
   private Integer studentsCount;
@@ -38,17 +44,24 @@ public class Course {
   @Column(name = "price_per_hour")
   private float pricePerHour;
 
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name = "Subscriptions",
+      joinColumns = {@JoinColumn(name = "course_id")},
+      inverseJoinColumns = {@JoinColumn(name = "student_id")}
+  )
+  private List<Student> students;
+
   public Course() {
   }
 
   public Course(int id, String name, int duration, CourseType type, String description,
-      int teacherId, int studentsCount, int price, float pricePerHour) {
+      Teacher teacher, int studentsCount, int price, float pricePerHour) {
     this.id = id;
     this.name = name;
     this.duration = duration;
     this.type = type;
     this.description = description;
-    this.teacherId = teacherId;
+    this.teacher = teacher;
     this.studentsCount = studentsCount;
     this.price = price;
     this.pricePerHour = pricePerHour;
@@ -94,12 +107,12 @@ public class Course {
     this.description = description;
   }
 
-  public int getTeacherId() {
-    return teacherId;
+  public Teacher getTeacher() {
+    return teacher;
   }
 
-  public void setTeacherId(int teacherId) {
-    this.teacherId = teacherId;
+  public void setTeacherId(Teacher teacher) {
+    this.teacher = teacher;
   }
 
   public int getStudentsCount() {
@@ -126,5 +139,12 @@ public class Course {
     this.pricePerHour = pricePerHour;
   }
 
+  public List<Student> getStudents() {
+    return students;
+  }
+
+  public void setStudents(List<Student> students) {
+    this.students = students;
+  }
 
 }
