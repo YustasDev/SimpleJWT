@@ -1,6 +1,9 @@
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,8 +15,8 @@ import javax.persistence.Table;
 public class Student {
 
   @Id
+  @Column(name="id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @OneToMany(mappedBy = "studentId")
   private Integer id;
 
   private String name;
@@ -22,6 +25,9 @@ public class Student {
 
   @Column(name = "registration_date")
   private Date registrationDate;
+
+  @OneToMany (fetch = FetchType.LAZY, mappedBy = "student")
+  private List<Subscription> subscriptionList;
 
   public Student() {
   }
