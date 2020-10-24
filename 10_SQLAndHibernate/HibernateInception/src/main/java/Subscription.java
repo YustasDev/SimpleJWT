@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ public class Subscription {
 
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "id")
-  private Integer studentId;
+  private Student student;
 
   @Column(name = "course_id")
   private Integer courseId;
@@ -25,18 +26,18 @@ public class Subscription {
   public Subscription() {
   }
 
-  public Subscription(Integer studentId, Integer courseId, Date subscriptionDate) {
-    this.studentId = studentId;
+  public Subscription(Student student, Integer courseId, Date subscriptionDate) {
+    this.student = student;
     this.courseId = courseId;
     this.subscriptionDate = subscriptionDate;
   }
 
-  public Integer getStudentId() {
-    return studentId;
+  public Student getStudent() {
+    return student;
   }
 
-  public void setStudentId(Integer student) {
-    this.studentId = studentId;
+  public void setStudent(Student student) {
+    this.student = student;
   }
 
   public Integer getCourseId() {
