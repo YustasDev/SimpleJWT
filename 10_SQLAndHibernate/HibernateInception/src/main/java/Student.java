@@ -9,13 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "students")
 public class Student {
 
   @Id
-  @Column(name="id")
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
@@ -24,9 +26,10 @@ public class Student {
   private int age;
 
   @Column(name = "registration_date")
+  @Temporal(TemporalType.TIMESTAMP)
   private Date registrationDate;
 
-  @OneToMany (fetch = FetchType.LAZY, mappedBy = "student")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
   private List<Subscription> subscriptionList;
 
   public Student() {

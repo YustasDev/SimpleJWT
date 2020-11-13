@@ -1,7 +1,10 @@
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +20,9 @@ public class Teacher {
   private int salary;
 
   private int age;
+
+  @OneToMany(mappedBy = "teacher")
+  private Set<Course> courseSet = new HashSet<>();
 
   public Teacher() {
   }
@@ -61,5 +67,11 @@ public class Teacher {
     this.age = age;
   }
 
+  public Set<Course> getCourseSet() {
+    return courseSet;
+  }
 
+  public void setCourseSet(Set<Course> courseSet) {
+    this.courseSet = courseSet;
+  }
 }

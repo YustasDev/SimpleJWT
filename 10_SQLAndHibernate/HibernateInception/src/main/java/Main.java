@@ -1,4 +1,7 @@
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,17 +32,28 @@ public class Main {
 
     Transaction transaction = session.beginTransaction();
 
-    Course course = session.get(Course.class, 1);
+    Course requiredСourse = session.get(Course.class, 1);
 
-    int countStudents = course.getStudents().size();
-    List<Student> studentsList = course.getStudents();
+    int countStudents = requiredСourse.getSubscriptionList().size();
+    List<Subscription> priorStudentsList = requiredСourse.getSubscriptionList();
 
-    System.out.println(countStudents);
-    for (Student student : studentsList) {
-      System.out.println(student.getName());
+    System.out.println("На курсе: " + requiredСourse.getName());
+
+    System.out.println("Обучаются  " + countStudents + " студентов:");
+
+    for (Subscription student : priorStudentsList) {
+      System.out.println(student.getStudent().getName());
     }
 
-    System.out.println("Преподаватель группы:  " + course.getTeacher().getName());
+    System.out.println("Преподаватель группы:  " + requiredСourse.getTeacher().getName());
+
+    System.out.println("Перечень курсов, которые ведет этот же преподаватель:  ");
+
+    Set<Course> collectionCourses = requiredСourse.getTeacher().getCourseSet();
+
+    Iterator<Course> iterator = collectionCourses.iterator();
+    while (iterator.hasNext())
+      System.out.println(iterator.next().getName());
 
     session.close();
     sessionFactory.close();

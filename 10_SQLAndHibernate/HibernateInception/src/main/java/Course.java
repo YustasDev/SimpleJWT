@@ -1,4 +1,5 @@
 import com.mysql.cj.protocol.ColumnDefinition;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,11 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "Courses")
+@Table(name = "courses")
 public class Course {
 
   @Id
@@ -45,12 +47,8 @@ public class Course {
   @Column(name = "price_per_hour")
   private float pricePerHour;
 
-  @ManyToMany(cascade = CascadeType.ALL)
-  @JoinTable(name = "Subscriptions",
-      joinColumns = {@JoinColumn(name = "course_id")},
-      inverseJoinColumns = {@JoinColumn(name = "student_id")}
-  )
-  private List<Student> students;
+  @OneToMany(mappedBy = "course")
+  private List<Subscription> subscriptionList = new ArrayList<>();
 
   public Course() {
   }
@@ -140,12 +138,11 @@ public class Course {
     this.pricePerHour = pricePerHour;
   }
 
-  public List<Student> getStudents() {
-    return students;
+  public List<Subscription> getSubscriptionList() {
+    return subscriptionList;
   }
 
-  public void setStudents(List<Student> students) {
-    this.students = students;
+  public void setSubscriptionsList(List<Subscription> subscriptionList) {
+    this.subscriptionList = subscriptionList;
   }
-
 }

@@ -8,11 +8,13 @@ import javax.persistence.Table;
 @Table(name = "purchaselist")
 public class Purchaselist {
 
+
+
   @Column(name = "student_name")
-  private String StudentName;
+  private String studentName;
 
   @Column(name = "course_name")
-  private String CourseName;
+  private String courseName;
 
   private int price;
 
@@ -24,26 +26,26 @@ public class Purchaselist {
 
   public Purchaselist(String studentName, String courseName, int price,
       Date subscriptionDate) {
-    StudentName = studentName;
-    CourseName = courseName;
+    this.studentName = studentName;
+    this.courseName = courseName;
     this.price = price;
     this.subscriptionDate = subscriptionDate;
   }
 
   public String getStudentName() {
-    return StudentName;
+    return studentName;
   }
 
   public void setStudentName(String studentName) {
-    StudentName = studentName;
+    this.studentName = studentName;
   }
 
   public String getCourseName() {
-    return CourseName;
+    return courseName;
   }
 
   public void setCourseName(String courseName) {
-    CourseName = courseName;
+    this.courseName = courseName;
   }
 
   public int getPrice() {
