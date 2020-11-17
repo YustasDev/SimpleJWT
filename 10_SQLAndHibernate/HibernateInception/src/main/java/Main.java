@@ -64,6 +64,13 @@ public class Main {
     System.out.println("Обучаются  " + countStudents + " студентов:");
     studentList2.forEach(st -> System.out.println(st.getName()));
 
+    Student studentIdOne = session.get(Student.class, 1);
+    List<Course> coursesOfOneStudent = studentIdOne.getCourses();
+
+    System.out.println("Студент: " + studentIdOne.getName() + "  обучается на следующих курсах:");
+    coursesOfOneStudent.forEach(cs -> System.out.println(cs.getName()));
+
+
     session.close();
     sessionFactory.close();
   }
