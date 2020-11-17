@@ -94,6 +94,12 @@ public class Subscription {
     this.student = student;
     this.course = course;
     this.subscriptionDate = subscriptionDate;
+
+    this.id.courseId = course.getId();
+    this.id.studentId = student.getId();
+
+    course.getSubscriptionList().add(this);
+    student.getSubscriptionList().add(this);
   }
 
   public Id getId() {

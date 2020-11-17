@@ -52,8 +52,17 @@ public class Main {
     Set<Course> collectionCourses = requiredСourse.getTeacher().getCourseSet();
 
     Iterator<Course> iterator = collectionCourses.iterator();
-    while (iterator.hasNext())
+    while (iterator.hasNext()) {
       System.out.println(iterator.next().getName());
+    }
+
+    Course requiredСourse2 = session.get(Course.class, 2);
+    Integer countStudents2 = requiredСourse2.getStudentsCount();
+    List<Student> studentList2 = requiredСourse2.getStudents();
+
+    System.out.println("На курсе: " + requiredСourse2.getName());
+    System.out.println("Обучаются  " + countStudents + " студентов:");
+    studentList2.forEach(st -> System.out.println(st.getName()));
 
     session.close();
     sessionFactory.close();

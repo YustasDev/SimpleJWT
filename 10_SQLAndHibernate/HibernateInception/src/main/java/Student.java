@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -31,6 +32,9 @@ public class Student {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
   private List<Subscription> subscriptionList;
+
+  @ManyToMany(mappedBy = "students")
+  List <Course> courses;
 
   public Student() {
   }
@@ -73,4 +77,22 @@ public class Student {
   public void setRegistrationDate(Date registrationDate) {
     this.registrationDate = registrationDate;
   }
+
+  public List<Subscription> getSubscriptionList() {
+    return subscriptionList;
+  }
+
+  public void setSubscriptionList(List<Subscription> subscriptionList) {
+    this.subscriptionList = subscriptionList;
+  }
+
+  public List<Course> getCourses() {
+    return courses;
+  }
+
+  public void setCourses(List<Course> courses) {
+    this.courses = courses;
+  }
+
+
 }

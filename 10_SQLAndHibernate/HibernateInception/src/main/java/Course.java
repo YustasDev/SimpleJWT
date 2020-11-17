@@ -47,6 +47,13 @@ public class Course {
   @Column(name = "price_per_hour")
   private float pricePerHour;
 
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name = "subscriptions",
+      joinColumns = {@JoinColumn(name = "course_id")},
+      inverseJoinColumns = {@JoinColumn(name = "student_id")})
+  private List<Student> students;
+
+
   @OneToMany(mappedBy = "course")
   private List<Subscription> subscriptionList = new ArrayList<>();
 
@@ -136,6 +143,14 @@ public class Course {
 
   public void setPricePerHour(float pricePerHour) {
     this.pricePerHour = pricePerHour;
+  }
+
+  public List<Student> getStudents() {
+    return students;
+  }
+
+  public void setStudents(List<Student> students) {
+    this.students = students;
   }
 
   public List<Subscription> getSubscriptionList() {
