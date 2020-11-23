@@ -1,23 +1,93 @@
+import com.sun.istack.NotNull;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 @Entity
 @Table(name = "purchaselist")
+@IdClass(Purchaselist.CompositeKey.class)
 public class Purchaselist {
 
+    @Embeddable
+    public static class CompositeKey implements Serializable { // encapsulates composite key
 
-  @Column(name = "student_name")
+      static final long serialVersionUID = 1L;
+
+      @Column(name = "student_name")
+      private String studentName;
+      @Column(name = "corse_name")
+      private String courseName;
+
+      public CompositeKey() {
+      }
+
+      public CompositeKey(String studentName, String courseName) {
+        this.studentName = studentName;
+        this.courseName = courseName;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+        if (this == o) {
+          return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+          return false;
+        }
+        CompositeKey id = (CompositeKey) o;
+        return courseName.equals(id.courseName) &&
+            studentName.equals(id.studentName);
+      }
+
+      @Override
+      public int hashCode() {
+        int result = studentName.hashCode();
+        result = 13 * result + courseName.hashCode();
+        return result;
+      }
+
+      public String getCourseName() {
+        return courseName;
+      }
+
+      public void setCourseName(String courseName) {
+        this.courseName = courseName;
+      }
+
+      public String getStudentName() {
+        return studentName;
+      }
+
+      public void setStudentName(String studentName) {
+        this.studentName = studentName;
+      }
+    }
+
+  @Id
+  @Column(name = "student_name", nullable = false)
   private String studentName;
 
-  @Column(name = "course_name")
+  @Id
+  @Column(name = "ccurse_name", nullable = false)
   private String courseName;
 
   private int price;
 
-  @Column(name = "subscription_date")
+  @Column(name = "subscription_date", updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  @NotNull
   private Date subscriptionDate;
 
   public Purchaselist() {

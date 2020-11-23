@@ -53,9 +53,11 @@ public class Course {
       inverseJoinColumns = {@JoinColumn(name = "student_id")})
   private List<Student> students;
 
-
   @OneToMany(mappedBy = "course")
   private List<Subscription> subscriptionList = new ArrayList<>();
+
+//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+//  private List<Purchaselist> purchaselist1;
 
   public Course() {
   }
@@ -160,4 +162,12 @@ public class Course {
   public void setSubscriptionsList(List<Subscription> subscriptionList) {
     this.subscriptionList = subscriptionList;
   }
+
+//  public List<Purchaselist> getPurchaselist1() {
+//    return purchaselist1;
+//  }
+//
+//  public void setPurchaselist1(List<Purchaselist> purchaselist1) {
+//    this.purchaselist1 = purchaselist1;
+//  }
 }

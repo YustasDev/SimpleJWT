@@ -72,7 +72,7 @@ public class Subscription {
   }
 
   @EmbeddedId
-  protected Id id = new Id();
+  private Id id = new Id();
 
   @ManyToOne
   @JoinColumn(name = "student_id", insertable = false, updatable = false)

@@ -33,6 +33,9 @@ public class Student {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
   private List<Subscription> subscriptionList;
 
+//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
+//  private List<Purchaselist> purchaselist1;
+
   @ManyToMany(mappedBy = "students")
   List <Course> courses;
 
@@ -94,5 +97,11 @@ public class Student {
     this.courses = courses;
   }
 
+//  public List<Purchaselist> getPurchaselist1() {
+//    return purchaselist1;
+//  }
 
+//  public void setPurchaselist1(List<Purchaselist> purchaselist1) {
+//    this.purchaselist1 = purchaselist1;
+//  }
 }
