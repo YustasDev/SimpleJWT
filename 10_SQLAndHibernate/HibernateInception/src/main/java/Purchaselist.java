@@ -27,7 +27,7 @@ public class Purchaselist {
 
       @Column(name = "student_name")
       private String studentName;
-      @Column(name = "corse_name")
+      @Column(name = "course_name")
       private String courseName;
 
       public CompositeKey() {
@@ -76,11 +76,11 @@ public class Purchaselist {
     }
 
   @Id
-  @Column(name = "student_name", nullable = false)
+  @Column(name = "student_name", nullable = false, insertable = false, updatable = false )
   private String studentName;
 
   @Id
-  @Column(name = "ccurse_name", nullable = false)
+  @Column(name = "course_name", nullable = false, insertable = false, updatable = false)
   private String courseName;
 
   private int price;
@@ -132,4 +132,14 @@ public class Purchaselist {
   public void setSubscriptionDate(Date subscriptionDate) {
     this.subscriptionDate = subscriptionDate;
   }
+  @Override
+  public String toString() {
+    return "Purchaselist{" +
+        "studentName='" + studentName + '\'' +
+        ", courseName='" + courseName + '\'' +
+        ", price=" + price +
+        ", subscriptionDate=" + subscriptionDate +
+        '}';
+  }
+
 }

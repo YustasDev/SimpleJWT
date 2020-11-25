@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Query;
@@ -32,44 +33,36 @@ public class Main {
 
     Transaction transaction = session.beginTransaction();
 
-    Course requiredСourse = session.get(Course.class, 1);
+   // =============================================================================================
 
-    int countStudents = requiredСourse.getSubscriptionList().size();
-    List<Subscription> priorStudentsList = requiredСourse.getSubscriptionList();
+    List <Purchaselist> purchaselistAll = session.createQuery("from Purchaselist").getResultList();
+    List <Student> studentlist = session.createQuery("from Student").getResultList();
+    List <Course> courseList = session.createQuery("from Course").getResultList();
+    LinkedPurchaselist linkedPurchaselist = new LinkedPurchaselist();
 
-    System.out.println("На курсе: " + requiredСourse.getName());
-
-    System.out.println("Обучаются  " + countStudents + " студентов:");
-
-    for (Subscription student : priorStudentsList) {
-      System.out.println(student.getStudent().getName());
+    for (Purchaselist purchaselist : purchaselistAll){
+      for (Student student : studentlist) {
+        if (purchaselist.getStudentName().equals(student.getName())) {
+          Integer studentIdForLinkedPurchaselist = student.getId();
+          linkedPurchaselist.setStudentId(studentIdForLinkedPurchaselist);
+          System.out.println(linkedPurchaselist);
+        }
+      }
     }
 
-    System.out.println("Преподаватель группы:  " + requiredСourse.getTeacher().getName());
+    System.out.println("Теперь заполняем второе поле ----------------------------------------------");
 
-    System.out.println("Перечень курсов, которые ведет этот же преподаватель:  ");
-
-    Set<Course> collectionCourses = requiredСourse.getTeacher().getCourseSet();
-
-    Iterator<Course> iterator = collectionCourses.iterator();
-    while (iterator.hasNext()) {
-      System.out.println(iterator.next().getName());
+    for (Purchaselist purchaselist : purchaselistAll){
+      for (Course course : courseList) {
+        if (purchaselist.getCourseName().equals(course.getName())){
+          Integer courseIdForLinkedPurchaselist = course.getId();
+          linkedPurchaselist.setCourseId(courseIdForLinkedPurchaselist);
+          System.out.println(linkedPurchaselist);
+        }
+      }
     }
 
-    Course requiredСourse2 = session.get(Course.class, 2);
-    Integer countStudents2 = requiredСourse2.getStudentsCount();
-    List<Student> studentList2 = requiredСourse2.getStudents();
-
-    System.out.println("На курсе: " + requiredСourse2.getName());
-    System.out.println("Обучаются  " + countStudents + " студентов:");
-    studentList2.forEach(st -> System.out.println(st.getName()));
-
-    Student studentIdOne = session.get(Student.class, 1);
-    List<Course> coursesOfOneStudent = studentIdOne.getCourses();
-
-    System.out.println("Студент: " + studentIdOne.getName() + "  обучается на следующих курсах:");
-    coursesOfOneStudent.forEach(cs -> System.out.println(cs.getName()));
-
+    session.save(linkedPurchaselist);
 
     session.close();
     sessionFactory.close();

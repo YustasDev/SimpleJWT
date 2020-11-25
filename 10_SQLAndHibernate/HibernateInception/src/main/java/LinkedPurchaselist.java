@@ -42,7 +42,9 @@ import javax.persistence.Table;
 
       @Override
       public int hashCode() {
-        return Objects.hash(courseId, studentId);
+        int result = studentId.hashCode();
+        result = 13 * result + courseId.hashCode();
+        return result;
       }
 
       public Integer getCourseId() {
@@ -66,15 +68,16 @@ import javax.persistence.Table;
     private Id id;
 
     @Column(name = "student_id", insertable = false, updatable = false)
-    private Long studentId;
+    private Integer studentId;
+
 
     @Column(name = "course_id", insertable = false, updatable = false)
-    private Long courseId;
+    private Integer courseId;
 
     public LinkedPurchaselist() {
     }
 
-    public LinkedPurchaselist(Id id, Long studentId, Long courseId) {
+    public LinkedPurchaselist(Id id, Integer studentId, Integer courseId) {
       this.id = id;
       this.studentId = studentId;
       this.courseId = courseId;
@@ -88,19 +91,28 @@ import javax.persistence.Table;
       this.id = id;
     }
 
-    public Long getStudentId() {
+    public Integer getStudentId() {
       return studentId;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(Integer studentId) {
       this.studentId = studentId;
     }
 
-    public Long getCourseId() {
+    public Integer getCourseId() {
       return courseId;
     }
 
-    public void setCourseId(Long courseId) {
+    public void setCourseId(Integer courseId) {
       this.courseId = courseId;
+    }
+
+    @Override
+    public String toString() {
+      return "LinkedPurchaselist{" +
+          "id=" + id +
+          ", studentId=" + studentId +
+          ", courseId=" + courseId +
+          '}';
     }
   }

@@ -95,11 +95,11 @@ public class Subscription {
     this.course = course;
     this.subscriptionDate = subscriptionDate;
 
-    this.id.courseId = course.getId();
-    this.id.studentId = student.getId();
+    this.id.courseId = course.getId();  //  установка значения
+    this.id.studentId = student.getId(); // идентификатора
 
-    course.getSubscriptionList().add(this);
-    student.getSubscriptionList().add(this);
+    course.getSubscriptionList().add(this);  // гарантирует ссылочную целостность,
+    student.getSubscriptionList().add(this); // если отношение двунаправленное
   }
 
   public Id getId() {
