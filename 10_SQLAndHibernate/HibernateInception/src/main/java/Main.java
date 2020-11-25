@@ -1,3 +1,4 @@
+import static org.hibernate.id.PersistentIdentifierGenerator.PK;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -33,38 +34,48 @@ public class Main {
 
     Transaction transaction = session.beginTransaction();
 
-   // =============================================================================================
+    // =============================================================================================
 
-    List <Purchaselist> purchaselistAll = session.createQuery("from Purchaselist").getResultList();
-    List <Student> studentlist = session.createQuery("from Student").getResultList();
-    List <Course> courseList = session.createQuery("from Course").getResultList();
-    LinkedPurchaselist linkedPurchaselist = new LinkedPurchaselist();
+    LinkedPurchaselist linkedPurchaselist = null;
+    try {
+      List<Purchaselist> purchaselistAll = session.createQuery("from Purchaselist").getResultList();
+      List<Student> studentlist = session.createQuery("from Student").getResultList();
+      List<Course> courseList = session.createQuery("from Course").getResultList();
+      linkedPurchaselist = new LinkedPurchaselist();
+      Set<LinkedPurchaselist> linkedPurchaselistSet = new LinkedHashSet<>();
 
-    for (Purchaselist purchaselist : purchaselistAll){
-      for (Student student : studentlist) {
-        if (purchaselist.getStudentName().equals(student.getName())) {
-          Integer studentIdForLinkedPurchaselist = student.getId();
-          linkedPurchaselist.setStudentId(studentIdForLinkedPurchaselist);
-          System.out.println(linkedPurchaselist);
+      for (Purchaselist purchaselist : purchaselistAll) {
+        for (Student student : studentlist) {
+          if (purchaselist.getStudentName().equals(student.getName())) {
+            Integer studentIdForLinkedPurchaselist = student.getId();
+            linkedPurchaselist.setStudentId(studentIdForLinkedPurchaselist);
+          }
         }
+        for (Course course : courseList) {
+          if (purchaselist.getCourseName().equals(course.getName())) {
+            Integer courseIdForLinkedPurchaselist = course.getId();
+            linkedPurchaselist.setCourseId(courseIdForLinkedPurchaselist);
+          }
+        }
+        linkedPurchaselistSet.add(linkedPurchaselist);
       }
+
+      Iterator<LinkedPurchaselist> iterator = linkedPurchaselistSet.iterator();
+      System.out.println("Print Set");
+      while (iterator.hasNext()) {
+        System.out.println(iterator.next());
+      }
+
+      transaction.commit();
+
+      session.close();
+      sessionFactory.close();
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      System.out.println("**********************************************************");
+
     }
 
-    System.out.println("Теперь заполняем второе поле ----------------------------------------------");
-
-    for (Purchaselist purchaselist : purchaselistAll){
-      for (Course course : courseList) {
-        if (purchaselist.getCourseName().equals(course.getName())){
-          Integer courseIdForLinkedPurchaselist = course.getId();
-          linkedPurchaselist.setCourseId(courseIdForLinkedPurchaselist);
-          System.out.println(linkedPurchaselist);
-        }
-      }
-    }
-
-    session.save(linkedPurchaselist);
-
-    session.close();
-    sessionFactory.close();
   }
 }
