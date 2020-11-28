@@ -35,15 +35,13 @@ public class Main {
 
     // =============================================================================================
 
-    LinkedPurchaselist linkedPurchaselist = null;
     try {
       List<Purchaselist> purchaselistAll = session.createQuery("from Purchaselist").getResultList();
       List<Student> studentlist = session.createQuery("from Student").getResultList();
       List<Course> courseList = session.createQuery("from Course").getResultList();
-      linkedPurchaselist = new LinkedPurchaselist();
-      Set<LinkedPurchaselist> linkedPurchaselistSet = new LinkedHashSet<>();
 
       for (Purchaselist purchaselist : purchaselistAll) {
+        LinkedPurchaselist linkedPurchaselist = new LinkedPurchaselist();
         LinkedPurchaselist.Id regId = new LinkedPurchaselist.Id();
         for (Student student : studentlist) {
           if (purchaselist.getStudentName().equals(student.getName())) {
@@ -61,14 +59,6 @@ public class Main {
         }
         linkedPurchaselist.setId(regId);
         session.save(linkedPurchaselist);
-
-        linkedPurchaselistSet.add(linkedPurchaselist);
-      }
-
-      Iterator<LinkedPurchaselist> iterator = linkedPurchaselistSet.iterator();
-      System.out.println("Print Set");
-      while (iterator.hasNext()) {
-        System.out.println(iterator.next());
       }
 
       transaction.commit();
@@ -77,8 +67,7 @@ public class Main {
 
     } catch (Exception ex) {
       ex.printStackTrace();
-      System.out.println("**********************************************************");
-
+      System.out.println("It's WRONG!");
     }
   }
 }
