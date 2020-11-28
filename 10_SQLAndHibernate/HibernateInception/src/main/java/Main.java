@@ -1,4 +1,3 @@
-import static org.hibernate.id.PersistentIdentifierGenerator.PK;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -45,18 +44,24 @@ public class Main {
       Set<LinkedPurchaselist> linkedPurchaselistSet = new LinkedHashSet<>();
 
       for (Purchaselist purchaselist : purchaselistAll) {
+        LinkedPurchaselist.Id regId = new LinkedPurchaselist.Id();
         for (Student student : studentlist) {
           if (purchaselist.getStudentName().equals(student.getName())) {
             Integer studentIdForLinkedPurchaselist = student.getId();
+            regId.setStudentId(studentIdForLinkedPurchaselist);
             linkedPurchaselist.setStudentId(studentIdForLinkedPurchaselist);
           }
         }
         for (Course course : courseList) {
           if (purchaselist.getCourseName().equals(course.getName())) {
             Integer courseIdForLinkedPurchaselist = course.getId();
+            regId.setCourseId(courseIdForLinkedPurchaselist);
             linkedPurchaselist.setCourseId(courseIdForLinkedPurchaselist);
           }
         }
+        linkedPurchaselist.setId(regId);
+        session.save(linkedPurchaselist);
+
         linkedPurchaselistSet.add(linkedPurchaselist);
       }
 
@@ -67,7 +72,6 @@ public class Main {
       }
 
       transaction.commit();
-
       session.close();
       sessionFactory.close();
 
@@ -76,6 +80,5 @@ public class Main {
       System.out.println("**********************************************************");
 
     }
-
   }
 }
