@@ -23,7 +23,7 @@ public class Main {
     long start = System.currentTimeMillis();
 
     File[] files = srcDir.listFiles();
-    System.out.println("Общее количество файлов для обработки  :"+ files.length);
+    System.out.println("Общее количество файлов для обработки: "+ files.length);
 
     try {
       for (File file : files) {
@@ -57,6 +57,6 @@ public class Main {
       e.printStackTrace();
       System.err.println("Resizing failed");
     }
-    System.out.println("Duration: " + (System.currentTimeMillis() - start));
+    System.out.println("Duration: " + (System.currentTimeMillis() - start) + "ms");
   }
 }
