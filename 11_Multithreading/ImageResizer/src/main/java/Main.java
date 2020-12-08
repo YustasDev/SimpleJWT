@@ -1,56 +1,62 @@
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import org.imgscalr.Scalr;
 
-public class Main
-{
-    public static void main(String[] args)
-    {
-        String srcFolder = "/users/sortedmap/Desktop/src";
-        String dstFolder = "/users/sortedmap/Desktop/dst";
+public class Main {
 
-        File srcDir = new File(srcFolder);
 
-        long start = System.currentTimeMillis();
+  public static void main(String[] args) {
 
-        File[] files = srcDir.listFiles();
+    String OS = System.getProperty("os.name").toLowerCase();
+    String srcFolder = "c:/JAVA/sourceImages";
+    String dstFolder = "c:/JAVA/destinationImages";
+    int cores = Runtime.getRuntime().availableProcessors();
+    int needWidth = 200;
+    int needHeight = 200;
 
-        try
-        {
-            for(File file : files)
-            {
-                BufferedImage image = ImageIO.read(file);
-                if(image == null) {
-                    continue;
-                }
+    System.out.println("Your operating system is  " + OS);
+    System.out.println("CPU  " + cores + "  cores");
 
-                int newWidth = 300;
-                int newHeight = (int) Math.round(
-                        image.getHeight() / (image.getWidth() / (double) newWidth)
-                );
-                BufferedImage newImage = new BufferedImage(
-                        newWidth, newHeight, BufferedImage.TYPE_INT_RGB
-                );
+    File srcDir = new File(srcFolder);
+    long start = System.currentTimeMillis();
 
-                int widthStep = image.getWidth() / newWidth;
-                int heightStep = image.getHeight() / newHeight;
+    File[] files = srcDir.listFiles();
+    System.out.println("Общее количество файлов для обработки  :"+ files.length);
 
-                for (int x = 0; x < newWidth; x++)
-                {
-                    for (int y = 0; y < newHeight; y++) {
-                        int rgb = image.getRGB(x * widthStep, y * heightStep);
-                        newImage.setRGB(x, y, rgb);
-                    }
-                }
-
-                File newFile = new File(dstFolder + "/" + file.getName());
-                ImageIO.write(newImage, "jpg", newFile);
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
+    try {
+      for (File file : files) {
+        BufferedImage imageToScale = ImageIO.read(file);
+        if (imageToScale == null) {
+          continue;
         }
 
-        System.out.println("Duration: " + (System.currentTimeMillis() - start));
+        int originalWidth = imageToScale.getWidth(null);
+        int originalHeight = imageToScale.getHeight(null);
+
+        if (originalWidth > needWidth) {
+          originalWidth /= 5;
+          if (originalWidth < needWidth) needWidth = originalWidth;
+        }
+
+        if (originalHeight > needHeight) {
+          originalHeight /= 5;
+          if (originalHeight < needHeight)
+            needHeight = originalHeight;
+        }
+
+        BufferedImage scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
+            Scalr.Mode.FIT_EXACT, needWidth, needHeight);
+
+          File newFile = new File(dstFolder + "/" + file.getName());
+                ImageIO.write(scaledImage, "jpg", newFile);
+
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.err.println("Resizing failed");
     }
+    System.out.println("Duration: " + (System.currentTimeMillis() - start));
+  }
 }
