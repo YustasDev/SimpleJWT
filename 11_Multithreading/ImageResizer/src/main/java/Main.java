@@ -47,7 +47,7 @@ public class Main {
         }
 
         BufferedImage scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
-            Scalr.Mode.FIT_EXACT, needWidth, needHeight);
+            Scalr.Mode.AUTOMATIC, needWidth, needHeight);
 
           File newFile = new File(dstFolder + "/" + file.getName());
                 ImageIO.write(scaledImage, "jpg", newFile);
@@ -57,6 +57,6 @@ public class Main {
       e.printStackTrace();
       System.err.println("Resizing failed");
     }
-    System.out.println("Duration: " + (System.currentTimeMillis() - start) + "ms");
+    System.out.println("Duration: " + (System.currentTimeMillis() - start) + " ms");
   }
 }
