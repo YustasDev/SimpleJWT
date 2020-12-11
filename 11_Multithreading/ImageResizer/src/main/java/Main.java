@@ -1,18 +1,19 @@
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.io.File;
-import org.imgscalr.Scalr;
+
 
 public class Main {
 
-
   public static void main(String[] args) {
 
-    String OS = System.getProperty("os.name").toLowerCase(); // получаем информацию об используемой операционной системе
+    String OS = System.getProperty("os.name")
+        .toLowerCase(); // получаем информацию об используемой операционной системе
     String srcFolder = "c:/JAVA/sourceImages";
     String dstFolder = "c:/JAVA/destinationImages";
-    int cores = Runtime.getRuntime().availableProcessors(); // количество используемых ядер процессора(-ов)
+    int cores = Runtime.getRuntime()
+        .availableProcessors(); // количество используемых ядер процессора(-ов)
     int needWidth = 200;
     int needHeight = 200;
 
@@ -23,17 +24,28 @@ public class Main {
     long start = System.currentTimeMillis();
 
     File[] files = srcDir.listFiles();
-    System.out.println("Общее количество файлов для обработки: "+ files.length);
+    int arraySize = files.length;
+    System.out.println("Общее количество файлов для обработки: " + arraySize);
 
-    ImageMultipleThread imageMultipleThread = new ImageMultipleThread(files, dstFolder, needWidth, needHeight);
-    new Thread(imageMultipleThread).start();
+    ExecutorService executorService = Executors.newFixedThreadPool(cores);
 
+    for (int i = 0; i < arraySize; i++) {
+      File file = files[i];
+      final int fileNo = i;
+      ImageMultipleThread imageMultipleThread = new ImageMultipleThread(file, dstFolder, needWidth,
+          needHeight, start);
+      executorService.submit(imageMultipleThread);
+      executorService.submit((Runnable) () -> System.out
+              .printf("thread %s running task #%d%n", Thread.currentThread().getName(), fileNo)
+      );
+    }
+    executorService.shutdown();
 
-//    int divider = files.length/cores;
-//    for (int i = 0; i < divider; i++) {
-//    }
-
-
-    System.out.println("Duration: " + (System.currentTimeMillis() - start) + " ms");
+    try {
+      executorService.awaitTermination(1, TimeUnit.MINUTES);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    System.out.println("The final time " + (System.currentTimeMillis() - start) + " ms");
   }
 }
