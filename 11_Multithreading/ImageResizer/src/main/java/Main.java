@@ -9,10 +9,10 @@ public class Main {
 
   public static void main(String[] args) {
 
-    String OS = System.getProperty("os.name").toLowerCase();
+    String OS = System.getProperty("os.name").toLowerCase(); // получаем информацию об используемой операционной системе
     String srcFolder = "c:/JAVA/sourceImages";
     String dstFolder = "c:/JAVA/destinationImages";
-    int cores = Runtime.getRuntime().availableProcessors();
+    int cores = Runtime.getRuntime().availableProcessors(); // количество используемых ядер процессора(-ов)
     int needWidth = 200;
     int needHeight = 200;
 
@@ -25,38 +25,15 @@ public class Main {
     File[] files = srcDir.listFiles();
     System.out.println("Общее количество файлов для обработки: "+ files.length);
 
-    try {
-      for (File file : files) {
-        BufferedImage imageToScale = ImageIO.read(file);
-        if (imageToScale == null) {
-          continue;
-        }
+    ImageMultipleThread imageMultipleThread = new ImageMultipleThread(files, dstFolder, needWidth, needHeight);
+    new Thread(imageMultipleThread).start();
 
-        int originalWidth = imageToScale.getWidth(null);
-        int originalHeight = imageToScale.getHeight(null);
 
-        if (originalWidth > needWidth) {
-          originalWidth /= 5;
-          if (originalWidth < needWidth) needWidth = originalWidth;
-        }
+//    int divider = files.length/cores;
+//    for (int i = 0; i < divider; i++) {
+//    }
 
-        if (originalHeight > needHeight) {
-          originalHeight /= 5;
-          if (originalHeight < needHeight)
-            needHeight = originalHeight;
-        }
 
-        BufferedImage scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
-            Scalr.Mode.AUTOMATIC, needWidth, needHeight);
-
-          File newFile = new File(dstFolder + "/" + file.getName());
-                ImageIO.write(scaledImage, "jpg", newFile);
-
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("Resizing failed");
-    }
     System.out.println("Duration: " + (System.currentTimeMillis() - start) + " ms");
   }
 }
