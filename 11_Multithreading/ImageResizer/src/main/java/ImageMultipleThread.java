@@ -2,9 +2,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.imgscalr.Scalr;
 
 public class ImageMultipleThread implements Runnable {
+
+  private static final Logger LOGGER = LogManager.getLogger(Main.class);
+  private static final Marker HISTORY_TREADS = MarkerManager.getMarker("HISTORY_TREADS");
 
   private File file;
   private String dstFolder;
@@ -25,36 +32,40 @@ public class ImageMultipleThread implements Runnable {
   public void run() {
 
     try {
-        BufferedImage imageToScale = ImageIO.read(file);
+      BufferedImage imageToScale = ImageIO.read(file);  // читаем файл
 
-        int originalWidth = imageToScale.getWidth(null);
-        int originalHeight = imageToScale.getHeight(null);
+      int originalWidth = imageToScale.getWidth(null);  // получаем ширину
+      int originalHeight = imageToScale.getHeight(null);  // ... и высоту исходного файла
 
-        if (originalWidth > needWidth) {
-          originalWidth /= 5;
-          if (originalWidth < needWidth) {
-            needWidth = originalWidth;
-          }
+     // если ширина и высота исходного файйла больше заданных, уменьшаем эти параметры в 5 раз
+      if (originalWidth > needWidth) {
+        originalWidth /= 5;
+        if (originalWidth < needWidth) {
+          needWidth = originalWidth;
         }
+      }
 
-        if (originalHeight > needHeight) {
-          originalHeight /= 5;
-          if (originalHeight < needHeight) {
-            needHeight = originalHeight;
-          }
+      if (originalHeight > needHeight) {
+        originalHeight /= 5;
+        if (originalHeight < needHeight) {
+          needHeight = originalHeight;
         }
+      }
 
-        BufferedImage scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
-            Scalr.Mode.AUTOMATIC, needWidth, needHeight);
+      // преобразуем файл используя потокобезопасную библиотеку imgscalr-lib
+      BufferedImage scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
+          Scalr.Mode.AUTOMATIC, needWidth, needHeight);
 
-        File newFile = new File(dstFolder + "/" + file.getName());
-        ImageIO.write(scaledImage, "jpg", newFile);
-
+      File newFile = new File(dstFolder + "/" + file.getName());
+      ImageIO.write(scaledImage, "jpg", newFile); // записываем преобразованный файл по указанному пути
 
     } catch (IOException e) {
       e.printStackTrace();
       System.err.println("Resizing failed");
     }
-    System.out.println("Completed in " + (System.currentTimeMillis() - start) + " ms");
+    // записываем в threads.log данные о потоке и времени обработки файла
+    LOGGER.info(HISTORY_TREADS, "Thread {}, running task {}", Thread.currentThread().getName(),
+        file.getName());
+    LOGGER.info(HISTORY_TREADS, "  Completed in {} ms", System.currentTimeMillis() - start);
   }
 }
