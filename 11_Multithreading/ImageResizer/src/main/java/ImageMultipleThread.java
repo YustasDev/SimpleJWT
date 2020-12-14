@@ -10,7 +10,7 @@ import org.imgscalr.Scalr;
 
 public class ImageMultipleThread implements Runnable {
 
-  private static final Logger LOGGER = LogManager.getLogger(Main.class);
+  private static final Logger LOGGER = LogManager.getLogger(ImageMultipleThread.class);
   private static final Marker HISTORY_TREADS = MarkerManager.getMarker("HISTORY_TREADS");
 
   private File file;
