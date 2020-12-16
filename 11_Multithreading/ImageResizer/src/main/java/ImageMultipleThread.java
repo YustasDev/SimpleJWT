@@ -17,27 +17,47 @@ public class ImageMultipleThread implements Runnable {
   private String dstFolder;
   private int needWidth;
   private int needHeight;
-  private long start;
 
-  public ImageMultipleThread(File file, String dstFolder, int needWidth, int needHeight,
-      long start) {
+  public ImageMultipleThread(File file, String dstFolder, int needWidth, int needHeight) {
     this.file = file;
     this.dstFolder = dstFolder;
     this.needWidth = needWidth;
     this.needHeight = needHeight;
-    this.start = start;
   }
 
   @Override
   public void run() {
 
+   long ThreadStart = System.currentTimeMillis();  // определим время начала работы потока
+
+   writeImageFile(imageProcessing()); // запишем преобразованный файл
+
+   // записываем в threads.log данные о потоке и времени обработки файла
+    LOGGER.info(HISTORY_TREADS, "Thread {}, running task {}", Thread.currentThread().getName(),
+        file.getName());
+    LOGGER.info(HISTORY_TREADS, "  Completed in {} ms", System.currentTimeMillis() - ThreadStart);
+  }
+
+  private void writeImageFile(BufferedImage scaledImage)  // метод записи файла
+  {
+    File newFile = new File(dstFolder + "/" + file.getName());
     try {
-      BufferedImage imageToScale = ImageIO.read(file);  // читаем файл
+      ImageIO.write(scaledImage, "jpg", newFile); // записываем преобразованный файл по указанному пути
+    } catch (IOException e) {
+      e.printStackTrace();
+      LOGGER.error("File write error {} ", e);
+    }
+  }
+
+  private BufferedImage imageProcessing() {  // метод преобразования *.jpg
+    BufferedImage scaledImage = null;
+    try {
+      BufferedImage imageToScale = ImageIO.read(file);  // читаем исходный файл
 
       int originalWidth = imageToScale.getWidth(null);  // получаем ширину
       int originalHeight = imageToScale.getHeight(null);  // ... и высоту исходного файла
 
-     // если ширина и высота исходного файйла больше заданных, уменьшаем эти параметры в 5 раз
+      // если ширина и высота исходного файйла больше заданных, уменьшаем эти параметры в 5 раз
       if (originalWidth > needWidth) {
         originalWidth /= 5;
         if (originalWidth < needWidth) {
@@ -51,21 +71,14 @@ public class ImageMultipleThread implements Runnable {
           needHeight = originalHeight;
         }
       }
-
       // преобразуем файл используя потокобезопасную библиотеку imgscalr-lib
-      BufferedImage scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
+      scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
           Scalr.Mode.AUTOMATIC, needWidth, needHeight);
-
-      File newFile = new File(dstFolder + "/" + file.getName());
-      ImageIO.write(scaledImage, "jpg", newFile); // записываем преобразованный файл по указанному пути
 
     } catch (IOException e) {
       e.printStackTrace();
-      System.err.println("Resizing failed");
+      LOGGER.error("Resizing failed {} ", e);
     }
-    // записываем в threads.log данные о потоке и времени обработки файла
-    LOGGER.info(HISTORY_TREADS, "Thread {}, running task {}", Thread.currentThread().getName(),
-        file.getName());
-    LOGGER.info(HISTORY_TREADS, "  Completed in {} ms", System.currentTimeMillis() - start);
+    return scaledImage;  // возвращаем преобразованный файл
   }
 }

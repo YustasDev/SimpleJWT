@@ -24,16 +24,15 @@ public class Main {
     int arraySize = files.length;
     System.out.println("Общее количество файлов для обработки: " + arraySize);
 
-    long start = System.currentTimeMillis();  // определим начало работы по преобразованию изображений
+    long GeneralStart = System.currentTimeMillis();  // определим начало работы по преобразованию изображений
 
     ExecutorService executorService = Executors.newFixedThreadPool(cores); // запустим на исполнение кол-во потоков = cores
 
-    for (int i = 0; i < arraySize; i++) {   // перебираем все файлы в массиве
-      File file = files[i];
-      ImageMultipleThread imageMultipleThread = new ImageMultipleThread(file, dstFolder, needWidth,
-          needHeight, start);
-      executorService.submit(imageMultipleThread); // передаем на исполнение созданный объект с заданными параметрами
+    for (File file : files) {   // перебираем все файлы в массиве
+      executorService.submit(new ImageMultipleThread(file, dstFolder, needWidth,
+          needHeight));  // передаем на исполнение созданный объект с заданными параметрами
     }
+
     // останавливаем все потоки исполнения, находящиеся под управлением экземпляра ExecutorService
     executorService.shutdown();
 
@@ -42,6 +41,6 @@ public class Main {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    System.out.println("The final time " + (System.currentTimeMillis() - start) + " ms");
+    System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
   }
 }
