@@ -13,8 +13,7 @@ public class Main {
     String dstFolder = "c:/JAVA/destinationImages";
     int cores = Runtime.getRuntime()
         .availableProcessors(); // количество используемых ядер процессора(-ов)
-    int needWidth = 200;  // установим max значение ширины изображения
-    int needHeight = 200; // установим max значение высоты изображения
+
 
     System.out.println("Your operating system is  " + OS);
     System.out.println("CPU  " + cores + "  cores");
@@ -28,9 +27,16 @@ public class Main {
 
     ExecutorService executorService = Executors.newFixedThreadPool(cores); // запустим на исполнение кол-во потоков = cores
 
-    for (File file : files) {   // перебираем все файлы в массиве
-      executorService.submit(new ImageMultipleThread(file, dstFolder, needWidth,
-          needHeight));  // передаем на исполнение созданный объект с заданными параметрами
+    try {
+      for (File file : files) {   // перебираем все файлы в массиве
+        executorService.submit(new ImageMultipleThread(file,
+            dstFolder));  // передаем на исполнение созданный объект с заданными параметрами
+      }
+    }
+    catch (FileIsNotImageException e) {
+      e.printStackTrace();
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
 
     // останавливаем все потоки исполнения, находящиеся под управлением экземпляра ExecutorService
