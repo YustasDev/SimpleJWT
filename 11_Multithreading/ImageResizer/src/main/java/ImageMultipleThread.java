@@ -32,27 +32,28 @@ public class ImageMultipleThread implements Runnable {
   @Override
   public void run() {
 
-   final long threadStartTime = System.currentTimeMillis();
+    final long threadStartTime = System.currentTimeMillis();
 
     try {
       writeImageFile(resizeImage(file)); // запишем преобразованный файл
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
-      LOGGER.error("Resizing failed {} ", e);
+      LOGGER.error("File is {} It didn't work out {} ", file.getName(), e);
     }
 
     // записываем в threads.log данные о потоке и времени обработки файла
     LOGGER.info(HISTORY_TREADS, "Thread {}, running task {}", Thread.currentThread().getName(),
         file.getName());
-    LOGGER.info(HISTORY_TREADS, "  Completed in {} ms", System.currentTimeMillis() - threadStartTime);
+    LOGGER
+        .info(HISTORY_TREADS, "  Completed in {} ms", System.currentTimeMillis() - threadStartTime);
   }
 
   private void writeImageFile(BufferedImage scaledImage)  // метод записи файла
   {
     File newFile = new File(dstFolder + "/" + file.getName());
     try {
-      ImageIO.write(scaledImage, "jpg", newFile); // записываем преобразованный файл по указанному пути
+      ImageIO
+          .write(scaledImage, "jpg", newFile); // записываем преобразованный файл по указанному пути
     } catch (IOException e) {
       e.printStackTrace();
       LOGGER.error("File write error {} ", e);
@@ -62,7 +63,7 @@ public class ImageMultipleThread implements Runnable {
   private static BufferedImage resizeImage(File file) throws Exception {
 
     if (isJPG(file)) {
-    try {
+      try {
         BufferedImage imageToScale = ImageIO.read(file);  // читаем исходный файл
 
         int needWidth = 200; // заданное max значение ширины изображения
@@ -88,27 +89,27 @@ public class ImageMultipleThread implements Runnable {
         scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY,
             Scalr.Mode.AUTOMATIC, needWidth, needHeight);
 
-      } catch(IOException e){
+      } catch (IOException e) {
         e.printStackTrace();
         LOGGER.error("Resizing failed {} ", e);
       }
       return scaledImage;  // возвращаем преобразованный файл
-    }
-    else {
-      throw new FileIsNotImageException("It's not an image", file.getName());
+    } else {
+      throw new FileIsNotImageException("It's not an Image", file.getName());
     }
   }
 
 
- //  For JPEG image files begin with FF D8 and end with FF D9
+  // TODO: доработать корректное определение файла изображения
+  //  For JPEG image files begin with FF D8 and end with FF D9
   private static Boolean isJPG(File filename) throws Exception {
-    DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)));
+    DataInputStream ins = new DataInputStream(
+        new BufferedInputStream(new FileInputStream(filename)));
     try {
       if (ins.readInt() == 0xffd8ffe0) {
         return true;
       } else {
         return false;
-
       }
     } finally {
       ins.close();

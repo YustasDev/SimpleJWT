@@ -14,7 +14,6 @@ public class Main {
     int cores = Runtime.getRuntime()
         .availableProcessors(); // количество используемых ядер процессора(-ов)
 
-
     System.out.println("Your operating system is  " + OS);
     System.out.println("CPU  " + cores + "  cores");
 
@@ -23,27 +22,23 @@ public class Main {
     int arraySize = files.length;
     System.out.println("Общее количество файлов для обработки: " + arraySize);
 
-    long GeneralStart = System.currentTimeMillis();  // определим начало работы по преобразованию изображений
+    long GeneralStart = System
+        .currentTimeMillis();  // определим начало работы по преобразованию изображений
 
-    ExecutorService executorService = Executors.newFixedThreadPool(cores); // запустим на исполнение кол-во потоков = cores
+    ExecutorService executorService = Executors
+        .newFixedThreadPool(cores); // запустим на исполнение кол-во потоков = cores
 
-    try {
-      for (File file : files) {   // перебираем все файлы в массиве
-        executorService.submit(new ImageMultipleThread(file,
-            dstFolder));  // передаем на исполнение созданный объект с заданными параметрами
-      }
-    }
-    catch (FileIsNotImageException e) {
-      e.printStackTrace();
-    } catch (Exception ex) {
-      ex.printStackTrace();
+    for (File file : files) {   // перебираем все файлы в массиве
+      executorService.submit(new ImageMultipleThread(file,
+          dstFolder));  // передаем на исполнение созданный объект с заданными параметрами
     }
 
     // останавливаем все потоки исполнения, находящиеся под управлением экземпляра ExecutorService
     executorService.shutdown();
 
     try {
-      executorService.awaitTermination(1, TimeUnit.MINUTES); // см. https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
+      executorService.awaitTermination(1,
+          TimeUnit.MINUTES); // см. https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
