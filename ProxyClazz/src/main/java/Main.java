@@ -2,16 +2,24 @@ import java.lang.reflect.Proxy;
 
 public class Main {
 
-  Person person = new Person();
+  public static void main(String[] args) {
 
-  IPerson personproxy = (IPerson) Proxy.newProxyInstance(Person.class.getClassLoader(),
-      Person.class.getInterfaces(),
-      new NeverSleepingEye(person));
+    Person person = new Person();
 
-	personproxy.setName("Гриша");
-  String h  = personproxy.getName() ;
-	personproxy.rename("Вася");
+    IPerson personproxy = (IPerson) Proxy.newProxyInstance(Person.class.getClassLoader(),
+        Person.class.getInterfaces(),
+        new NeverSleepingEye(person));
 
+    person.setName("Гриша");
+    String h = person.getName();
+    person.rename("Вася");
 
+    System.out.println(h + person);
 
+    personproxy.setName("Гриша");
+    String hh = personproxy.getName();
+    personproxy.rename("Вася");
+
+    System.out.println(hh + personproxy);
+  }
 }
