@@ -1,4 +1,4 @@
-public class Account
+public class Account implements IAccount
 {
     private long money;
     private String accNumber;
@@ -33,7 +33,4 @@ public class Account
             "Остаток на счете составляет - '" + money +
             "'";
     }
-
-
-
 }

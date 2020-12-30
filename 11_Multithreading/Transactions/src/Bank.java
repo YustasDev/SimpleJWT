@@ -1,18 +1,12 @@
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Bank
-{
+public class Bank {
     private ConcurrentHashMap<String, Account> accounts;
     private final Random random = new Random();
 
-    public synchronized boolean isFraud(long amount)
-        throws InterruptedException
-    {
-        Thread.sleep(1000);
-        return random.nextBoolean();
-    }
 
     public ConcurrentHashMap<String, Account> getAccounts() {
         return accounts;
@@ -20,6 +14,30 @@ public class Bank
 
     public void setAccounts(ConcurrentHashMap<String, Account> accounts) {
         this.accounts = accounts;
+    }
+
+    public void bankBuilder () {
+        long money = 1L;
+        Long accNumberLong = 1000000000000000001L;
+        String accNumber = "";
+
+        for (int i = 0; i < 100; i++)
+        {
+            money++;
+            accNumberLong++;
+            accNumber = accNumberLong.toString();
+
+            Account account = new Account(money, accNumber);
+            accounts.put(accNumber, account);
+
+        }
+    }
+
+    public synchronized boolean isFraud()
+        throws InterruptedException
+    {
+        Thread.sleep(1000);
+        return random.nextBoolean();
     }
 
 
@@ -34,7 +52,7 @@ public class Bank
         boolean fraud = false;
         if (amount > 50000) {
             try {
-                fraud = isFraud(amount);
+                fraud = isFraud();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.err.println("Occurred aborting the transaction");
@@ -61,7 +79,15 @@ public class Bank
             currentBank.replace(toAccountNum, toAccount);
         }
         else {
-            // 
+            ConcurrentHashMap<String, Account> currentBank = bank.getAccounts();
+            Account fromAccount = currentBank.get(fromAccountNum);
+            Account toAccount = currentBank.get(toAccountNum);
+            IAccount accountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
+                Account.class.getInterfaces(),
+                new SubstitutionAccount(fromAccount));
+            currentBank.replace(fromAccountNum, (Account) accountProxy);
+            currentBank.replace(toAccountNum, (Account) accountProxy);
+
         }
     }
 
