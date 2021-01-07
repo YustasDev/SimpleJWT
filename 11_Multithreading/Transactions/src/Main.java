@@ -9,12 +9,12 @@ public class Main {
     bank.setAccounts(new ConcurrentHashMap<>());
     bank.bankBuilder();
 
-    ConcurrentHashMap<String, Account> currentBank = bank.getAccounts();
+    ConcurrentHashMap<String, IAccount> currentBank = bank.getAccounts();
 
     for(var pair: currentBank.entrySet())
     {
       String key = pair.getKey();
-      Account value = pair.getValue();
+      IAccount value = pair.getValue();
       System.out.println(key + "  " + value.toString());
     }
 

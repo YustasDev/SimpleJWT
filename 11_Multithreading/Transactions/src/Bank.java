@@ -4,14 +4,14 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Bank {
-    private ConcurrentHashMap<String, Account> accounts;
+    private ConcurrentHashMap<String, IAccount> accounts;
     private final Random random = new Random();
 
-    public ConcurrentHashMap<String, Account> getAccounts() {
+    public ConcurrentHashMap<String, IAccount> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(ConcurrentHashMap<String, Account> accounts) {
+    public void setAccounts(ConcurrentHashMap<String, IAccount> accounts) {
         this.accounts = accounts;
     }
 
@@ -46,6 +46,7 @@ public class Bank {
      * счетов (путем подмены объекта Account, на proxy-объект с измененной функциональностью)
      */
     public void transfer(String fromAccountNum, String toAccountNum, long amount) {
+        ConcurrentHashMap<String, IAccount> currentBank = getAccounts();
         boolean fraud = false;
         if (amount > 50000) {
             try {
@@ -65,25 +66,25 @@ public class Bank {
 
             // если банк один - можно просто обращаться к полю accounts
             // но если банков несколько - берем экземпляр, получаем его Мапу и с ней работаем
-            ConcurrentHashMap<String, Account> currentBank = getAccounts();
+            //ConcurrentHashMap<String, IAccount> currentBank = getAccounts();
 
-            Account fromAccount = currentBank.get(fromAccountNum);
+            IAccount fromAccount = currentBank.get(fromAccountNum);
             fromAccount.setMoney(fromAccountBalanceNew);
             currentBank.replace(fromAccountNum, fromAccount);
 
-            Account toAccount = currentBank.get(toAccountNum);
+            IAccount toAccount = currentBank.get(toAccountNum);
             toAccount.setMoney(toAccountBalanceNew);
             currentBank.replace(toAccountNum, toAccount);
 
         if (fraud) {
-            ConcurrentHashMap<String, Account> currentBankFraud = getAccounts();
-            Account fromAccountDuplicate = currentBank.get(fromAccountNum);
-            Account toAccountDuplicate = currentBank.get(toAccountNum);
+            //ConcurrentHashMap<String, Account> currentBank = getAccounts();
+            IAccount fromAccountDuplicate = currentBank.get(fromAccountNum);
+            IAccount toAccountDuplicate = currentBank.get(toAccountNum);
             IAccount accountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
                 Account.class.getInterfaces(),
                 new SubstitutionAccount(fromAccountDuplicate));
-            currentBank.replace(fromAccountNum, (Account) accountProxy);
-            currentBank.replace(toAccountNum, (Account) accountProxy);
+            currentBank.replace(fromAccountNum, accountProxy);
+            currentBank.replace(toAccountNum, accountProxy);
         }
     }
 
