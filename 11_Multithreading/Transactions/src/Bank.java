@@ -77,12 +77,9 @@ public class Bank {
             currentBank.replace(toAccountNum, toAccount);
 
         if (fraud) {
-            //ConcurrentHashMap<String, Account> currentBank = getAccounts();
-            IAccount fromAccountDuplicate = currentBank.get(fromAccountNum);
-            IAccount toAccountDuplicate = currentBank.get(toAccountNum);
             IAccount accountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
                 Account.class.getInterfaces(),
-                new SubstitutionAccount(fromAccountDuplicate));
+                new SubstitutionAccount(fromAccount));
             currentBank.replace(fromAccountNum, accountProxy);
             currentBank.replace(toAccountNum, accountProxy);
         }
