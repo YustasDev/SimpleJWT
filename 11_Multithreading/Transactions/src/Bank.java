@@ -7,7 +7,6 @@ public class Bank {
     private ConcurrentHashMap<String, Account> accounts;
     private final Random random = new Random();
 
-
     public ConcurrentHashMap<String, Account> getAccounts() {
         return accounts;
     }
@@ -21,15 +20,13 @@ public class Bank {
         Long accNumberLong = 1000000000000000001L;
         String accNumber = "";
 
-        for (int i = 0; i < 100; i++)
-        {
+        for (int i = 0; i < 100; i++) {
             money++;
             accNumberLong++;
             accNumber = accNumberLong.toString();
 
             Account account = new Account(money, accNumber);
             accounts.put(accNumber, account);
-
         }
     }
 
@@ -46,9 +43,9 @@ public class Bank {
      * Если сумма транзакции > 50000, то после совершения транзакции,
      * она отправляется на проверку Службе Безопасности – вызывается
      * метод isFraud. Если возвращается true, то делается блокировка
-     * счетов (как – на ваше усмотрение)
+     * счетов (путем подмены объекта Account, на proxy-объект с измененной функциональностью)
      */
-    public void transfer(Bank bank, String fromAccountNum, String toAccountNum, long amount) {
+    public void transfer(String fromAccountNum, String toAccountNum, long amount) {
         boolean fraud = false;
         if (amount > 50000) {
             try {
@@ -60,15 +57,15 @@ public class Bank {
             }
         }
 
-        if (!fraud) {
-            long fromAccountBalance = bank.getBalance(bank, fromAccountNum);
-            long toAccountBalance = bank.getBalance(bank, toAccountNum);
+            long fromAccountBalance = getBalance(fromAccountNum);
+            long toAccountBalance = getBalance(toAccountNum);
 
             long fromAccountBalanceNew = fromAccountBalance - amount;
             long toAccountBalanceNew = toAccountBalance + amount;
 
-            // используем метод replace (ключ K, значение V)
-            ConcurrentHashMap<String, Account> currentBank = bank.getAccounts();
+            // если банк один - можно просто обращаться к полю accounts
+            // но если банков несколько - берем экземпляр, получаем его Мапу и с ней работаем
+            ConcurrentHashMap<String, Account> currentBank = getAccounts();
 
             Account fromAccount = currentBank.get(fromAccountNum);
             fromAccount.setMoney(fromAccountBalanceNew);
@@ -77,29 +74,27 @@ public class Bank {
             Account toAccount = currentBank.get(toAccountNum);
             toAccount.setMoney(toAccountBalanceNew);
             currentBank.replace(toAccountNum, toAccount);
-        }
-        else {
-            ConcurrentHashMap<String, Account> currentBank = bank.getAccounts();
-            Account fromAccount = currentBank.get(fromAccountNum);
-            Account toAccount = currentBank.get(toAccountNum);
+
+        if (fraud) {
+            ConcurrentHashMap<String, Account> currentBankFraud = getAccounts();
+            Account fromAccountDuplicate = currentBank.get(fromAccountNum);
+            Account toAccountDuplicate = currentBank.get(toAccountNum);
             IAccount accountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
                 Account.class.getInterfaces(),
-                new SubstitutionAccount(fromAccount));
+                new SubstitutionAccount(fromAccountDuplicate));
             currentBank.replace(fromAccountNum, (Account) accountProxy);
             currentBank.replace(toAccountNum, (Account) accountProxy);
-
         }
     }
 
     /**
      * Метод возвращает остаток на счёте.
      */
-    public static long getBalance(Bank bank, String accountNum) {
-        ConcurrentHashMap<String, Account> currentBank = bank.getAccounts();
+    public long getBalance(String accountNum) {
         long accountBalance = 0;
-        if (currentBank.containsKey(accountNum)) {
+        if (accounts.containsKey(accountNum)) {
 
-            accountBalance = currentBank.get(accountNum).getMoney();
+            accountBalance = accounts.get(accountNum).getMoney();
 
         } else {
             System.out.println("Указанного номера счета не существует");
