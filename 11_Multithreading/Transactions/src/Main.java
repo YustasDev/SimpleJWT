@@ -18,16 +18,20 @@ public class Main {
       System.out.println(key + "  " + value.toString());
     }
 
-    bank.transfer("1000000000000000068", "1000000000000000069", 100000);
+    for (int i=0; i<3; i++) {
+      System.out.println("i = " + i);
+      bank.transfer("1000000000000000068", "1000000000000000069", 100000);
 
-    String accountNum68 = "1000000000000000068";
-    long balance68 = bank.getBalance(accountNum68);
-    System.out.println("На счете № " + accountNum68 + " остаток средств составляет '" + balance68 + "'");
+      String accountNum68 = "1000000000000000068";
+      long balance68 = bank.getBalance(accountNum68);
+      System.out.println(
+          "На счете № " + accountNum68 + " остаток средств составляет '" + balance68 + "'");
 
-    String accountNum69 = "1000000000000000069";
-    long balance69 = bank.getBalance(accountNum69);
-    System.out.println("На счете № " + accountNum69 + " остаток средств составляет '" + balance69 + "'");
-
+      String accountNum69 = "1000000000000000069";
+      long balance69 = bank.getBalance(accountNum69);
+      System.out.println(
+          "На счете № " + accountNum69 + " остаток средств составляет '" + balance69 + "'");
+    }
 
 
 

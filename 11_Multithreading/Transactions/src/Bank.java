@@ -46,6 +46,8 @@ public class Bank {
      * счетов (путем подмены объекта Account, на proxy-объект с измененной функциональностью)
      */
     public void transfer(String fromAccountNum, String toAccountNum, long amount) {
+        // если банк один - можно просто обращаться к полю accounts
+        // но если банков несколько - берем экземпляр, получаем его Мапу и с ней работаем
         ConcurrentHashMap<String, IAccount> currentBank = getAccounts();
         boolean fraud = false;
         if (amount > 50000) {
@@ -64,10 +66,6 @@ public class Bank {
             long fromAccountBalanceNew = fromAccountBalance - amount;
             long toAccountBalanceNew = toAccountBalance + amount;
 
-            // если банк один - можно просто обращаться к полю accounts
-            // но если банков несколько - берем экземпляр, получаем его Мапу и с ней работаем
-            //ConcurrentHashMap<String, IAccount> currentBank = getAccounts();
-
             IAccount fromAccount = currentBank.get(fromAccountNum);
             fromAccount.setMoney(fromAccountBalanceNew);
             currentBank.replace(fromAccountNum, fromAccount);
@@ -77,11 +75,16 @@ public class Bank {
             currentBank.replace(toAccountNum, toAccount);
 
         if (fraud) {
-            IAccount accountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
+            IAccount fromAccountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
                 Account.class.getInterfaces(),
                 new SubstitutionAccount(fromAccount));
-            currentBank.replace(fromAccountNum, accountProxy);
-            currentBank.replace(toAccountNum, accountProxy);
+
+            IAccount toAccountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
+                Account.class.getInterfaces(),
+                new SubstitutionAccount(toAccount));
+
+            currentBank.replace(fromAccountNum, fromAccountProxy);
+            currentBank.replace(toAccountNum, toAccountProxy);
         }
     }
 
