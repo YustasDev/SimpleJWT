@@ -2,10 +2,12 @@ import java.lang.reflect.Proxy;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Bank {
     private final ConcurrentMap<String, IAccount> accounts;
     private final Random random = new Random();
+    AtomicInteger countBlock = new AtomicInteger(0);
 
     public Bank() {
         this(new ConcurrentHashMap<>());
@@ -77,6 +79,10 @@ public class Bank {
             }
         }
 
+        if (accounts.containsKey(fromAccountNum) && accounts.containsKey(toAccountNum) &&
+            !Proxy.isProxyClass(accounts.get(fromAccountNum).getClass()) &&
+            !Proxy.isProxyClass(accounts.get(toAccountNum).getClass())) {
+
             long fromAccountBalance = getBalance(fromAccountNum);
             long toAccountBalance = getBalance(toAccountNum);
 
@@ -91,7 +97,17 @@ public class Bank {
             toAccount.setMoney(toAccountBalanceNew);
             currentBank.replace(toAccountNum, toAccount);
 
+            System.out.println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
+                + " суммы в размере " + amount);
+        }
+       else {
+            System.out.println("Операция невозможна - счет заблокирован");
+            System.out.println("Заблокирован трансфер №  " + countBlock.addAndGet(1));
+        }
+
         if (fraud) {
+            IAccount fromAccount = currentBank.get(fromAccountNum);
+            IAccount toAccount = currentBank.get(toAccountNum);
             IAccount fromAccountProxy = (IAccount) Proxy.newProxyInstance(Account.class.getClassLoader(),
                 Account.class.getInterfaces(),
                 new SubstitutionAccount(fromAccount));

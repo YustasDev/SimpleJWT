@@ -51,7 +51,4 @@ public class Main {
     long generatedMoneyAmount = r.nextInt(100000) + 1L;
     return generatedMoneyAmount;
   }
-
-
-
 }
