@@ -1,42 +1,57 @@
 
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
   public static void main(String[] args) {
 
+    int numberThreads = 100;
+
     Bank bank = new Bank();
-    bank.setAccounts(new ConcurrentHashMap<>());
     bank.bankBuilder();
 
-    ConcurrentHashMap<String, IAccount> currentBank = bank.getAccounts();
+    System.out.println("BEFORE starting the transaction");
+    bank.calculateBankBalance();
 
-    for(var pair: currentBank.entrySet())
-    {
-      String key = pair.getKey();
-      IAccount value = pair.getValue();
-      System.out.println(key + "  " + value.toString());
+    ExecutorService executorService = Executors
+        .newFixedThreadPool(numberThreads);
+
+    for (int i=0; i<100; i++) {
+      executorService.submit(()->
+          bank.transfer(generatedAccNumber(), generatedAccNumber(), generatedMoneyAmount()));
+
+    }
+    executorService.shutdown();
+
+    try {
+      executorService.awaitTermination(1, TimeUnit.MINUTES);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
 
-    for (int i=0; i<3; i++) {
-      System.out.println("i = " + i);
-      bank.transfer("1000000000000000068", "1000000000000000069", 100000);
-
-      String accountNum68 = "1000000000000000068";
-      long balance68 = bank.getBalance(accountNum68);
-      System.out.println(
-          "На счете № " + accountNum68 + " остаток средств составляет '" + balance68 + "'");
-
-      String accountNum69 = "1000000000000000069";
-      long balance69 = bank.getBalance(accountNum69);
-      System.out.println(
-          "На счете № " + accountNum69 + " остаток средств составляет '" + balance69 + "'");
-    }
-
-
-
-
+    System.out.println("AFTER completion");
+    bank.calculateBankBalance();
 
   }
+
+  public static String generatedAccNumber() {
+    Random r = new Random();
+    Long generatedAccNumberLong = r.nextInt(100) + 1000000000000000000L;
+    String generatedAccNumber = generatedAccNumberLong.toString();
+    return generatedAccNumber;
+  }
+
+  public static long generatedMoneyAmount() {
+    Random r = new Random();
+    long generatedMoneyAmount = r.nextInt(100000) + 1L;
+    return generatedMoneyAmount;
+  }
+
+
 
 }

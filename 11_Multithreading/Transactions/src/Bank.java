@@ -1,22 +1,27 @@
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class Bank {
-    private ConcurrentHashMap<String, IAccount> accounts;
+    private final ConcurrentMap<String, IAccount> accounts;
     private final Random random = new Random();
 
-    public ConcurrentHashMap<String, IAccount> getAccounts() {
-        return accounts;
+    public Bank() {
+        this(new ConcurrentHashMap<>());
     }
 
-    public void setAccounts(ConcurrentHashMap<String, IAccount> accounts) {
+    public Bank(ConcurrentMap<String, IAccount> accounts) {
         this.accounts = accounts;
     }
 
+    public ConcurrentMap<String, IAccount> getAccounts() {
+        return accounts;
+    }
+
+
     public void bankBuilder () {
-        long money = 1L;
+        long money = 100000L;
         Long accNumberLong = 1000000000000000001L;
         String accNumber = "";
 
@@ -29,6 +34,18 @@ public class Bank {
             accounts.put(accNumber, account);
         }
     }
+
+    public void calculateBankBalance() {
+        ConcurrentMap<String, IAccount> currentBank = getAccounts();
+        long sum = 0;
+        for(var pair: currentBank.entrySet())
+        {
+            long value = pair.getValue().getMoney();
+            sum += value;
+        }
+        System.out.println("Общий баланс банка:  " + sum + "  у.е.");
+    }
+
 
     public synchronized boolean isFraud()
         throws InterruptedException
@@ -45,10 +62,10 @@ public class Bank {
      * метод isFraud. Если возвращается true, то делается блокировка
      * счетов (путем подмены объекта Account, на proxy-объект с измененной функциональностью)
      */
-    public void transfer(String fromAccountNum, String toAccountNum, long amount) {
+    public synchronized void transfer(String fromAccountNum, String toAccountNum, long amount) {
         // если банк один - можно просто обращаться к полю accounts
         // но если банков несколько - берем экземпляр, получаем его Мапу и с ней работаем
-        ConcurrentHashMap<String, IAccount> currentBank = getAccounts();
+        ConcurrentMap<String, IAccount> currentBank = getAccounts();
         boolean fraud = false;
         if (amount > 50000) {
             try {
@@ -91,14 +108,14 @@ public class Bank {
     /**
      * Метод возвращает остаток на счёте.
      */
-    public long getBalance(String accountNum) {
+    public synchronized long getBalance(String accountNum) {
         long accountBalance = 0;
         if (accounts.containsKey(accountNum)) {
 
             accountBalance = accounts.get(accountNum).getMoney();
 
         } else {
-            System.out.println("Указанного номера счета не существует");
+            System.out.println(accountNum + " Указанного номера счета не существует");
         }
         return accountBalance;
     }
