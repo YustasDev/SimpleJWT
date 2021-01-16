@@ -21,8 +21,8 @@ public class Main {
     ExecutorService executorService = Executors
         .newFixedThreadPool(numberThreads);
 
-    for (int i=0; i<100; i++) {
-      executorService.submit(()->
+    for (int i = 0; i < 100; i++) {
+      executorService.submit(() ->
           bank.transfer(generatedAccNumber(), generatedAccNumber(), generatedMoneyAmount()));
 
     }
