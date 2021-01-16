@@ -102,7 +102,7 @@ public class Bank {
         }
        else {
             System.out.println("Операция невозможна - счет заблокирован");
-            System.out.println("Заблокирован трансфер №  " + countBlock.addAndGet(1));
+            System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
         }
 
         if (fraud) {
