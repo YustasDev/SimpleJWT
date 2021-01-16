@@ -77,9 +77,7 @@ public class Bank {
       }
     }
 
-    if (accounts.containsKey(fromAccountNum) && accounts.containsKey(toAccountNum) &&
-        !Proxy.isProxyClass(accounts.get(fromAccountNum).getClass()) &&
-        !Proxy.isProxyClass(accounts.get(toAccountNum).getClass())) {
+    if (isTransferSupported(fromAccountNum) && isTransferSupported(toAccountNum)) {
 
       long fromAccountBalance = getBalance(fromAccountNum);
       long toAccountBalance = getBalance(toAccountNum);
@@ -117,6 +115,19 @@ public class Bank {
       currentBank.replace(toAccountNum, toAccountProxy);
     }
   }
+
+  /**
+   * Метод проверяет, существует ли счет в банке и если да, не является ли account proxy-объектом
+   * (если является - возвращает false)
+   */
+  public boolean isTransferSupported(String accountNum) {
+    IAccount account = accounts.get(accountNum);
+    if (account == null) {
+      return false;
+    }
+    return !Proxy.isProxyClass(account.getClass());
+  }
+
 
   /**
    * Метод возвращает остаток на счёте.
