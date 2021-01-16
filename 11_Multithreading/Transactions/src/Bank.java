@@ -77,6 +77,10 @@ public class Bank {
       }
     }
 
+    /**
+     * перед осуществлением трансфера проверяется - существует ли account с таким номером
+     * и не был ли он ранее заменен на proxy-объект
+     */
     if (isTransferSupported(fromAccountNum) && isTransferSupported(toAccountNum)) {
 
       long fromAccountBalance = getBalance(fromAccountNum);
