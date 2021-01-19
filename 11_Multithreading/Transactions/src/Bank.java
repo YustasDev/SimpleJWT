@@ -3,6 +3,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Bank {
 
@@ -83,23 +84,25 @@ public class Bank {
      */
     if (isTransferSupported(fromAccountNum) && isTransferSupported(toAccountNum)) {
 
-      long fromAccountBalance = getBalance(fromAccountNum);
-      long toAccountBalance = getBalance(toAccountNum);
+      IAccount fromAccount = accounts.get(fromAccountNum);
+      IAccount toAccount = accounts.get(toAccountNum);
+      synchronized (fromAccount) {
+        synchronized (toAccount) {
+          long fromAccountBalance = getBalance(fromAccountNum);
+          long toAccountBalance = getBalance(toAccountNum);
 
-      long fromAccountBalanceNew = fromAccountBalance - amount;
-      long toAccountBalanceNew = toAccountBalance + amount;
+          long fromAccountBalanceNew = fromAccountBalance - amount;
+          long toAccountBalanceNew = toAccountBalance + amount;
 
-      IAccount fromAccount = currentBank.get(fromAccountNum);
-      fromAccount.setMoney(fromAccountBalanceNew);
-      currentBank.replace(fromAccountNum, fromAccount);
-
-      IAccount toAccount = currentBank.get(toAccountNum);
-      toAccount.setMoney(toAccountBalanceNew);
-      currentBank.replace(toAccountNum, toAccount);
+          fromAccount.setMoney(fromAccountBalanceNew);
+          toAccount.setMoney(toAccountBalanceNew);
+         }
+      }
 
       System.out.println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
           + " суммы в размере " + amount);
-    } else {
+    }
+    else {
       System.out.println("Операция невозможна - счет заблокирован");
       System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
     }
@@ -135,6 +138,7 @@ public class Bank {
 
   /**
    * Метод возвращает остаток на счёте.
+   * @return
    */
   public synchronized long getBalance(String accountNum) {
     long accountBalance = 0;
