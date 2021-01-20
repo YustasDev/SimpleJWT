@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class PersonalAccount implements Account{
 
     private long money;
@@ -27,7 +29,25 @@ public class PersonalAccount implements Account{
       this.accNumber = accNumber;
     }
 
-    @Override
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof PersonalAccount)) {
+      return false;
+    }
+    PersonalAccount that = (PersonalAccount) o;
+    return getMoney() == that.getMoney() &&
+        getAccNumber().equals(that.getAccNumber());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getMoney(), getAccNumber());
+  }
+
+  @Override
     public String toString() {
       return "Для счета № " + accNumber + "  " +
           "Остаток на счете составляет - '" + money +

@@ -3,7 +3,6 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Bank {
 
@@ -26,7 +25,7 @@ public class Bank {
 
   public void bankBuilder() {
     long money = 100000L;
-    Long accNumberLong = 1000000000000000001L;
+    Long accNumberLong = 1000000000000000000L;
     String accNumber = "";
 
     for (int i = 0; i < 100; i++) {
@@ -39,7 +38,7 @@ public class Bank {
     }
   }
 
-  public void calculateBankBalance() {
+  public long calculateBankBalance() {
     ConcurrentMap<String, Account> currentBank = getAccounts();
     long sum = 0;
     for (var pair : currentBank.entrySet()) {
@@ -47,6 +46,7 @@ public class Bank {
       sum += value;
     }
     System.out.println("Общий баланс банка:  " + sum + "  у.е.");
+    return sum;
   }
 
 
@@ -63,7 +63,7 @@ public class Bank {
    * метод isFraud. Если возвращается true, то делается блокировка счетов (путем подмены объекта
    * Account, на proxy-объект с измененной функциональностью)
    */
-  public synchronized void transfer(String fromAccountNum, String toAccountNum, long amount) {
+  public void transfer(String fromAccountNum, String toAccountNum, long amount) {
     // если банк один - можно просто обращаться к полю accounts
     // но если банков несколько - берем экземпляр, получаем его Мапу и с ней работаем
     ConcurrentMap<String, Account> currentBank = getAccounts();
@@ -79,10 +79,12 @@ public class Bank {
     }
 
     /**
-     * перед осуществлением трансфера проверяется - существует ли account с таким номером
-     * и не был ли он ранее заменен на proxy-объект
+     * перед осуществлением трансфера проверяется: 1) существует ли account с таким номером;
+     * 2) не был ли он ранее заменен на proxy-объект;
+     * 3) нет ли попытки перевести деньги самому себе с одного и того же счета
      */
-    if (isTransferSupported(fromAccountNum) && isTransferSupported(toAccountNum)) {
+    if (isTransferSupported(fromAccountNum) && isTransferSupported(toAccountNum) && !(fromAccountNum
+        .equals(toAccountNum))) {
 
       Account fromAccount = accounts.get(fromAccountNum);
       Account toAccount = accounts.get(toAccountNum);
@@ -101,8 +103,7 @@ public class Bank {
 
       System.out.println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
           + " суммы в размере " + amount);
-    }
-    else {
+    } else {
       System.out.println("Операция невозможна - счет заблокирован");
       System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
     }
@@ -138,7 +139,6 @@ public class Bank {
 
   /**
    * Метод возвращает остаток на счёте.
-   * @return
    */
   public synchronized long getBalance(String accountNum) {
     long accountBalance = 0;

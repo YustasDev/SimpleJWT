@@ -19,8 +19,18 @@ import java.util.concurrent.TimeUnit;
       Bank bank = new Bank();
       bank.bankBuilder();
 
-      System.out.println("BEFORE starting the transaction");
-      bank.calculateBankBalance();
+      ConcurrentMap<String, Account> currentBank = bank.getAccounts();
+      int sizeCM = currentBank.size();
+      System.out.println("sizeCM = " + sizeCM);
+      int iz = 0;
+      for (var pair : currentBank.entrySet()) {
+        String key = pair.getKey();
+        long value = pair.getValue().getMoney();
+        iz++;
+        System.out.println("ix= " + iz + "key = " + key + " value= " + value);
+      }
+
+      long startSum = bank.calculateBankBalance();
 
       ExecutorService executorService = Executors
           .newFixedThreadPool(numberThreads);
@@ -28,7 +38,6 @@ import java.util.concurrent.TimeUnit;
       for (int i = 0; i < 100; i++) {
         executorService.submit(() ->
             bank.transfer(generatedAccNumber(), generatedAccNumber(), generatedMoneyAmount()));
-
       }
       executorService.shutdown();
 
@@ -38,8 +47,9 @@ import java.util.concurrent.TimeUnit;
         e.printStackTrace();
       }
 
-      System.out.println("AFTER completion");
-      bank.calculateBankBalance();
+      System.out.println("BEFORE starting the transaction  " + startSum);
+      System.out.println("AFTER completion" + bank.calculateBankBalance());
+
 
     }
 
@@ -52,7 +62,7 @@ import java.util.concurrent.TimeUnit;
 
     public static long generatedMoneyAmount() {
       Random r = new Random();
-      long generatedMoneyAmount = r.nextInt(100000) + 1L;
+      long generatedMoneyAmount = r.nextInt(100) + 1L;
       return generatedMoneyAmount;
     }
   }
