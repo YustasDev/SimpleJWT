@@ -143,9 +143,7 @@ public class Bank {
   public synchronized long getBalance(String accountNum) {
     long accountBalance = 0;
     if (accounts.containsKey(accountNum)) {
-
       accountBalance = accounts.get(accountNum).getMoney();
-
     } else {
       System.out.println(accountNum + " Указанного номера счета не существует");
     }

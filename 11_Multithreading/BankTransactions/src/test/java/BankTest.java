@@ -15,6 +15,7 @@ public class BankTest extends TestCase {
   private ConcurrentMap<String, Account> testingBank;
   private Bank bank;
 
+  @Override
   @BeforeClass
   public void setUp() throws Exception {
     Bank bank = new Bank();
@@ -23,28 +24,28 @@ public class BankTest extends TestCase {
   }
 
   @Test
-  public void getAccounts() {
+  public void testGetAccounts() {
     int expected = 100;
     int actual = testingBank.size();
     assertEquals("Количество аккаунтов в банке не соответствует требованиям", expected, actual);
   }
 
   @Test
-  public void bankBuilder() {
+  public void testBankBuilder() {
     assertNotNull(testingBank);
   }
 
   @Test
-  public void calculateBankBalance() {
+  public void testCalculateBankBalance() {
     long expected = 10005050;
     long actual = bank.calculateBankBalance();
     assertEquals("Неправильный баланс банка", expected, actual);
   }
 
   @Test
-  public void transfer() {
+  public void testTransfer() {
     int numberThreads = 100;
-    long startBalance =  bank.calculateBankBalance();
+    long startBalance = bank.calculateBankBalance();
     ExecutorService executorService = Executors
         .newFixedThreadPool(numberThreads);
     for (int i = 0; i < 100; i++) {
@@ -58,12 +59,12 @@ public class BankTest extends TestCase {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    long finishBalance =  bank.calculateBankBalance();
+    long finishBalance = bank.calculateBankBalance();
     assertEquals("Ошибка при проведении трансферов", startBalance, finishBalance);
   }
 
   @Test
-  public void isTransferSupported() {
+  public void testIsTransferSupported() {
     String nonexistentAccountNum = "001";
     boolean actual = bank.isTransferSupported(nonexistentAccountNum);
     assertFalse("Ошибка определения несуществующего аккаунта", actual);
@@ -79,12 +80,15 @@ public class BankTest extends TestCase {
   }
 
   @Test
-  public void getBalance() {
-
-
+  public void testGetBalance() {
+    for (Long accountNumLong = 1000000000000000000L; accountNumLong < 1000000000000000110L;
+        accountNumLong++) {
+      String accounNum = accountNumLong.toString();
+      assertNotNull("Неправильное вычисление баланса аккаунта", bank.getBalance(accounNum));
+    }
   }
 
-  @After
+  @Override
   public void tearDown() throws Exception {
   }
 }
