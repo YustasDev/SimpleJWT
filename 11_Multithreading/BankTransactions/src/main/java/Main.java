@@ -19,17 +19,6 @@ import java.util.concurrent.TimeUnit;
       Bank bank = new Bank();
       bank.bankBuilder();
 
-      ConcurrentMap<String, Account> currentBank = bank.getAccounts();
-      int sizeCM = currentBank.size();
-      System.out.println("sizeCM = " + sizeCM);
-      int iz = 0;
-      for (var pair : currentBank.entrySet()) {
-        String key = pair.getKey();
-        long value = pair.getValue().getMoney();
-        iz++;
-        System.out.println("ix= " + iz + "key = " + key + " value= " + value);
-      }
-
       long startSum = bank.calculateBankBalance();
 
       ExecutorService executorService = Executors
