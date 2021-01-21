@@ -38,8 +38,6 @@ import java.util.concurrent.TimeUnit;
 
       System.out.println("BEFORE starting the transaction  " + startSum);
       System.out.println("AFTER completion" + bank.calculateBankBalance());
-
-
     }
 
     public static String generatedAccNumber() {
@@ -51,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
     public static long generatedMoneyAmount() {
       Random r = new Random();
-      long generatedMoneyAmount = r.nextInt(100) + 1L;
+      long generatedMoneyAmount = r.nextInt(100) + 100000L;
       return generatedMoneyAmount;
     }
   }

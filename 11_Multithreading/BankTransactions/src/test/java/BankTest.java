@@ -1,4 +1,5 @@
 import java.lang.reflect.Proxy;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,14 +14,12 @@ import org.junit.Test;
 public class BankTest extends TestCase {
 
   private ConcurrentMap<String, Account> testingBank;
-  private Bank bank;
+  private Bank testBank = new Bank();
 
   @Override
-  @BeforeClass
   public void setUp() throws Exception {
-    Bank bank = new Bank();
-    bank.bankBuilder();
-    testingBank = bank.getAccounts();
+    testBank.bankBuilder();
+    testingBank = testBank.getAccounts();
   }
 
   @Test
@@ -38,19 +37,19 @@ public class BankTest extends TestCase {
   @Test
   public void testCalculateBankBalance() {
     long expected = 10005050;
-    long actual = bank.calculateBankBalance();
+    long actual = testBank.calculateBankBalance();
     assertEquals("Неправильный баланс банка", expected, actual);
   }
 
   @Test
   public void testTransfer() {
     int numberThreads = 100;
-    long startBalance = bank.calculateBankBalance();
+    long startBalance = testBank.calculateBankBalance();
     ExecutorService executorService = Executors
         .newFixedThreadPool(numberThreads);
     for (int i = 0; i < 100; i++) {
       executorService.submit(() ->
-          bank.transfer(Main.generatedAccNumber(), Main.generatedAccNumber(), Main
+          testBank.transfer(Main.generatedAccNumber(), Main.generatedAccNumber(), Main
               .generatedMoneyAmount()));
     }
     executorService.shutdown();
@@ -59,23 +58,25 @@ public class BankTest extends TestCase {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
-    long finishBalance = bank.calculateBankBalance();
+    long finishBalance = testBank.calculateBankBalance();
     assertEquals("Ошибка при проведении трансферов", startBalance, finishBalance);
   }
 
   @Test
   public void testIsTransferSupported() {
     String nonexistentAccountNum = "001";
-    boolean actual = bank.isTransferSupported(nonexistentAccountNum);
+    boolean actual = testBank.isTransferSupported(nonexistentAccountNum);
     assertFalse("Ошибка определения несуществующего аккаунта", actual);
 
     String existentAccountNum = "1000000000000000001";
+    Account existentAccount = testingBank.get(existentAccountNum);
+
     Account testAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
         Account.class.getInterfaces(),
-        new SubstitutionalAccount(existentAccountNum));
+        new SubstitutionalAccount(existentAccount));
 
     testingBank.replace(existentAccountNum, testAccountProxy);
-    boolean actualProxy = bank.isTransferSupported(existentAccountNum);
+    boolean actualProxy = testBank.isTransferSupported(existentAccountNum);
     assertFalse("Ошибка определения proxy-аккаунта", actualProxy);
   }
 
@@ -84,7 +85,7 @@ public class BankTest extends TestCase {
     for (Long accountNumLong = 1000000000000000000L; accountNumLong < 1000000000000000110L;
         accountNumLong++) {
       String accounNum = accountNumLong.toString();
-      assertNotNull("Неправильное вычисление баланса аккаунта", bank.getBalance(accounNum));
+      assertNotNull("Неправильное вычисление баланса аккаунта", testBank.getBalance(accounNum));
     }
   }
 
