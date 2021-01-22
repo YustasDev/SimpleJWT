@@ -3,6 +3,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Bank {
 
@@ -64,8 +65,9 @@ public class Bank {
    * Account, на proxy-объект с измененной функциональностью)
    */
   public void transfer(String fromAccountNum, String toAccountNum, long amount) {
-    // если банк один - можно просто обращаться к полю accounts
-    // но если банков несколько - берем экземпляр, получаем его Мапу и с ней работаем
+    Account fromAccount = accounts.get(fromAccountNum);
+    Account toAccount = accounts.get(toAccountNum);
+
     ConcurrentMap<String, Account> currentBank = getAccounts();
     boolean fraud = false;
     if (amount > 50000) {
@@ -86,45 +88,58 @@ public class Bank {
     if (isTransferSupported(fromAccountNum) && isTransferSupported(toAccountNum) && !(fromAccountNum
         .equals(toAccountNum))) {
 
-      Account fromAccount = accounts.get(fromAccountNum);
-      Account toAccount = accounts.get(toAccountNum);
-      synchronized (fromAccount) {
+      if (fromAccountNum.compareTo(toAccountNum) < 0) {
+        synchronized (fromAccount) {
+          synchronized (toAccount) {
+            long fromAccountBalance = getBalance(fromAccountNum);
+            long toAccountBalance = getBalance(toAccountNum);
+
+            long fromAccountBalanceNew = fromAccountBalance - amount;
+            long toAccountBalanceNew = toAccountBalance + amount;
+
+            fromAccount.setMoney(fromAccountBalanceNew);
+            toAccount.setMoney(toAccountBalanceNew);
+          }
+        }
+      }
+      else {
         synchronized (toAccount) {
-          long fromAccountBalance = getBalance(fromAccountNum);
-          long toAccountBalance = getBalance(toAccountNum);
+          synchronized (fromAccount) {
+            long fromAccountBalance = getBalance(fromAccountNum);
+            long toAccountBalance = getBalance(toAccountNum);
 
-          long fromAccountBalanceNew = fromAccountBalance - amount;
-          long toAccountBalanceNew = toAccountBalance + amount;
+            long fromAccountBalanceNew = fromAccountBalance - amount;
+            long toAccountBalanceNew = toAccountBalance + amount;
 
-          fromAccount.setMoney(fromAccountBalanceNew);
-          toAccount.setMoney(toAccountBalanceNew);
+            fromAccount.setMoney(fromAccountBalanceNew);
+            toAccount.setMoney(toAccountBalanceNew);
+          }
         }
       }
 
-      System.out.println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
-          + " суммы в размере " + amount);
-    } else {
-      System.out.println("Операция невозможна - счет заблокирован");
-      System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
+        System.out
+            .println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
+                + " суммы в размере " + amount);
+      } else {
+        System.out.println("Операция невозможна - счет заблокирован");
+        System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
+      }
+
+      if (fraud) {
+        Account fromAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
+            Account.class.getInterfaces(),
+            new SubstitutionalAccount(fromAccount));
+
+        Account toAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
+            Account.class.getInterfaces(),
+            new SubstitutionalAccount(toAccount));
+
+        accounts.replace(fromAccountNum, fromAccountProxy);
+        accounts.replace(toAccountNum, toAccountProxy);
+      }
     }
 
-    if (fraud) {
-      Account fromAccount = currentBank.get(fromAccountNum);
-      Account toAccount = currentBank.get(toAccountNum);
-      Account fromAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
-          Account.class.getInterfaces(),
-          new SubstitutionalAccount(fromAccount));
-
-      Account toAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
-          Account.class.getInterfaces(),
-          new SubstitutionalAccount(toAccount));
-
-      currentBank.replace(fromAccountNum, fromAccountProxy);
-      currentBank.replace(toAccountNum, toAccountProxy);
-    }
-  }
-
-  /**
+    /**
    * Метод проверяет, существует ли счет в банке и если да, не является ли account proxy-объектом
    * (если является - возвращает false)
    */
@@ -139,6 +154,7 @@ public class Bank {
 
   /**
    * Метод возвращает остаток на счёте.
+   * @return
    */
   public synchronized long getBalance(String accountNum) {
     long accountBalance = 0;
