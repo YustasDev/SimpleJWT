@@ -71,8 +71,8 @@ public class BankTest extends TestCase {
     String existentAccountNum = "1000000000000000001";
     Account existentAccount = testingBank.get(existentAccountNum);
 
-    Account testAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
-        Account.class.getInterfaces(),
+    Account testAccountProxy = (Account) Proxy.newProxyInstance(PersonalAccount.class.getClassLoader(),
+        PersonalAccount.class.getInterfaces(),
         new SubstitutionalAccount(existentAccount));
 
     testingBank.replace(existentAccountNum, testAccountProxy);

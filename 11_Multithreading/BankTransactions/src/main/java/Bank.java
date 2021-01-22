@@ -126,12 +126,12 @@ public class Bank {
       }
 
       if (fraud) {
-        Account fromAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
-            Account.class.getInterfaces(),
+        Account fromAccountProxy = (Account) Proxy.newProxyInstance(PersonalAccount.class.getClassLoader(),
+            PersonalAccount.class.getInterfaces(),
             new SubstitutionalAccount(fromAccount));
 
-        Account toAccountProxy = (Account) Proxy.newProxyInstance(Account.class.getClassLoader(),
-            Account.class.getInterfaces(),
+        Account toAccountProxy = (Account) Proxy.newProxyInstance(PersonalAccount.class.getClassLoader(),
+            PersonalAccount.class.getInterfaces(),
             new SubstitutionalAccount(toAccount));
 
         accounts.replace(fromAccountNum, fromAccountProxy);

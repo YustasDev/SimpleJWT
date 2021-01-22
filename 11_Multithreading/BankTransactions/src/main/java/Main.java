@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
     public static long generatedMoneyAmount() {
       Random r = new Random();
-      long generatedMoneyAmount = r.nextInt(100) + 100000L;
+      long generatedMoneyAmount = r.nextInt(100) + 1L;
       return generatedMoneyAmount;
     }
   }
