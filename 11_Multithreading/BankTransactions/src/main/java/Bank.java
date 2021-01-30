@@ -99,9 +99,9 @@ public class Bank {
           long toAccountBalance = getBalance(toAccountNum);
 
           long fromAccountBalanceNew = fromAccountBalance - amount;
-          long toAccountBalanceNew = toAccountBalance + amount;
-
           fromAccount.setMoney(fromAccountBalanceNew);
+
+          long toAccountBalanceNew = toAccountBalance + amount;
           toAccount.setMoney(toAccountBalanceNew);
         }
       }
@@ -148,12 +148,12 @@ public class Bank {
    *
    * @return
    */
-  public synchronized long getBalance(String accountNum) {
+  public synchronized long getBalance(String accountNum) throws AccountIsNotExistException {
     long accountBalance = 0;
     if (accounts.containsKey(accountNum)) {
       accountBalance = accounts.get(accountNum).getMoney();
     } else {
-      System.out.println(accountNum + " Указанного номера счета не существует");
+      throw new AccountIsNotExistException("Указанного номера счета не существует ", accountNum);
     }
     return accountBalance;
   }
