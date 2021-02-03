@@ -1,14 +1,8 @@
-import java.lang.reflect.Proxy;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class BankTest extends TestCase {
@@ -64,28 +58,24 @@ public class BankTest extends TestCase {
 
   @Test
   public void testIsTransferSupported() {
-    String nonexistentAccountNum = "001";
-    boolean actual = testBank.isTransferSupported(nonexistentAccountNum);
-    assertFalse("Ошибка определения несуществующего аккаунта", actual);
-
     String existentAccountNum = "1000000000000000001";
-    Account existentAccount = testingBank.get(existentAccountNum);
-
-    Account testAccountProxy = (Account) Proxy.newProxyInstance(PersonalAccount.class.getClassLoader(),
-        PersonalAccount.class.getInterfaces(),
-        new SubstitutionalAccount(existentAccount));
-
-    testingBank.replace(existentAccountNum, testAccountProxy);
-    boolean actualProxy = testBank.isTransferSupported(existentAccountNum);
-    assertFalse("Ошибка определения proxy-аккаунта", actualProxy);
+    testBank.lockAccount(existentAccountNum);
+    assertFalse("Ошибка определения несуществующего или заблокированного аккаунта",
+        testBank.isTransferSupported(existentAccountNum));
   }
 
-  @Test
-  public void testGetBalance() {
-    for (Long accountNumLong = 1000000000000000000L; accountNumLong < 1000000000000000110L;
+
+  @Test(expected = AccountIsNotExistException.class)
+  public void testGetBalanceforNotExistAccount() throws AccountIsNotExistException {
+    for (Long accountNumLong = 1000000000000000101L; accountNumLong < 1000000000000000110L;
         accountNumLong++) {
       String accounNum = accountNumLong.toString();
-      assertNotNull("Неправильное вычисление баланса аккаунта", testBank.getBalance(accounNum));
+      try {
+        testBank.getBalance(accounNum);
+        fail("Exception expected");
+      } catch (AccountIsNotExistException e) {
+        e.printStackTrace();
+      }
     }
   }
 

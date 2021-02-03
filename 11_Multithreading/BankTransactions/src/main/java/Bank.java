@@ -1,4 +1,5 @@
-import java.lang.reflect.Proxy;
+import static java.util.Objects.requireNonNull;
+
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -27,13 +28,14 @@ public class Bank {
     long money = 100000L;
     Long accNumberLong = 1000000000000000000L;
     String accNumber = "";
+    boolean locked = false;
 
     for (int i = 0; i < 100; i++) {
       money++;
       accNumberLong++;
       accNumber = accNumberLong.toString();
 
-      PersonalAccount account = new PersonalAccount(money, accNumber);
+      PersonalAccount account = new PersonalAccount(money, accNumber, locked);
       accounts.put(accNumber, account);
     }
   }
@@ -56,20 +58,35 @@ public class Bank {
     return random.nextBoolean();
   }
 
+  private Account ensureAccount(String accNumber) {
+    Account account = accounts.get(accNumber);
+    return requireNonNull(account, "account with number " + accNumber + " doesn't exists");
+  }
+
+  private static void ensureAmount(long amount) {
+    if (amount <= 0) {
+      throw new IllegalArgumentException("Amount (" + amount + ") should be greater then zero");
+    }
+  }
 
   /**
    * TODO: реализовать метод. Метод переводит деньги между счетами. Если сумма транзакции > 50000,
    * то после совершения транзакции, она отправляется на проверку Службе Безопасности – вызывается
-   * метод isFraud. Если возвращается true, то делается блокировка счетов (путем подмены объекта
-   * Account, на proxy-объект с измененной функциональностью)
+   * метод isFraud. Если возвращается true, то делается блокировка счетов. Перед осуществлением
+   * трансфера проверяется: 1) существует ли account с таким номером; 2) нет ли попытки перевести
+   * деньги самому себе с одного и того же счета
    */
   public void transfer(String fromAccountNum, String toAccountNum, long amount) {
     if (fromAccountNum.equals(toAccountNum)) {
       return;
     }
 
-    Account fromAccount = accounts.get(fromAccountNum);
-    Account toAccount = accounts.get(toAccountNum);
+    requireNonNull(fromAccountNum, "fromAccountNum can't be null");
+    requireNonNull(toAccountNum, "toAccountNum can't be null");
+    ensureAmount(amount);
+
+    Account fromAccount = ensureAccount(fromAccountNum);
+    Account toAccount = ensureAccount(toAccountNum);
 
     ConcurrentMap<String, Account> currentBank = getAccounts();
     boolean fraud = false;
@@ -83,68 +100,66 @@ public class Bank {
       }
     }
 
-    /**
-     * перед осуществлением трансфера проверяется: 1) существует ли account с таким номером;
-     * 2) не был ли он ранее заменен на proxy-объект;
-     * 3) нет ли попытки перевести деньги самому себе с одного и того же счета
-     */
-    if (isTransferSupported(fromAccountNum) && isTransferSupported(toAccountNum)) {
+    Account lowLock = fromAccountNum.compareTo(toAccountNum) < 0 ? fromAccount : toAccount;
+    Account highLock = fromAccountNum.compareTo(toAccountNum) < 0 ? toAccount : fromAccount;
 
-      Account lowLock = fromAccountNum.compareTo(toAccountNum) < 0 ? fromAccount : toAccount;
-      Account highLock = fromAccountNum.compareTo(toAccountNum) < 0 ? toAccount : fromAccount;
-
-      synchronized (lowLock) {
+    synchronized (lowLock) {
+      if (lowLock.isLocked()) {
+        System.out.println("Операция невозможна - счет заблокирован");
+        System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
+      } else {
         synchronized (highLock) {
-          long fromAccountBalance = getBalance(fromAccountNum);
-          long toAccountBalance = getBalance(toAccountNum);
+          if (highLock.isLocked()) {
+            System.out.println("Операция невозможна - счет заблокирован");
+            System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
+          } else {
+            long fromAccountBalance = fromAccount.getMoney();
+            long toAccountBalance = toAccount.getMoney();
 
-          long fromAccountBalanceNew = fromAccountBalance - amount;
-          fromAccount.setMoney(fromAccountBalanceNew);
+            long fromAccountBalanceNew = fromAccountBalance - amount;
+            fromAccount.setMoney(fromAccountBalanceNew);
 
-          long toAccountBalanceNew = toAccountBalance + amount;
-          toAccount.setMoney(toAccountBalanceNew);
+            long toAccountBalanceNew = toAccountBalance + amount;
+            toAccount.setMoney(toAccountBalanceNew);
+
+            if (fraud) {
+              fromAccount.setLocked(true);
+              toAccount.setLocked(true);
+            }
+          }
         }
       }
-
-      System.out
-          .println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
-              + " суммы в размере " + amount);
-    } else {
-      System.out.println("Операция невозможна - счет заблокирован");
-      System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
     }
-
-    if (fraud) {
-      Account fromAccountProxy = (Account) Proxy
-          .newProxyInstance(PersonalAccount.class.getClassLoader(),
-              PersonalAccount.class.getInterfaces(),
-              new SubstitutionalAccount(fromAccount));
-
-      Account toAccountProxy = (Account) Proxy
-          .newProxyInstance(PersonalAccount.class.getClassLoader(),
-              PersonalAccount.class.getInterfaces(),
-              new SubstitutionalAccount(toAccount));
-
-      accounts.replace(fromAccountNum, fromAccountProxy);
-      accounts.replace(toAccountNum, toAccountProxy);
-    }
+    System.out
+        .println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
+            + " суммы в размере " + amount);
   }
 
   /**
-   * Метод проверяет, существует ли счет в банке и если да, не является ли account proxy-объектом
-   * (если является - возвращает false)
+   * Метод проверяет, существует ли счет в банке и если существует, не заблокирован ли он
    */
   public boolean isTransferSupported(String accountNum) {
     Account account = accounts.get(accountNum);
-    if (account == null) {
-      return false;
+    if (account != null) {
+      synchronized (account) {
+        return !account.isLocked();
+      }
     }
-    return !Proxy.isProxyClass(account.getClass());
+    return false;
   }
 
+  public void lockAccount(String accountNum) {
+    Account account = accounts.get(accountNum);
+    if (account != null) {
+      synchronized (account) {
+        account.setLocked(true);
+      }
+    }
+  }
 
   /**
-   * Метод возвращает остаток на счёте.
+   * Метод возвращает остаток на счёте, если счета не существует,
+   * бросаем AccountIsNotExistException, который на это указывает
    *
    * @return
    */

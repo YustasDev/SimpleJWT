@@ -1,33 +1,44 @@
 import java.util.Objects;
 
-public class PersonalAccount implements Account{
+public class PersonalAccount implements Account {
 
-    private long money;
-    private String accNumber;
+  private long money;
+  private String accNumber;
+  private boolean locked;
 
-    public PersonalAccount() {
-    }
+  public PersonalAccount() {
+  }
 
-    public PersonalAccount(long money, String accNumber) {
-      this.money = money;
-      this.accNumber = accNumber;
-    }
+  public PersonalAccount(long money, String accNumber, boolean locked) {
+    this.money = money;
+    this.accNumber = accNumber;
+    this.locked = locked;
+  }
 
-    public long getMoney() {
-      return money;
-    }
+  public long getMoney() {
+    return money;
+  }
 
-    public void setMoney(long money) {
-      this.money = money;
-    }
+  public void setMoney(long money) {
+    this.money = money;
+  }
 
-    public String getAccNumber() {
-      return accNumber;
-    }
+  public String getAccNumber() {
+    return accNumber;
+  }
 
-    public void setAccNumber(String accNumber) {
-      this.accNumber = accNumber;
-    }
+  public void setAccNumber(String accNumber) {
+    this.accNumber = accNumber;
+  }
+
+  public boolean isLocked() {
+    return locked;
+  }
+
+  public void setLocked(boolean locked) {
+    this.locked = locked;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -48,9 +59,9 @@ public class PersonalAccount implements Account{
   }
 
   @Override
-    public String toString() {
-      return "Для счета № " + accNumber + "  " +
-          "Остаток на счете составляет - '" + money +
-          "'";
-    }
+  public String toString() {
+    return "Для счета № " + accNumber + "  " +
+        "Остаток на счете составляет - '" + money +
+        "'";
   }
+}
