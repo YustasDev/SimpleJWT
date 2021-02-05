@@ -49,7 +49,7 @@ public class Main {
       }
     }
     System.out.println("BEFORE starting the transaction  " + startSum);
-    System.out.println("AFTER completion" + bank.calculateBankBalance());
+    System.out.println("AFTER completion  " + bank.calculateBankBalance());
   }
 
   public static String generatedAccNumber() {

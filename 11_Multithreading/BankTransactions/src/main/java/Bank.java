@@ -105,31 +105,30 @@ public class Bank {
 
     synchronized (lowLock) {
       if (lowLock.isLocked()) {
-        System.out.println("Операция невозможна - счет заблокирован");
-        System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
-      } else {
-        synchronized (highLock) {
-          if (highLock.isLocked()) {
-            System.out.println("Операция невозможна - счет заблокирован");
-            System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
-          } else {
-            long fromAccountBalance = fromAccount.getMoney();
-            long toAccountBalance = toAccount.getMoney();
+        printAccountIsBlocked();
+        return;
+      }
+      synchronized (highLock) {
+        if (highLock.isLocked()) {
+          printAccountIsBlocked();
+          return;
+        }
+        long fromAccountBalance = fromAccount.getMoney();
+        long toAccountBalance = toAccount.getMoney();
 
-            long fromAccountBalanceNew = fromAccountBalance - amount;
-            fromAccount.setMoney(fromAccountBalanceNew);
+        long fromAccountBalanceNew = fromAccountBalance - amount;
+        fromAccount.setMoney(fromAccountBalanceNew);
 
-            long toAccountBalanceNew = toAccountBalance + amount;
-            toAccount.setMoney(toAccountBalanceNew);
+        long toAccountBalanceNew = toAccountBalance + amount;
+        toAccount.setMoney(toAccountBalanceNew);
 
-            if (fraud) {
-              fromAccount.setLocked(true);
-              toAccount.setLocked(true);
-            }
-          }
+        if (fraud) {
+          fromAccount.setLocked(true);
+          toAccount.setLocked(true);
         }
       }
     }
+
     System.out
         .println("Выполнен перевод со счета " + fromAccountNum + " на счет " + toAccountNum
             + " суммы в размере " + amount);
@@ -155,6 +154,11 @@ public class Bank {
         account.setLocked(true);
       }
     }
+  }
+
+  public void printAccountIsBlocked() {
+    System.out.println("Операция невозможна - счет заблокирован");
+    System.out.println("Произошла " + countBlock.addAndGet(1) + " блокировка трансфера");
   }
 
   /**
