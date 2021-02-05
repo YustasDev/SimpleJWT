@@ -30,16 +30,26 @@ public class Main {
     }
     executorService.shutdown();
 
-    try {
-      executorService.awaitTermination(1, TimeUnit.MINUTES);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+//    while (true) {
+//      try {
+//        if (executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+//          break;
+//        }
+//      } catch (InterruptedException e) {
+//        e.printStackTrace();
+//        return;
+//      }
+//    }
 
-    //    if (executorService.isTerminated()) {
+    while (!executorService.isTerminated()) {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
     System.out.println("BEFORE starting the transaction  " + startSum);
     System.out.println("AFTER completion" + bank.calculateBankBalance());
-    //    }
   }
 
   public static String generatedAccNumber() {
