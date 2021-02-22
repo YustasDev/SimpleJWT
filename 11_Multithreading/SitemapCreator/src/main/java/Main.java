@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.stream.Stream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,7 +9,7 @@ import org.jsoup.nodes.Element;
 
 public class Main {
 
-  private static final String URL_NEED = "https://lenta.ru/";
+  private static final String URL_NEED = "https://skillbox.ru/";
 
   public static void main(String[] args) {
 
@@ -25,19 +26,40 @@ public class Main {
       return;
     }
 
-    LinkedList<String> listURL = new LinkedList<>();
+    LinkedList<Element> listURL = new LinkedList<>();
+    LinkedList<String> listURLtext = new LinkedList<>();
 
-    for (Element docs : docLenta  // в коде страницы
-        .select("<a href="))  // осуществляем поиск элементов соответствующих требованию
-    {
-     // listURL.add(docs.attr("abs:src")); // прибавляем найденные элементы в список
-    }
+//    for (Element docs : docLenta  // в коде страницы
+//        .select("a[href]"))  // осуществляем поиск элементов соответствующих требованию
+//    {
+//      listURLtext.add(String.valueOf(docs)); // прибавляем найденные элементы в список
+//      listURL.add(docs);
+//    }
+//
+//    final String REGEX = "https://skillbox.ru/   ";
+//
+//      for (Element e : listURL) {
+//        if (e.getElementsMatchingText("")) {
+//          System.out.println(e);
+//        }
+//      }
 
 
-
-
+    //System.out.println(listURL.stream().);
 
 
 
   }
+
+
+
+
+
+
+
+
+
+
+
+
 }
