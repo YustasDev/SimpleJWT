@@ -72,8 +72,11 @@ public class LinkGetter {
     if (link.matches("/.*") && url.matches(".*[^/]")) {
       return url + link;
     }
-    throw new RuntimeException("Cannot make the link absolute. Url: " + url
-        + " Link " + link);
+    System.out.println("Cannot make the link absolute. Url: " + url + " Link " + link);
+    String wrong = "It's wrong";
+    return wrong;
+    //throw new RuntimeException("Cannot make the link absolute. Url: " + url
+    //    + " Link " + link);
   }
 }
 
