@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +16,17 @@ public class Main {
   public static void main(String[] args) {
 
     LinkGetter linkGetter = new LinkGetter();
-    System.out.println(linkGetter.getLinks(URL_NEED));
+    List needUrlList = linkGetter.getLinks(URL_NEED);
+
+    for (Object s : needUrlList) {
+          System.out.println(s);
+        }
+
+
+
+
+
+
 //    Document docLenta = null;
 //    try {
 //      docLenta = Jsoup

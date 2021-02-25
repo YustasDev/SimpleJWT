@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class LinkGetter {
+public class LinkGetter  {
 
   private Pattern htmltag;
   private Pattern link;
@@ -21,7 +21,7 @@ public class LinkGetter {
   }
 
   public List getLinks(String url) {
-    List links = new ArrayList();
+    List links = new LinkedList();
     try {
       BufferedReader bufferedReader = new BufferedReader(
           new InputStreamReader(new URL(url).openStream()));
@@ -73,7 +73,7 @@ public class LinkGetter {
       return url + link;
     }
     System.out.println("Cannot make the link absolute. Url: " + url + " Link " + link);
-    String wrong = "It's wrong";
+    String wrong = "";
     return wrong;
     //throw new RuntimeException("Cannot make the link absolute. Url: " + url
     //    + " Link " + link);
