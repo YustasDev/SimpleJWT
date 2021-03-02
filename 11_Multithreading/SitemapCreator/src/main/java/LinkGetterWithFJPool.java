@@ -9,6 +9,7 @@ import org.jsoup.nodes.Element;
 public class LinkGetterWithFJPool extends RecursiveTask<List<Element>> {
 
   LinkedList<Element> listURL = new LinkedList<>();
+  LinkedList<String> listURLtext = new LinkedList<>();
 
   public LinkGetterWithFJPool(LinkedList<Element> listURL) {
     this.listURL = listURL;
@@ -29,10 +30,13 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<Element>> {
       System.out.println("Ошибка при парсинге страницы");
     }
 
+
     for (Element docs : docNeed  // в коде страницы
         .select("a[href]"))  // осуществляем поиск элементов соответствующих требованию
     {
-      listURL.add(docs); // прибавляем найденные элементы в список
+      listURLtext.add(docs.attr("abs:href")); // прибавляем найденные элементы в список
+      listURLtext.forEach(System.out::println);
+
       return listURL;
     }
 
