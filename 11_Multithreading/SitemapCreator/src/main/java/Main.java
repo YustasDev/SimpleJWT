@@ -52,19 +52,26 @@ public class Main {
      // listURL.forEach(System.out::println);
     }
 
+    int count = 0;
     for (String select : listURL) {
 
-      final String REGEX = "https://skillbox.ru/[^\\s]*(?!pdf)";
-      Pattern p = Pattern.compile(REGEX);
-      Matcher m = p.matcher(select);   // get a matcher object
-      int count = 0;
-      if (m.find()) {
+      if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf")) {
         count++;
         listURLSelect.add(select);
       }
-    }
+
+
+     // final String REGEX = "^[https://skillbox.ru/.*\\(^.pdf)]$";
+//      Pattern p = Pattern.compile(REGEX);
+//      Matcher m = p.matcher(select);
+//      if (m.find()) {
+//        count++;
+//        listURLSelect.add(select);
+      }
 
     listURLSelect.forEach(System.out::println);
+    System.out.println("Найдено " + count + " ссылок");
+
 
 //      String cssQuery = "a[href*=/skillbox.ru/]";
 //      Elements elements= docNeed.select(cssQuery);
