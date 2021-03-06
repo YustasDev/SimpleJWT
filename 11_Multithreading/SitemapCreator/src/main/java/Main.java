@@ -28,60 +28,8 @@ public class Main {
 
     // ===============================================================
 
-    LinkedList<String> listURL = new LinkedList<>();
-    LinkedList<String> listURLSelect = new LinkedList<>();
-    List<Node> listUrlElement = new LinkedList<>();
 
-    Document docNeed = null;
-    try {
-      docNeed = Jsoup
-          .connect(Main.URL_SKILLBOX)
-          .userAgent("Mozilla/5.0")
-          .timeout(10 * 1000)
-          .get();
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.out.println("Ошибка при парсинге страницы");
-    }
 
-    for (Element docs : docNeed  // в коде страницы
-        .select("a[href]"))  // осуществляем поиск элементов соответствующих требованию
-    {
-      //listUrlElement = docs.childNodes();
-      listURL.add(docs.attr("abs:href")); // прибавляем найденные элементы в список
-     // listURL.forEach(System.out::println);
-    }
-
-    int count = 0;
-    for (String select : listURL) {
-
-      if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf")) {
-        count++;
-        listURLSelect.add(select);
       }
-
-
-     // final String REGEX = "^[https://skillbox.ru/.*\\(^.pdf)]$";
-//      Pattern p = Pattern.compile(REGEX);
-//      Matcher m = p.matcher(select);
-//      if (m.find()) {
-//        count++;
-//        listURLSelect.add(select);
-      }
-
-    listURLSelect.forEach(System.out::println);
-    System.out.println("Найдено " + count + " ссылок");
-
-
-//      String cssQuery = "a[href*=/skillbox.ru/]";
-//      Elements elements= docNeed.select(cssQuery);
-//
-//      Iterator<Element> iterator = elements.iterator();
-//
-//      while(iterator.hasNext())  {
-//        Element e = iterator.next();
-//        System.out.println(e.attr("href"));
-      }
-
     }
 
