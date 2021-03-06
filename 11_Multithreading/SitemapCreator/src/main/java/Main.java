@@ -3,6 +3,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
@@ -16,6 +17,7 @@ public class Main {
 
   public static final String URL_NEED = "https://lenta.ru/";
   public static final String URL_SKILLBOX = "https://Skillbox.ru/";
+  public static LinkedList<Element> listURL = new LinkedList<>();
 
   public static void main(String[] args) {
 
@@ -28,6 +30,11 @@ public class Main {
 
     // ===============================================================
 
+
+
+
+        String fgp = new ForkJoinPool().invoke(new LinkGetterWithFJPool(URL_SKILLBOX));
+        System.out.println(fgp);
 
 
       }

@@ -1,30 +1,35 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 
-public class LinkGetterWithFJPool extends RecursiveTask<List<Element>> {
+public class LinkGetterWithFJPool extends RecursiveTask <String> {
 
-  LinkedList<Element> listURL = new LinkedList<>();
   LinkedList<String> listURLtext = new LinkedList<>();
   LinkedList<String> listURLSelect = new LinkedList<>();
-  List<LinkGetterWithFJPool> taskList = new LinkedList<>();
+  LinkedList <String> joinList = new LinkedList<>();
+  String outputFileName = "file.txt";
+  String url;
 
-
-  public LinkGetterWithFJPool(LinkedList<Element> listURL) {
-    this.listURL = listURL;
+  public LinkGetterWithFJPool(String url) {
+    this.url = url;
   }
 
   @Override
-  protected List<Element> compute() {
+  protected String compute() {
+
     Document docNeed = null;
     try {
       docNeed = Jsoup
-          .connect(String.valueOf(Main.URL_SKILLBOX))
+          .connect(String.valueOf(url))
           .userAgent("Mozilla/5.0")
           .timeout(10 * 1000)
           .get(); }
@@ -45,17 +50,27 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<Element>> {
       }
     }
 
-    for (String link : listURLSelect) {
-      Document doc = Jsoup.parse(link);
-      listURL.add(doc);
+    List<LinkGetterWithFJPool> taskList = new ArrayList<>();
+    for (String url : listURLSelect) {
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      LinkGetterWithFJPool task = new LinkGetterWithFJPool(url);
+      task.fork();
+      taskList.add(task);
     }
 
-
-    for (Element url : listURL) {
-      
+    for (LinkGetterWithFJPool task : taskList) {
+      List <String> joinList = Collections.singletonList(task.join());
+//      try (BufferedWriter writter = new BufferedWriter(new FileWriter(outputFileName))) {
+//          writter.write(join + "\n");
+//      }
+//      catch (IOException e) {
+//        e.printStackTrace();
+//      }
     }
-
-
-    return listURL;
+    return String.valueOf(joinList);
   }
 }
