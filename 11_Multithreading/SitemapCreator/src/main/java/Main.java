@@ -33,7 +33,7 @@ public class Main {
 
 
 
-        String fgp = new ForkJoinPool().invoke(new LinkGetterWithFJPool(URL_SKILLBOX));
+        LinkedList<String> fgp = new ForkJoinPool().invoke(new LinkGetterWithFJPool(URL_SKILLBOX));
         System.out.println(fgp);
 
 

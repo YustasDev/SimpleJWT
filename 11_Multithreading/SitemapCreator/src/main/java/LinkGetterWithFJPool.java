@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
@@ -11,7 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class LinkGetterWithFJPool extends RecursiveTask <String> {
+public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 
   LinkedList<String> listURLtext = new LinkedList<>();
   LinkedList<String> listURLSelect = new LinkedList<>();
@@ -24,7 +20,7 @@ public class LinkGetterWithFJPool extends RecursiveTask <String> {
   }
 
   @Override
-  protected String compute() {
+  protected LinkedList<String> compute() {
 
     Document docNeed = null;
     try {
@@ -63,7 +59,7 @@ public class LinkGetterWithFJPool extends RecursiveTask <String> {
     }
 
     for (LinkGetterWithFJPool task : taskList) {
-      List <String> joinList = Collections.singletonList(task.join());
+      LinkedList<String> joinList = task.join();
 //      try (BufferedWriter writter = new BufferedWriter(new FileWriter(outputFileName))) {
 //          writter.write(join + "\n");
 //      }
@@ -71,6 +67,6 @@ public class LinkGetterWithFJPool extends RecursiveTask <String> {
 //        e.printStackTrace();
 //      }
     }
-    return String.valueOf(joinList);
+    return joinList;
   }
 }
