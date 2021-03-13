@@ -5,12 +5,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.RecursiveTask;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 
+  private static final Logger LOGGER = LogManager.getLogger(LinkGetterWithFJPool.class);
+  private static final Marker HISTORY_PARSING = MarkerManager.getMarker("HISTORY_PARSING");
   LinkedList<String> listURLtext = new LinkedList<>();
   LinkedList<String> listURLSelect = new LinkedList<>();
   Set<String> visitedLinks = new HashSet<>();
@@ -34,6 +40,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
           .get(); }
     catch (IOException e) {
       e.printStackTrace();
+      LOGGER.error("Parsing failed {} ", e);
       throw new DuringParseException("Ошибка при парсинге страницы  ", url);
     }
 
