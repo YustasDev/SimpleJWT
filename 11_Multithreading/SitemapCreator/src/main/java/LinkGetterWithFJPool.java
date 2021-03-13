@@ -55,6 +55,8 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
         visitedLinks.add(select);
         if (!visitedLinks.contains(select)) {
           listURLSelect.add(select);
+          LOGGER
+              .info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
         }
       }
     }
