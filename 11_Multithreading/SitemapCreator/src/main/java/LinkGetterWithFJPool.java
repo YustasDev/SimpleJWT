@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.RecursiveTask;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,6 +13,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 
   LinkedList<String> listURLtext = new LinkedList<>();
   LinkedList<String> listURLSelect = new LinkedList<>();
+  Set<String> visitedLinks = new HashSet<>();
   LinkedList <String> joinList = new LinkedList<>();
   String outputFileName = "file.txt";
   String url;
@@ -25,13 +28,13 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
     Document docNeed = null;
     try {
       docNeed = Jsoup
-          .connect(String.valueOf(url))
+          .connect(url)
           .userAgent("Mozilla/5.0")
           .timeout(10 * 1000)
           .get(); }
     catch (IOException e) {
       e.printStackTrace();
-      System.out.println("Ошибка при парсинге страницы");
+      throw new DuringParseException("Ошибка при парсинге страницы  ", url);
     }
 
     for (Element docs : docNeed  // в коде страницы
@@ -42,7 +45,10 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 
     for (String select : listURLtext) {
       if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf")) {
-        listURLSelect.add(select);
+        visitedLinks.add(select);
+        if (!visitedLinks.contains(select)) {
+          listURLSelect.add(select);
+        }
       }
     }
 
