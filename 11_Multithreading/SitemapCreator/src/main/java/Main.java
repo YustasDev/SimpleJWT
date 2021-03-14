@@ -30,13 +30,11 @@ public class Main {
 
     // ===============================================================
 
+    LinkedList<String> resultList = new ForkJoinPool()
+        .invoke(new LinkGetterWithFJPool(URL_SKILLBOX));
+    System.out.println(resultList);
 
 
-
-        LinkedList<String> resultList = new ForkJoinPool().invoke(new LinkGetterWithFJPool(URL_SKILLBOX));
-        System.out.println(resultList);
-
-
-      }
-    }
+  }
+}
 

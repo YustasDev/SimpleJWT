@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class LinkGetter  {
+public class LinkGetter {
 
   private Pattern htmltag;
   private Pattern link;

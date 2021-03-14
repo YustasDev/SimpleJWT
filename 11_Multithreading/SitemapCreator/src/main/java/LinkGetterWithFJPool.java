@@ -20,7 +20,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
   LinkedList<String> listURLtext = new LinkedList<>();
   LinkedList<String> listURLSelect = new LinkedList<>();
   Set<String> visitedLinks = new HashSet<>();
-  LinkedList <String> joinList = new LinkedList<>();
+  LinkedList<String> finalList = new LinkedList<>();
   String outputFileName = "file.txt";
   String url;
 
@@ -37,8 +37,8 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
           .connect(url)
           .userAgent("Mozilla/5.0")
           .timeout(10 * 1000)
-          .get(); }
-    catch (IOException e) {
+          .get();
+    } catch (IOException e) {
       e.printStackTrace();
       LOGGER.error("Parsing failed {} ", e);
       throw new DuringParseException("Ошибка при парсинге страницы  ", url);
@@ -55,8 +55,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
         visitedLinks.add(select);
         if (!visitedLinks.contains(select)) {
           listURLSelect.add(select);
-          LOGGER
-              .info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
+          LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
         }
       }
     }
@@ -74,7 +73,8 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
     }
 
     for (LinkGetterWithFJPool task : taskList) {
-      LinkedList<String> joinList = task.join();
+      finalList.addAll(task.join());
+
 //      try (BufferedWriter writter = new BufferedWriter(new FileWriter(outputFileName))) {
 //          writter.write(join + "\n");
 //      }
@@ -82,6 +82,6 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 //        e.printStackTrace();
 //      }
     }
-    return joinList;
+    return finalList;
   }
 }
