@@ -51,14 +51,13 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
     }
 
     for (String select : listURLtext) {
-      if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf")) {
-        visitedLinks.add(select);
-        if (!visitedLinks.contains(select)) {
+      if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf") && !visitedLinks.contains(select)) {
           listURLSelect.add(select);
           LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
         }
+      visitedLinks.add(select);
       }
-    }
+
 
     List<LinkGetterWithFJPool> taskList = new ArrayList<>();
     for (String url : listURLSelect) {
