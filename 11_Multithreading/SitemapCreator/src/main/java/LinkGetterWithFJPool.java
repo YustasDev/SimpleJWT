@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.RecursiveTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,10 +18,10 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 
   private static final Logger LOGGER = LogManager.getLogger(LinkGetterWithFJPool.class);
   private static final Marker HISTORY_PARSING = MarkerManager.getMarker("HISTORY_PARSING");
-  LinkedList<String> listURLtext = new LinkedList<>();
-  LinkedList<String> listURLSelect = new LinkedList<>();
-  Set<String> visitedLinks = new HashSet<>();
-  LinkedList<String> finalList = new LinkedList<>();
+  List<String> listURLtext = new ArrayList<>();
+  List<String> listURLSelect = new ArrayList<>();
+  static Set<String> visitedLinks = new ConcurrentSkipListSet<>();
+  List<String> finalList = new ArrayList<>();
   String outputFileName = "file.txt";
   String url;
 
@@ -30,7 +31,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 
   @Override
   protected LinkedList<String> compute() {
-
+    visitedLinks.add(url);
     Document docNeed = null;
     try {
       docNeed = Jsoup
@@ -43,6 +44,13 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
       LOGGER.error("Parsing failed {} ", e);
       throw new DuringParseException("Ошибка при парсинге страницы  ", url);
     }
+
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
 
     for (Element docs : docNeed  // в коде страницы
         .select("a[href]"))  // осуществляем поиск элементов соответствующих требованию
@@ -61,11 +69,6 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 
     List<LinkGetterWithFJPool> taskList = new ArrayList<>();
     for (String url : listURLSelect) {
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
       LinkGetterWithFJPool task = new LinkGetterWithFJPool(url);
       task.fork();
       taskList.add(task);
