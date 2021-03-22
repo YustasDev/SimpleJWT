@@ -14,7 +14,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
+public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
 
   private static final Logger LOGGER = LogManager.getLogger(LinkGetterWithFJPool.class);
   private static final Marker HISTORY_PARSING = MarkerManager.getMarker("HISTORY_PARSING");
@@ -30,7 +30,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
   }
 
   @Override
-  protected LinkedList<String> compute() {
+  protected List<String> compute() {
     visitedLinks.add(url);
     Document docNeed = null;
     try {
@@ -51,7 +51,6 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
       e.printStackTrace();
     }
 
-
     for (Element docs : docNeed  // в коде страницы
         .select("a[href]"))  // осуществляем поиск элементов соответствующих требованию
     {
@@ -59,23 +58,21 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
     }
 
     for (String select : listURLtext) {
-      if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf") && !visitedLinks.contains(select)) {
-          listURLSelect.add(select);
-          LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
-        }
-      visitedLinks.add(select);
+      if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf") && !visitedLinks
+          .contains(select)) {
+        listURLSelect.add(select);
+        LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
       }
 
+      List<LinkGetterWithFJPool> taskList = new ArrayList<>();
+      for (String url : listURLSelect) {
+        LinkGetterWithFJPool task = new LinkGetterWithFJPool(url);
+        task.fork();
+        taskList.add(task);
+      }
 
-    List<LinkGetterWithFJPool> taskList = new ArrayList<>();
-    for (String url : listURLSelect) {
-      LinkGetterWithFJPool task = new LinkGetterWithFJPool(url);
-      task.fork();
-      taskList.add(task);
-    }
-
-    for (LinkGetterWithFJPool task : taskList) {
-      finalList.addAll(task.join());
+      for (LinkGetterWithFJPool task : taskList) {
+        finalList.addAll(task.join());
 
 //      try (BufferedWriter writter = new BufferedWriter(new FileWriter(outputFileName))) {
 //          writter.write(join + "\n");
@@ -83,7 +80,9 @@ public class LinkGetterWithFJPool extends RecursiveTask<LinkedList<String>> {
 //      catch (IOException e) {
 //        e.printStackTrace();
 //      }
+      }
     }
     return finalList;
   }
 }
+

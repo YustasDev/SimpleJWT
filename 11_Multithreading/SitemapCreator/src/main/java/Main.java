@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Main {
 
   public static final String URL_NEED = "https://lenta.ru/";
   public static final String URL_SKILLBOX = "https://Skillbox.ru/";
-  public static LinkedList<Element> listURL = new LinkedList<>();
+  public static List<Element> listURL = new ArrayList<>();
 
   public static void main(String[] args) {
 
@@ -30,7 +31,7 @@ public class Main {
 
     // ===============================================================
 
-    LinkedList<String> resultList = new ForkJoinPool()
+    List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_SKILLBOX));
     System.out.println(resultList);
 
