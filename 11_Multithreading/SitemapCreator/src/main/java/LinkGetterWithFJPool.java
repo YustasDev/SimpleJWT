@@ -46,7 +46,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     }
 
     try {
-      Thread.sleep(100);
+      Thread.sleep(150);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -58,7 +58,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     }
 
     for (String select : listURLtext) {
-      if (select.startsWith("https://Skillbox.ru/") && !select.endsWith("pdf") && !visitedLinks
+      if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks
           .contains(select)) {
         listURLSelect.add(select);
         LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);

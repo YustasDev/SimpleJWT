@@ -32,7 +32,7 @@ public class Main {
     // ===============================================================
 
     List<String> resultList = new ForkJoinPool()
-        .invoke(new LinkGetterWithFJPool(URL_SKILLBOX));
+        .invoke(new LinkGetterWithFJPool(URL_NEED));
     System.out.println(resultList);
 
 
