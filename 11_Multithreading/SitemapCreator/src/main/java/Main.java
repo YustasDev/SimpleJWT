@@ -16,9 +16,9 @@ import org.jsoup.select.Elements;
 
 public class Main {
 
-  public static final String URL_NEED = "https://lenta.ru/";
+  //public static final String URL_NEED = "https://lenta.ru/";
+  public static final String URL_NEED = "http://sendel.ru/";
   public static final String URL_SKILLBOX = "https://Skillbox.ru/";
-  public static List<Element> listURL = new ArrayList<>();
 
   public static void main(String[] args) {
 

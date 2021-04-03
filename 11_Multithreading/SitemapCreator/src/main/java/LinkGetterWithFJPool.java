@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -42,7 +41,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     } catch (IOException e) {
       e.printStackTrace();
       LOGGER.error("Parsing failed {} ", e);
-      throw new DuringParseException("Ошибка при парсинге страницы  ", url);
+      return Collections.emptyList();
     }
 
     try {
@@ -58,11 +57,11 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     }
 
     for (String select : listURLtext) {
-      if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks
-          .contains(select)) {
+      if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks.contains(select)) {
         listURLSelect.add(select);
         LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
       }
+    }
 
       List<LinkGetterWithFJPool> taskList = new ArrayList<>();
       for (String url : listURLSelect) {
@@ -73,15 +72,14 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
 
       for (LinkGetterWithFJPool task : taskList) {
         finalList.addAll(task.join());
-
+      }
 //      try (BufferedWriter writter = new BufferedWriter(new FileWriter(outputFileName))) {
 //          writter.write(join + "\n");
 //      }
 //      catch (IOException e) {
 //        e.printStackTrace();
 //      }
-      }
-    }
+
     return finalList;
   }
 }
