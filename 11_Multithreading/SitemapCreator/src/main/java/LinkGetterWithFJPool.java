@@ -1,7 +1,9 @@
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,11 +65,31 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
       if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks.contains(select)) {
         listURLSelect.add(select);
         LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
+        FileWriter writer = null;
         try {
-          Files.write(Paths.get("demo.txt"), listURLSelect, StandardOpenOption.CREATE);
+          writer = new FileWriter("output.txt");
         } catch (IOException e) {
           e.printStackTrace();
         }
+        for(String selectUrl : listURLSelect) {
+          try {
+            writer.write(
+                MessageFormat.format("{0} {1}", selectUrl, System.getProperty("line.separator")));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+        try {
+          writer.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+//        try {
+//          Files.write(Paths.get("demo.txt"), listURLSelect, StandardOpenOption.CREATE);
+//        } catch (IOException e) {
+//          e.printStackTrace();
+//        }
       }
     }
 
@@ -81,7 +103,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
       for (LinkGetterWithFJPool task : taskList) {
         finalList.addAll(task.join());
       }
-
+    finalList.add(url);
     return finalList;
   }
 }
