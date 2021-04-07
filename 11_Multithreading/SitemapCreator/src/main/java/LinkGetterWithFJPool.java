@@ -56,8 +56,15 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
       listURLtext.add(docs.attr("abs:href")); // прибавляем найденные элементы в список
     }
 
+    /*
+    Осуществляем фильтрацию полученных ссылок, в т.ч. исключаем ранее пройденные
+     */
     for (String select : listURLtext) {
-      if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") &&!visitedLinks.contains(select)) {
+      if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks
+          .contains(select)) {
+        /*
+        Если url содержит ссылку на внутренний элемент страницы, сохраняем ссылку отбрасывая все символы после "#"
+         */
 //        if (select.contains("#")) {
 //          int indexOfNeedless = select.indexOf("#");
 //          select = select.substring(0,indexOfNeedless);
@@ -67,16 +74,16 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
       }
     }
 
-      List<LinkGetterWithFJPool> taskList = new ArrayList<>();
-      for (String url : listURLSelect) {
-        LinkGetterWithFJPool task = new LinkGetterWithFJPool(url);
-        task.fork();
-        taskList.add(task);
-      }
+    List<LinkGetterWithFJPool> taskList = new ArrayList<>();
+    for (String url : listURLSelect) {
+      LinkGetterWithFJPool task = new LinkGetterWithFJPool(url);
+      task.fork();
+      taskList.add(task);
+    }
 
-      for (LinkGetterWithFJPool task : taskList) {
-        finalList.addAll(task.join());
-      }
+    for (LinkGetterWithFJPool task : taskList) {
+      finalList.addAll(task.join());
+    }
     finalList.add(url);
     return finalList;
   }

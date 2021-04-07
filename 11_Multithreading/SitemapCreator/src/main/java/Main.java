@@ -6,21 +6,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ForkJoinPool;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.select.Elements;
 
 
 public class Main {
@@ -35,16 +25,16 @@ public class Main {
     System.out.println("Все найденные URL: " + resultList);
     Set<String> nonDuplicates = findDuplicates(resultList);
     System.out.println("Без дубликатов:");
-    nonDuplicates.forEach((e) -> { System.out.println(e); });
+    nonDuplicates.forEach((e) -> {
+      System.out.println(e);
+    });
 
     System.out.println("Отсортированный поток стартовал");
-    try(FileOutputStream fos = new FileOutputStream(recordedFile);
-        PrintStream printStream = new PrintStream(fos))
-    {
+    try (FileOutputStream fos = new FileOutputStream(recordedFile);
+        PrintStream printStream = new PrintStream(fos)) {
       nonDuplicates.stream().sorted(Comparator.naturalOrder())
           .forEach(e -> printStream.println(e));
-    }
-    catch(IOException ex){
+    } catch (IOException ex) {
       System.out.println(ex.getMessage());
     }
 
