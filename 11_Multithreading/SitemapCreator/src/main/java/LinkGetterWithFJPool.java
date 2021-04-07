@@ -19,7 +19,6 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
   private static final Logger LOGGER = LogManager.getLogger(LinkGetterWithFJPool.class);
   private static final Marker HISTORY_PARSING = MarkerManager.getMarker("HISTORY_PARSING");
   List<String> listURLtext = new ArrayList<>();
-  //List<String> listURLSelect = new ArrayList<>();
   Set<String> listURLSelect = new ConcurrentSkipListSet<>();
   static Set<String> visitedLinks = new ConcurrentSkipListSet<>();
   List<String> finalList = new ArrayList<>();
@@ -58,7 +57,11 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     }
 
     for (String select : listURLtext) {
-      if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks.contains(select)) {
+      if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") &&!visitedLinks.contains(select)) {
+//        if (select.contains("#")) {
+//          int indexOfNeedless = select.indexOf("#");
+//          select = select.substring(0,indexOfNeedless);
+//        }
         listURLSelect.add(select);
         LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
       }
