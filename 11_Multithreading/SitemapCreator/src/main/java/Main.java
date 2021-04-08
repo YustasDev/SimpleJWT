@@ -1,14 +1,12 @@
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
@@ -23,13 +21,13 @@ public class Main {
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
     System.out.println("Все найденные URL: " + resultList);
-    Set<String> nonDuplicates = findDuplicates(resultList);
-    System.out.println("Без дубликатов:");
+    Set<String> nonDuplicates = cleanDuplicatesAndInternalElements(resultList);
+    System.out.println("Без дубликатов и внутренних элементов:");
     nonDuplicates.forEach((e) -> {
       System.out.println(e);
     });
 
-    System.out.println("Отсортированный поток стартовал");
+    System.out.println("Сортировка коллекции стартовала");
     try (FileOutputStream fos = new FileOutputStream(recordedFile);
         PrintStream printStream = new PrintStream(fos)) {
       nonDuplicates.stream().sorted(Comparator.naturalOrder())
@@ -41,11 +39,16 @@ public class Main {
     System.out.println("Запись в файл произведена");
   }
 
-  public static Set<String> findDuplicates(Collection<String> collection) {
+  public static Set<String> cleanDuplicatesAndInternalElements(Collection<String> collection) {
     Set<String> elements = new TreeSet<>();
-    return collection.stream()
-        .filter(e -> elements.add(e))
-        .collect(Collectors.toSet());
+    for (String element : collection) {
+      if (element.contains("#")) {
+        int indexOfNeedless = element.indexOf("#");
+        element = element.substring(0, indexOfNeedless);
+      }
+      elements.add(element);
+    }
+    return elements;
   }
 }
 

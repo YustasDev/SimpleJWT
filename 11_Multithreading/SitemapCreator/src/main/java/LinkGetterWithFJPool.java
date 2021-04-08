@@ -62,13 +62,6 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     for (String select : listURLtext) {
       if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks
           .contains(select)) {
-        /*
-        Если url содержит ссылку на внутренний элемент страницы, сохраняем ссылку отбрасывая все символы после "#"
-         */
-//        if (select.contains("#")) {
-//          int indexOfNeedless = select.indexOf("#");
-//          select = select.substring(0,indexOfNeedless);
-//        }
         listURLSelect.add(select);
         LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);
       }
