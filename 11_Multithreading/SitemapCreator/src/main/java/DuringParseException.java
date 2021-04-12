@@ -8,8 +8,8 @@ public class DuringParseException extends RuntimeException {
     return url;
   }
 
-  public DuringParseException(String message, String url) {
-    super(message);
+  public DuringParseException(String message, Exception e, String url) {
+    super(message, e);
     this.url = url;
     System.err.println(url);
   }

@@ -41,7 +41,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     } catch (IOException e) {
       e.printStackTrace();
       LOGGER.error("Parsing failed {} ", e);
-      return Collections.emptyList();
+      throw new DuringParseException("Ошибка при парсинге страницы  ", e, url);
     }
 
     try {
@@ -53,7 +53,13 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     for (Element docs : docNeed  // в коде страницы
         .select("a[href]"))  // осуществляем поиск элементов соответствующих требованию
     {
-      listURLtext.add(docs.attr("abs:href")); // прибавляем найденные элементы в список
+      String element = docs
+          .attr("abs:href"); // можно и не вводить эту переменную, но с ней нагляднее
+      if (element.contains("#")) {  // избавляемся от "#" в ссылках
+        int indexOfNeedless = element.indexOf("#");
+        element = element.substring(0, indexOfNeedless);
+      }
+      listURLtext.add(element); // прибавляем найденные элементы в список
     }
 
     /*
@@ -75,7 +81,11 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
     }
 
     for (LinkGetterWithFJPool task : taskList) {
-      finalList.addAll(task.join());
+      try {
+        finalList.addAll(task.join());
+      } catch (Exception e) {
+        System.out.println(" Error into -> " + task.url);
+      }
     }
     finalList.add(url);
     return finalList;

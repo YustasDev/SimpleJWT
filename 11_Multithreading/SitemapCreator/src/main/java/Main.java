@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class Main {
@@ -21,8 +22,8 @@ public class Main {
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
     System.out.println("Все найденные URL: " + resultList);
-    Set<String> nonDuplicates = cleanDuplicatesAndInternalElements(resultList);
-    System.out.println("Без дубликатов и внутренних элементов:");
+    Set<String> nonDuplicates = cleanDuplicates(resultList);
+    System.out.println("URL без дубликатов:");
     nonDuplicates.forEach((e) -> {
       System.out.println(e);
     });
@@ -31,21 +32,30 @@ public class Main {
     try (FileOutputStream fos = new FileOutputStream(recordedFile);
         PrintStream printStream = new PrintStream(fos)) {
       nonDuplicates.stream().sorted(Comparator.naturalOrder())
-          .forEach(e -> printStream.println(e));
+          .forEach(url ->
+              {
+                String[] data = url.split("\\/");
+                int count = data.length;
+                /*
+                Если увидя следующую строку Вы захотите сжечь меня на костре, я прошу "Понять и простить"
+                 */
+                printStream.println(IntStream.range(0, count).boxed().map((i) -> "\t")
+                    .collect(Collectors.joining()) + url);
+              }
+          );
     } catch (IOException ex) {
       System.out.println(ex.getMessage());
     }
-
     System.out.println("Запись в файл произведена");
   }
 
-  public static Set<String> cleanDuplicatesAndInternalElements(Collection<String> collection) {
+  /*
+  Можно было избавиться от дубликатов с помощью Java Stream distinct()
+  но так нагляднее
+   */
+  public static Set<String> cleanDuplicates(Collection<String> collection) {
     Set<String> elements = new TreeSet<>();
     for (String element : collection) {
-      if (element.contains("#")) {
-        int indexOfNeedless = element.indexOf("#");
-        element = element.substring(0, indexOfNeedless);
-      }
       elements.add(element);
     }
     return elements;
