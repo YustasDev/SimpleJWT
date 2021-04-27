@@ -8,6 +8,8 @@ public class NeverSleepingEye implements java.lang.reflect.InvocationHandler {
   public Object invoke(Object proxy, java.lang.reflect.Method method, Object[] args)
       throws Throwable {
     System.out.println("NeverSleepingEye invoke : " + method.getName());
-    return method.invoke(obj, args) ;
+    return method.getName();
+
+    //return method.invoke(obj, args) ;
   }
 }

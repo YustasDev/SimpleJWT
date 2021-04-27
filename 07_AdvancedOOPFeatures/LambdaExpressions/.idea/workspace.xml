@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8af3af67-8288-4cfc-87da-2125e57fdf0e" name="Default Changelist" comment="Home_work 7.8 _ проверка">
-      <change afterPath="$PROJECT_DIR$/../../09_FilesAndNetwork/CSVReading/data/movementList.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../09_FilesAndNetwork/CSVReading/src/main/java/BankStatement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../09_FilesAndNetwork/CSVReading/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,7 +19,6 @@
     <option name="autoscrollFromSource" value="true" />
     <option name="autoscrollToSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -29,11 +26,14 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="$APPLICATION_HOME_DIR$/jbr" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="LambdaExpressions" />
       <method v="2">
@@ -46,18 +46,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -108,6 +97,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="Home_work 7.8 _ проверка" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="414" y="174" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1596471871876">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="174" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1596471871876" />
     <state x="765" y="229" key="#com.intellij.ide.util.MemberChooser" timestamp="1590665699892">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -120,26 +113,30 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="518" y="114" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590862925238" />
-    <state x="740" y="277" key="FileChooserDialogImpl" timestamp="1590432277120">
+    <state x="740" y="277" key="FileChooserDialogImpl" timestamp="1596472051252">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="277" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1590432277120" />
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1590672548602">
+    <state x="740" y="277" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1596472051252" />
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1596473119948">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590672548602" />
-    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1590672548601">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1596473119948" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1596473119948">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590672548601" />
-    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1590672548601">
+    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1596473119948" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1596473119948">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590672548601" />
-    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1590672548602">
+    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1596473119948" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1596473119948">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590672548602" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1596473119948" />
+    <state x="440" y="94" key="SettingsEditor" timestamp="1596472392075">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="440" y="94" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1596472392075" />
     <state x="552" y="255" key="Vcs.Push.Dialog.v2" timestamp="1590863030334">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

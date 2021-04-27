@@ -42,6 +42,16 @@ public class Loader {
 
     result.forEach(System.out::println);
 
+    System.out.println("НАЧАЛО");
+    long factor = 1;
+    for (int i = 1; i == 8; i++) {
+      factor = factor*i;
+      System.err.println("СЕРЕДИНА");
+      System.out.println(factor);
+    }
+    System.out.println("ОКОНЧАНИЕ");
+
+
     System.err.println("#1.in");
     f(); // создаем фрейм, помещаем в стек, передаем в него управление
     System.err.println("#1.out"); // вернулись
@@ -67,4 +77,5 @@ public class Loader {
     }
     System.err.println(".   .   .   #4.out"); // ПРОПУСКАЕМ
   }
-}
+
+ }

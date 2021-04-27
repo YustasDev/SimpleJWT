@@ -22,7 +22,7 @@ public class Main {
       ResultSet resultSet = statement.executeQuery(
           "SELECT course_name, cnt/sales_period as AVGMONTHSALES FROM (SELECT course_name, YEAR(subscription_date),"
               + " (MONTH(max(subscription_date)) - month(min(subscription_date))+1) as sales_period, COUNT(*) AS cnt "
-              + "FROM purchaselist GROUP BY 1) foo GROUP BY 1;");
+              + "FROM Purchaselist GROUP BY 1) foo GROUP BY 1;");
 
       System.out.println("Среднее количество покупок в месяц для каждого курса за 2018 год" + "\n");
 

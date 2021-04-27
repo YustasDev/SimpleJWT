@@ -1,10 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,9 +11,9 @@ import org.jsoup.select.Elements;
 
 public class Main {
 
-    public static Map<String, Object> metro = new HashMap<>();                 // Общая коллекция
-    public static Map<String, List<String>> stations = new HashMap<>();        // Коллекция станций
-    public static Set<String> lineNumbers = new HashSet<String>();             // Коллекция номеров линий
+//    public static Map<String, Object> metro = new HashMap<>();                 // Общая коллекция
+//    public static Map<String, List<String>> stations = new HashMap<>();        // Коллекция станций
+//    public static Set<String> lineNumbers = new HashSet<String>();             // Коллекция номеров линий
 
 
     private static final String URL_NEED = "https://www.moscowmap.ru/metro.html#lines";
@@ -54,16 +53,26 @@ public class Main {
 
 
         List<MetroLine> lines = new ArrayList<>();
+        List<String> stations = new ArrayList<>();
 
-      element.select("span.js-metro-line").forEach(el -> {
+      List<String> finalStations = stations;
+      //Map<MetroLine, List<String>> inventoryMetro =
+          element.select("data-line").forEach(el -> {
+            String name = el.select("span.js-metro-line").text();
             String number = el.attributes().get("data-line");
-            String name = el.text();
-            lines.add(new MetroLine(number, name));
+            finalStations.add(el.select("div.js-metro-stations").text());
+            lines.add(new MetroLine(number, name, finalStations));
           });
 
 
+//
+//            collect(Collectors.groupingBy(MetroLine::getName, TreeMap::new,
+//            Collectors.toList(stations = el
+//
+
 
           lines.forEach(System.out::println);
+          //stations.forEach(System.out::println);
       }
 
     }

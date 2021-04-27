@@ -16,10 +16,10 @@ public class Main {
 
     System.out.println(h + person);
 
-    personproxy.setName("Гриша");
+    personproxy.setName("Петя");
     String hh = personproxy.getName();
-    personproxy.rename("Вася");
+    personproxy.rename("Федя");
 
-    System.out.println(hh + personproxy);
+    System.out.println(personproxy);
   }
 }

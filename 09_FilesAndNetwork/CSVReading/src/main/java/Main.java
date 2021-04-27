@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+
 public class Main {
 
   private static final int INDEX_ORGANIZATION = 5;
@@ -23,6 +24,7 @@ public class Main {
     printSumExpense();
     printSumIncome();
     printAmountExpensesByOrganization();
+
   }
 
   private static void printSumExpense() {
