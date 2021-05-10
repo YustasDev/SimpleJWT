@@ -3,6 +3,8 @@ package response;
 public class Book {
 
   private int id;
+  private String name;
+  private int year;
 
   public int getId() {
     return id;
@@ -28,8 +30,7 @@ public class Book {
     this.year = year;
   }
 
-  private String name;
-  private int year;
+
 
 
 }
