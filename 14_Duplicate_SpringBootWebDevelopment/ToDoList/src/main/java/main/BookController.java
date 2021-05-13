@@ -29,8 +29,8 @@ public class BookController {
         return new ResponseEntity(book, HttpStatus.OK);
     }
 
-    @PutMapping("/books/{newBook}")
-    public int replaceBook(@PathVariable Book newBook) {
+    @PutMapping("/books/")
+    public int replaceBook(Book newBook) {
         return Storage.replaceBook(newBook);
     }
 
