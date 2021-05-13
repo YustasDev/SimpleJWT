@@ -2,7 +2,7 @@ $(function(){
 
     const appendBook = function(data){
         var bookCode = '<a href = "#" class = "book-link" data-id="' +
-        data.id + '">' + data.name + '</a>';
+        data.id + '">' + data.name + '</a><br>';
         $('#book-list')
             .append('<div>' + bookCode + '</div>');
     };
