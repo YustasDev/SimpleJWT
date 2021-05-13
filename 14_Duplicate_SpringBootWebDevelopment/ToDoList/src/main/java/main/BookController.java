@@ -42,5 +42,15 @@ public class BookController {
         }
         return new ResponseEntity(book, HttpStatus.OK);
     }
-}
+
+    @DeleteMapping("/books/")
+    public ResponseEntity deleteAll()
+    {
+        List<Book> deleteAllBooks = Storage.deleteAllBooks();
+        if (deleteAllBooks == null) {
+            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(null);
+        }
+        return new ResponseEntity(deleteAllBooks, HttpStatus.OK);
+    }
+  }
 
