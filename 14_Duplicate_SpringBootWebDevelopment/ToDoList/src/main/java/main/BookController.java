@@ -10,23 +10,38 @@ import response.Book;
 @RestController
 public class BookController {
 
-  @GetMapping("/books/")
-  public List<Book> list(){
-    return Storage.getAllBooks();
-  }
+    @GetMapping("/books/")
+    public List<Book> list() {
+        return Storage.getAllBooks();
+    }
 
-  @PostMapping("/books/")
-  public int add(Book book) {
-    return Storage.addBook(book);
-  }
+    @PostMapping("/books/")
+    public int add(Book book) {
+        return Storage.addBook(book);
+    }
 
-  @GetMapping("/books/{id}")
-  public ResponseEntity get(@PathVariable int id){
-  Book book = Storage.getBook(id);
-  if (book == null){
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-  }
-    return new ResponseEntity(book, HttpStatus.OK);
-  }
+    @GetMapping("/books/{id}")
+    public ResponseEntity get(@PathVariable int id) {
+        Book book = Storage.getBook(id);
+        if (book == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return new ResponseEntity(book, HttpStatus.OK);
+    }
+
+    @PutMapping("/books/{newBook}")
+    public int replaceBook(@PathVariable Book newBook) {
+        return Storage.replaceBook(newBook);
+    }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity deleteBook(@PathVariable int id) {
+        Book book = Storage.deleteBook(id);
+        if (book == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return new ResponseEntity(book, HttpStatus.OK);
+    }
 
 }
+
