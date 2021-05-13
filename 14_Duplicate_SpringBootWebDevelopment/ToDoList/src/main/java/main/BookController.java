@@ -42,6 +42,5 @@ public class BookController {
         }
         return new ResponseEntity(book, HttpStatus.OK);
     }
-
 }
 
