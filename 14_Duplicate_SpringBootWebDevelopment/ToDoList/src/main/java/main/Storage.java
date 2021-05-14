@@ -1,72 +1,73 @@
 package main;
 
+import response.CriminalCase;
+
 import java.util.*;
-import response.Book;
 
 public class Storage {
 
-    private static int currentId = 1;
-    private static Map<Integer, Book> books = createNewMap();
+    private static int caseId = 1;
+    private static Map<Integer, CriminalCase> cases = createNewMap();
 
-    private static Map<Integer, Book> createNewMap() {
-        return Collections.synchronizedMap(new HashMap<Integer, Book>());
+    private static Map<Integer, CriminalCase> createNewMap() {
+        return Collections.synchronizedMap(new HashMap<Integer, CriminalCase>());
     }
 
-    public static List<Book> getAllBooks() {
-        synchronized (books) {
-            ArrayList<Book> bookList = new ArrayList<Book>();
-            bookList.addAll(books.values());
-            return bookList;
+    public static List<CriminalCase> getAllCases() {
+        synchronized (cases) {
+            ArrayList<CriminalCase> caseList = new ArrayList<CriminalCase>();
+            caseList.addAll(cases.values());
+            return caseList;
         }
     }
 
-    public static int addBook(Book book) {
-        synchronized (books) {
-            int id = currentId++;
-            book.setId(id);
-            books.put(id, book);
+    public static int addCase(CriminalCase criminalCase) {
+        synchronized (cases) {
+            int id = caseId++;
+            criminalCase.setId(id);
+            cases.put(id, criminalCase);
             return id;
         }
     }
 
-    public static Book getBook(int bookId) {
-        if (books.containsKey(bookId)) {
-            return books.get(bookId);
+    public static CriminalCase getCase(int criminalCaseId) {
+        if (cases.containsKey(criminalCaseId)) {
+            return cases.get(criminalCaseId);
         }
         return null;
     }
 
-    public static int replaceBook(Book newBook) {
-        synchronized (books) {
-            int bookId = newBook.getId();
-            if (books.containsKey(bookId)) {
-                books.replace(bookId, newBook);
+    public static int replaceCase(CriminalCase newCase) {
+        synchronized (cases) {
+            int caseId = newCase.getId();
+            if (cases.containsKey(caseId)) {
+                cases.replace(caseId, newCase);
             } else {
-                newBook.setId(bookId);
-                books.put(bookId, newBook);
+                newCase.setId(caseId);
+                cases.put(caseId, newCase);
             }
-            return bookId;
+            return caseId;
         }
     }
 
-    public static Book deleteBook(int id) {
-        synchronized (books) {
-            if (books.containsKey(id)) {
-                return books.remove(id);
+    public static CriminalCase deleteCase(int id) {
+        synchronized (cases) {
+            if (cases.containsKey(id)) {
+                return cases.remove(id);
             }
             return null;
         }
     }
 
-    public static List<Book> deleteAllBooks() {
-        synchronized (books) {
-            if (!books.isEmpty()) {
-                ArrayList<Book> deleteBooks = new ArrayList<Book>();
-                deleteBooks.addAll(books.values());
-                books.clear();
-                return deleteBooks;
+    public static List<CriminalCase> deleteAllCase() {
+        synchronized (cases) {
+            if (!cases.isEmpty()) {
+                ArrayList<CriminalCase> deleteCase = new ArrayList<CriminalCase>();
+                deleteCase.addAll(cases.values());
+                cases.clear();
+                return deleteCase;
             } else {
-                System.out.println("The list of books is missing");
+                System.out.println("The list of Criminal Case is missing");
                 return null;
             }
         }
