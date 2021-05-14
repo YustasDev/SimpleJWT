@@ -49,26 +49,25 @@ public class CaseController {
 
     @DeleteMapping("/cases/{id}")
     public ResponseEntity deleteCase(@PathVariable int id) {
-        //ResponseEntity<CriminalCase> deleteCase =
-                caseRepository.deleteById(id);
-
-
-
-
-        if (criminalCase == null) {
+        Optional<CriminalCase> deleteCase = caseRepository.findById(id);
+        if (!deleteCase.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return new ResponseEntity(criminalCase, HttpStatus.OK);
+        caseRepository.deleteById(id);
+        return new ResponseEntity(deleteCase.get(), HttpStatus.OK);
     }
 
     @DeleteMapping("/cases/")
     public ResponseEntity deleteAll()
     {
-        List<CriminalCase> deleteAllCase = Storage.deleteAllCase();
+        Iterable<CriminalCase> deleteAllCase = caseRepository.findAll();
         if (deleteAllCase == null) {
             return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(null);
         }
-        return new ResponseEntity(deleteAllCase, HttpStatus.OK);
+        List<CriminalCase> deleteAllCaseList = new ArrayList<>();
+        deleteAllCaseList = Streamable.of(deleteAllCase).toList();
+        caseRepository.deleteAll();
+        return new ResponseEntity(deleteAllCaseList, HttpStatus.OK);
     }
   }
 
