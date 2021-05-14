@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import main.model.CaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +34,27 @@ public class CaseController {
 
     @GetMapping("/cases/{id}")
     public ResponseEntity get(@PathVariable int id) {
-        CriminalCase criminalCase = Storage.getCase(id);
-        if (criminalCase == null) {
+        Optional<CriminalCase> optionalCriminalCase = caseRepository.findById(id);
+        if (!optionalCriminalCase.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return new ResponseEntity(criminalCase, HttpStatus.OK);
+        return new ResponseEntity(optionalCriminalCase.get(), HttpStatus.OK);
     }
 
     @PutMapping("/cases/")
     public int replaceCase(CriminalCase newCase) {
-        return Storage.replaceCase(newCase);
+        CriminalCase updatedCase = caseRepository.save(newCase);
+        return updatedCase.getId();
     }
 
     @DeleteMapping("/cases/{id}")
     public ResponseEntity deleteCase(@PathVariable int id) {
-        CriminalCase criminalCase = Storage.deleteCase(id);
+        //ResponseEntity<CriminalCase> deleteCase =
+                caseRepository.deleteById(id);
+
+
+
+
         if (criminalCase == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
