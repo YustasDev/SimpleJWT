@@ -1,23 +1,34 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import main.model.CaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import model.CriminalCase;
+import main.model.CriminalCase;
 
 @RestController
 public class CaseController {
 
+    @Autowired
+    private CaseRepository caseRepository;
+
     @GetMapping("/cases/")
     public List<CriminalCase> list() {
-        return Storage.getAllCases();
+        Iterable<CriminalCase> criminalCaseIterable = caseRepository.findAll();
+        List<CriminalCase> criminalCaseList = new ArrayList<>();
+        criminalCaseList = Streamable.of(criminalCaseIterable).toList();
+        return criminalCaseList;
     }
 
     @PostMapping("/cases/")
     public int add(CriminalCase criminalCase) {
-        return Storage.addCase(criminalCase);
+        CriminalCase addedCase = caseRepository.save(criminalCase);
+        return addedCase.getId();
     }
 
     @GetMapping("/cases/{id}")

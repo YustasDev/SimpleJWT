@@ -1,6 +1,6 @@
 package main;
 
-import model.CriminalCase;
+import main.model.CriminalCase;
 
 import java.util.*;
 
