@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,16 +59,19 @@ public class CaseController {
     }
 
     @DeleteMapping("/cases/")
-    public ResponseEntity deleteAll()
-    {
+    public ResponseEntity deleteAll() {
         Iterable<CriminalCase> deleteAllCase = caseRepository.findAll();
         if (deleteAllCase == null) {
-            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else if (Streamable.of(deleteAllCase).toList().isEmpty()) {
+            String answer = "The list of Criminal Case is missing";
+            return new ResponseEntity(answer, HttpStatus.RESET_CONTENT);
+        } else {
+            List<CriminalCase> deleteAllCaseList = new ArrayList<>();
+            deleteAllCaseList = Streamable.of(deleteAllCase).toList();
+            caseRepository.deleteAll();
+            return new ResponseEntity(deleteAllCaseList, HttpStatus.OK);
         }
-        List<CriminalCase> deleteAllCaseList = new ArrayList<>();
-        deleteAllCaseList = Streamable.of(deleteAllCase).toList();
-        caseRepository.deleteAll();
-        return new ResponseEntity(deleteAllCaseList, HttpStatus.OK);
     }
-  }
+}
 
