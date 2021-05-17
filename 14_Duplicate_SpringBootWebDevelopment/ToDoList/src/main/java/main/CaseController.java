@@ -22,24 +22,29 @@ public class CaseController {
     @GetMapping("/cases/")
     public List<CriminalCase> list() {
         Iterable<CriminalCase> criminalCaseIterable = caseRepository.findAll();
-        List<CriminalCase> criminalCaseList = new ArrayList<>();
-        criminalCaseList = Streamable.of(criminalCaseIterable).toList();
-        return criminalCaseList;
+        return Streamable.of(criminalCaseIterable).toList();
     }
+
+    @GetMapping("/cases/{id}")
+    public ResponseEntity get(@PathVariable int id) {
+        return caseRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+   @GetMapping("/cases/{description}")
+   @ResponseBody
+   public  List<CriminalCase> getFindByDescription(@RequestParam String description) {
+
+
+    }
+
+
 
     @PostMapping("/cases/")
     public int add(CriminalCase criminalCase) {
         CriminalCase addedCase = caseRepository.save(criminalCase);
         return addedCase.getId();
-    }
-
-    @GetMapping("/cases/{id}")
-    public ResponseEntity get(@PathVariable int id) {
-        Optional<CriminalCase> optionalCriminalCase = caseRepository.findById(id);
-        if (!optionalCriminalCase.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return new ResponseEntity(optionalCriminalCase.get(), HttpStatus.OK);
     }
 
     @PutMapping("/cases/")
@@ -60,18 +65,14 @@ public class CaseController {
 
     @DeleteMapping("/cases/")
     public ResponseEntity deleteAll() {
-        Iterable<CriminalCase> deleteAllCase = caseRepository.findAll();
-        if (deleteAllCase == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } else if (Streamable.of(deleteAllCase).toList().isEmpty()) {
+        List<CriminalCase> deleteAllCase = Streamable.of(caseRepository.findAll()).toList();
+        if (deleteAllCase.isEmpty()) {
             String answer = "The list of Criminal Case is missing";
-            return new ResponseEntity(answer, HttpStatus.RESET_CONTENT);
-        } else {
-            List<CriminalCase> deleteAllCaseList = new ArrayList<>();
-            deleteAllCaseList = Streamable.of(deleteAllCase).toList();
-            caseRepository.deleteAll();
-            return new ResponseEntity(deleteAllCaseList, HttpStatus.OK);
+            return new ResponseEntity<>(answer, HttpStatus.RESET_CONTENT);
+        }
+        caseRepository.deleteAll();
+        return new ResponseEntity<>(deleteAllCase, HttpStatus.OK);
         }
     }
-}
+
 
