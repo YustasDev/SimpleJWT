@@ -1,7 +1,5 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,13 +30,11 @@ public class CaseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-   @GetMapping("/cases/{description}")
-   @ResponseBody
-   public  List<CriminalCase> getFindByDescription(@RequestParam String description) {
-
-
+    @GetMapping(value = "/cases/", params = "description")
+    public List<CriminalCase> getFindByDescription(@RequestParam String description) {
+        Iterable<CriminalCase> criminalCaseIterable = caseRepository.findByDescription(description);
+        return Streamable.of(criminalCaseIterable).toList();
     }
-
 
 
     @PostMapping("/cases/")

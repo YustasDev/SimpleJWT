@@ -8,8 +8,5 @@ import java.util.List;
 @Repository
 public interface CaseRepository extends CrudRepository<CriminalCase, Integer> {
 
-    List<CriminalCase> findByDescription(String str);
-
-
-
+    Iterable<CriminalCase> findByDescription(String description);
 }
