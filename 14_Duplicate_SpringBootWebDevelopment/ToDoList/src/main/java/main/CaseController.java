@@ -69,6 +69,8 @@ public class CaseController {
         caseRepository.deleteAll();
         return new ResponseEntity<>(deleteAllCase, HttpStatus.OK);
         }
+
+        // this is just a sync check with gitlab
     }
 
 
