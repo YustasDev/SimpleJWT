@@ -2,29 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Book Library</title>
+  <title>LIST OF CRIMINAL CASES</title>
   <script src="/js/jquery-3.4.0.min.js"></script>
   <script src="/js/main.js"></script>
   <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-<div id="book-form">
+<div id="case-form">
   <form>
-    <h2>Добавление книги</h2>
-    <label>Название книги:</label>
-    <input type="text" name="name" value="">
-    <label>Год выпуска:</label>
-    <input type="text" name="year" value="">
+    <h2>Добавление дела</h2>
+    <label>Описание дела:</label>
+    <input type="text" name="description" value="">
+    <label>Номер дела:</label>
+    <input type="text" name="number" value="">
     <hr>
-    <button id="save-book">Сохранить</button>
+    <button id="save-case">Сохранить</button>
   </form>
 </div>
-<h1>Библиотека (<span th:text="${booksCount}">0</span>)</h1>
-<button id="show-add-book-form">Добавить книгу</button>
+<h1>Список дел (<span th:text="${CaseCount}">0</span>)</h1>
+<button id="show-add-case-form">Добавить дело</button>
 <br><br>
-<div id="book-list">
-  <div th:each="book : ${books}">
-    <a href="#" class="book-link" th:attr="data-id=${book.id}" th:text="${book.name}"></a>
+<div id="case-list">
+  <div th:each="case : ${listOfCase}">
+    <a href="#" class="case-link" th:attr="data-id=${case.id}" th:text="${case.description}"></a>
   </div>
 </div>
 <p th:text="${someParameter}"></p>
