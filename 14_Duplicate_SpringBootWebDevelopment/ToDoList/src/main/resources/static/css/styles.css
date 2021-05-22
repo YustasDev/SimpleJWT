@@ -2,7 +2,7 @@
     font-family: Arial;
 }
 
-#book-form {
+#case-form {
     display: none;
     align-items: center;
     justify-content: center;
@@ -15,22 +15,22 @@
     background-color: #88888878;
 }
 
-#book-form form {
+#case-form form {
     background-color: white;
     border: 1px solid #333;
     width: 300px;
     padding: 20px;
 }
 
-#book-form h2 {
+#case-form h2 {
     margin-top: 0;
 }
 
-#book-form label {
+#case-form label {
     display: block;
 }
 
-#book-form form > * {
+#case-form form > * {
     margin-bottom: 5px;
 }
 

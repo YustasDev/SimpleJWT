@@ -1,72 +1,72 @@
 $(function(){
 
     const appendBook = function(data){
-        var bookCode = '<a href = "#" class = "book-link" data-id="' +
-        data.id + '">' + data.name + '</a><br>';
-        $('#book-list')
-            .append('<div>' + bookCode + '</div>');
+        var caseCode = '<a href = "#" class = "case-link" data-id="' +
+        data.id + '">' + data.description + '</a><br>';
+        $('#case-list')
+            .append('<div>' + caseCode + '</div>');
     };
 
     //Loading books on load page
-    $.get('/books/', function(response)
-    {
-        for(i in response) {
-            appendBook(response[i]);
-        }
+ //  $.get('/books/', function(response)
+ //  {
+ //       for(i in response) {
+ //          appendBook(response[i]);
+ //       }
+ //  });
+
+    //Show adding case form
+    $('#show-add-case-form').click(function(){
+        $('#case-form').css('display', 'flex');
     });
 
-    //Show adding book form
-    $('#show-add-book-form').click(function(){
-        $('#book-form').css('display', 'flex');
-    });
-
-    //Closing adding book form
-    $('#book-form').click(function(event){
+    //Closing adding case form
+    $('#case-form').click(function(event){
         if(event.target === this) {
             $(this).css('display', 'none');
         }
     });
 
-    //Getting book
-    $(document).on('click', '.book-link', function(){
+    //Getting case
+    $(document).on('click', '.case-link', function(){
         var link = $(this);
-        var bookId = link.data('id');
+        var caseId = link.data('id');
         $.ajax({
             method: "GET",
-            url: '/books/' + bookId,
+            url: '/cases/' + caseId,
             success: function(response)
             {
-                var code = '<span>Год выпуска:' + response.year + '</span>';
+                var code = '<span>Номер дела:' + response.number + '</span>';
                 link.parent().append(code);
             },
             error: function(response)
             {
                 if(response.status == 404) {
-                    alert('Книга не найдена!');
+                    alert('Дело не найдено!');
                 }
             }
         });
         return false;
     });
 
-    //Adding book
-    $('#save-book').click(function()
+    //Adding case
+    $('#save-case').click(function()
     {
-        var data = $('#book-form form').serialize();
+        var data = $('#case-form form').serialize();
         $.ajax({
             method: "POST",
-            url: '/books/',
+            url: '/cases/',
             data: data,
             success: function(response)
             {
-                $('#book-form').css('display', 'none');
+                $('#case-form').css('display', 'none');
                 var book = {};
                 book.id = response;
-                var dataArray = $('#book-form form').serializeArray();
+                var dataArray = $('#case-form form').serializeArray();
                 for(i in dataArray) {
-                    book[dataArray[i]['name']] = dataArray[i]['value'];
+                    book[dataArray[i]['description']] = dataArray[i]['value'];
                 }
-                appendBook(book);
+                appendCase(case);
             }
         });
         return false;
