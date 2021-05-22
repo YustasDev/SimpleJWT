@@ -1,6 +1,6 @@
 $(function(){
 
-    const appendBook = function(data){
+    const appendCase = function(data){
         var caseCode = '<a href = "#" class = "case-link" data-id="' +
         data.id + '">' + data.description + '</a><br>';
         $('#case-list')
