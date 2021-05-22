@@ -60,11 +60,11 @@ $(function(){
             success: function(response)
             {
                 $('#case-form').css('display', 'none');
-                var book = {};
-                book.id = response;
+                var case = {};
+                case.id = response;
                 var dataArray = $('#case-form form').serializeArray();
                 for(i in dataArray) {
-                    book[dataArray[i]['description']] = dataArray[i]['value'];
+                    case[dataArray[i]['description']] = dataArray[i]['value'];
                 }
                 appendCase(case);
             }
