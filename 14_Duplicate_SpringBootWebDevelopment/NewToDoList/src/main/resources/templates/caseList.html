@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Person List</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Case List</h1>
+<a href="addCase">Add Case</a>
+<br/><br/>
+<div>
+  <table border="1">
+    <tr>
+      <th>Number Case</th>
+      <th>Description Case</th>
+    </tr>
+    <tr th:each ="case : ${cases}">
+      <td th:utext="${case.numberCase}">...</td>
+      <td th:utext="${case.descriptionCase}">...</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

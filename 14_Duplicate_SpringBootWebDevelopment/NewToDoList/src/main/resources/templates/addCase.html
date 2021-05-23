@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Case</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Create a Case:</h1>
+
+<form th:action="@{/addCase}"
+      th:object="${caseForm}" method="POST">
+  Number Case:
+  <input type="text" th:field="*{numberCase}" />
+  <br/>
+  Description Case:
+  <input type="text" th:field="*{descriptionCase}" />
+  <br/>
+  <input type="submit" value="Create" />
+</form>
+
+<br/>
+
+<!-- Check if errorMessage is not null and not empty -->
+
+<div th:if="${errorMessage}" th:utext="${errorMessage}"
+     style="color:red;font-style:italic;">
+  ...
+</div>
+
+</body>
+</html>
