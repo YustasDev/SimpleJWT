@@ -29,18 +29,19 @@ public class DefaultController {
     model.addAttribute("listOfCase", listOfCase);
     model.addAttribute("caseCount", listOfCase.size());
     model.addAttribute("someParameter", someParameter);
-//    CriminalCase criminalCase = new CriminalCase();
-//    criminalCase.setNumber(Integer.parseInt("number"));
-//    criminalCase.setDescription("description");
-//    model.addAttribute("criminalCase", criminalCase);
     return "index";
   }
 
 
-//    @RequestMapping(value = "/", method=RequestMethod.POST)
-//    public String add(@ModelAttribute(value="criminalCase") CriminalCase criminalCase) {
-//        CriminalCase addedCase = caseRepository.save(criminalCase);
-//        return "index";
-//    }
+    /*
+    @RequestMapping(value = "/", method=RequestMethod.POST)
+    public String add(Model model, @ModelAttribute(value="criminalCase") CriminalCase criminalCase) {
+    CriminalCase newCriminalCase = new CriminalCase();
+    newCriminalCase.setNumber(Integer.parseInt("number"));
+    newCriminalCase.setDescription("description");
+    model.addAttribute("newCriminalCase", newCriminalCase);
+    CriminalCase addedCase = caseRepository.save(newCriminalCase);
+        return "index";
+    }*/
 }
 
