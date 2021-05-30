@@ -60,13 +60,13 @@ $(function(){
             success: function(response)
             {
                 $('#case-form').css('display', 'none');
-                var case = {};
-                case.id = response;
+                var caseVariable = {};
+                caseVariable.id = response;
                 var dataArray = $('#case-form form').serializeArray();
                 for(i in dataArray) {
-                    case[dataArray[i]['description']] = dataArray[i]['value'];
+                    caseVariable[dataArray[i]['description']] = dataArray[i]['value'];
                 }
-                appendCase(case);
+                appendCase(caseVariable);
             }
         });
         return false;

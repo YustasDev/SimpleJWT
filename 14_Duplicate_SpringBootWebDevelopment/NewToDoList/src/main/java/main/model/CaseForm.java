@@ -2,18 +2,8 @@ package main.model;
 
 public class CaseForm {
 
-  private Long id;
   private Integer numberCase;
   private String descriptionCase;
-
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public Integer getNumberCase() {
     return numberCase;

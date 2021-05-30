@@ -1,25 +1,33 @@
 package main.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class CriminalCase {
 
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
     private Integer numberCase;
     private String descriptionCase;
 
-    public CriminalCase() {
+    public CriminalCase(Integer numberCase, String descriptionCase) {
     }
 
-    public CriminalCase(Long id, Integer numberCase, String descriptionCase) {
+    public CriminalCase(int id, Integer numberCase, String descriptionCase) {
         this.id = id;
         this.numberCase = numberCase;
         this.descriptionCase = descriptionCase;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

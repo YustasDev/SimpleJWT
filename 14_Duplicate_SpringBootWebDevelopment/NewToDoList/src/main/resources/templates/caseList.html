@@ -15,9 +15,9 @@
       <th>Number Case</th>
       <th>Description Case</th>
     </tr>
-    <tr th:each ="case : ${cases}">
-      <td th:utext="${case.numberCase}">...</td>
-      <td th:utext="${case.descriptionCase}">...</td>
+    <tr th:each ="caseVar : ${cases}">
+      <td th:utext="${caseVar.numberCase}">...</td>
+      <td th:utext="${caseVar.descriptionCase}">...</td>
     </tr>
   </table>
 </div>
