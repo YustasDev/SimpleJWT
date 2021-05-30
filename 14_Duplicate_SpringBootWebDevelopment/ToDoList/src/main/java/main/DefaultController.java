@@ -1,6 +1,5 @@
 package main;
 
-import java.util.Date;
 import java.util.List;
 
 import main.model.CaseRepository;
@@ -10,8 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class DefaultController {
@@ -22,14 +22,25 @@ public class DefaultController {
   @Value("${someParameter}")
   private Integer someParameter;
 
-  @RequestMapping("/")
+  @RequestMapping(value = "/", method=RequestMethod.GET)
   public String index(Model model) {
     Iterable<CriminalCase> criminalCaseIterable = caseRepository.findAll();
     List<CriminalCase> listOfCase = Streamable.of(criminalCaseIterable).toList();
     model.addAttribute("listOfCase", listOfCase);
     model.addAttribute("caseCount", listOfCase.size());
     model.addAttribute("someParameter", someParameter);
+//    CriminalCase criminalCase = new CriminalCase();
+//    criminalCase.setNumber(Integer.parseInt("number"));
+//    criminalCase.setDescription("description");
+//    model.addAttribute("criminalCase", criminalCase);
     return "index";
   }
+
+
+//    @RequestMapping(value = "/", method=RequestMethod.POST)
+//    public String add(@ModelAttribute(value="criminalCase") CriminalCase criminalCase) {
+//        CriminalCase addedCase = caseRepository.save(criminalCase);
+//        return "index";
+//    }
 }
 

@@ -9,24 +9,33 @@
 </head>
 <body>
 <div id="case-form">
-    <form>
-      <h2>Добавление дела</h2>
-      <label>Описание дела:</label>
-      <input type="text" name="description" value="">
-      <label>Номер дела:</label>
-      <input type="text" name="number" value="">
-      <hr>
+   <form>
+     <h2>Добавление дела</h2>
+     <label>Описание дела:</label>
+     <input type="text" name="description" value="">
+     <label>Номер дела:</label>
+     <input type="text" name="number" value="">
+     <hr>
+     <p><input type="reset"> <input type="submit" value="Сохранить в БД"></p>
+ </form>
+
+    <!--
+    <form action="#" th:action="@{/}" th:object="${criminalCase}" method="post">
+      <input type="text" th:field="*{number}" />
+      <input type="text" th:field="*{description}" />
       <p><input type="reset"> <input type="submit" value="Сохранить в БД"></p>
-  </form>
-</div>
-<h1>Список дел (<span th:text="${caseCount}">0</span>)</h1>
-<button id="show-add-case-form">Добавить дело</button>
-<br><br>
-<div id="case-list">
-  <div th:each="caseVariable : ${listOfCase}">
-    <a href="#" class="case-link" th:attr="data-id=${caseVariable.id}" th:text="${caseVariable.description}"></a>
-  </div>
-</div>
-<p th:text="${someParameter}"></p>
-</body>
-</html>
+    </form>
+   -->
+
+   </div>
+   <h1>Список дел (<span th:text="${caseCount}">0</span>)</h1>
+   <button id="show-add-case-form">Добавить дело</button>
+   <br><br>
+   <div id="case-list">
+    <div th:each="caseVariable : ${listOfCase}">
+      <a href="#" class="case-link" th:attr="data-id=${caseVariable.id}" th:text="${caseVariable.description}"></a>
+    </div>
+   </div>
+   <p th:text="${someParameter}"></p>
+   </body>
+   </html>
