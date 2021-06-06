@@ -24,16 +24,6 @@ public class DefaultController {
   private Integer someParameter;
 
   @RequestMapping(value = "/", method=RequestMethod.GET)
-  public String index(Model model){
-    Iterable<CriminalCase> criminalCaseIterable = caseRepository.findAll();
-    List<CriminalCase> listOfCase = Streamable.of(criminalCaseIterable).toList();
-    model.addAttribute("listOfCase", listOfCase);
-    model.addAttribute("caseCount", listOfCase.size());
-    model.addAttribute("someParameter", someParameter);
-    return "index";
-  }
-
-  @RequestMapping(value = "/", method=RequestMethod.POST)
   public String index(Model model,
                       @RequestParam(name = "description", required = false) String description,
                       @RequestParam(name = "number", required = false) Integer number) {
@@ -41,6 +31,7 @@ public class DefaultController {
     List<CriminalCase> listOfCase = Streamable.of(criminalCaseIterable).toList();
     model.addAttribute("listOfCase", listOfCase);
     model.addAttribute("caseCount", listOfCase.size());
+    model.addAttribute("someParameter", someParameter);
     CriminalCase appendCriminalCase = new CriminalCase();
     if (description != null && number != null) {
       appendCriminalCase.setNumber(number);
@@ -50,17 +41,18 @@ public class DefaultController {
     return "index";
   }
 
-
-
-    /*
-    @RequestMapping(value = "/", method=RequestMethod.POST)
-    public String add(Model model, @ModelAttribute(value="criminalCase") CriminalCase criminalCase) {
-    CriminalCase newCriminalCase = new CriminalCase();
-    newCriminalCase.setNumber(Integer.parseInt("number"));
-    newCriminalCase.setDescription("description");
-    model.addAttribute("newCriminalCase", newCriminalCase);
-    CriminalCase addedCase = caseRepository.save(newCriminalCase);
-        return "index";
-    }*/
+ /* @RequestMapping(value = "/", method=RequestMethod.POST)
+  public String index(Model model,
+                      @RequestParam(name = "description", required = false) String description,
+                      @RequestParam(name = "number", required = false) Integer number) {
+    CriminalCase appendCriminalCase = new CriminalCase();
+    if (description != null && number != null) {
+      appendCriminalCase.setNumber(number);
+      appendCriminalCase.setDescription(description);
+    }
+    CriminalCase newAddedCase = caseRepository.save(appendCriminalCase);
+    return "index";
+  }
+*/
 }
 
