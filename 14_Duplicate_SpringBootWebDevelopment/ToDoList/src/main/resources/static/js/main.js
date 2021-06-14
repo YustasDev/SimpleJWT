@@ -7,13 +7,6 @@ $(function(){
             .append('<div>' + caseCode + '</div>');
     };
 
-    //Loading books on load page
- //  $.get('/books/', function(response)
- //  {
- //       for(i in response) {
- //          appendBook(response[i]);
- //       }
- //  });
 
     //Show adding case form
     $('#show-add-case-form').click(function(){

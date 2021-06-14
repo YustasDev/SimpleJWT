@@ -24,7 +24,6 @@ public class DefaultController {
   public String index(Model model) {
     model.addAttribute("listOfCase", getListOfCase());
     model.addAttribute("caseCount", getListOfCase().size());
-    model.addAttribute("someParameter", someParameter);
     return "index";
   }
 
