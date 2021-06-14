@@ -1,7 +1,7 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import main.model.CaseRepository;
 import main.model.CriminalCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class DefaultController {
@@ -24,35 +21,31 @@ public class DefaultController {
   private Integer someParameter;
 
   @RequestMapping(value = "/", method=RequestMethod.GET)
-  public String index(Model model,
-                      @RequestParam(name = "description", required = false) String description,
-                      @RequestParam(name = "number", required = false) Integer number) {
-    Iterable<CriminalCase> criminalCaseIterable = caseRepository.findAll();
-    List<CriminalCase> listOfCase = Streamable.of(criminalCaseIterable).toList();
-    model.addAttribute("listOfCase", listOfCase);
-    model.addAttribute("caseCount", listOfCase.size());
+  public String index(Model model) {
+    model.addAttribute("listOfCase", getListOfCase());
+    model.addAttribute("caseCount", getListOfCase().size());
     model.addAttribute("someParameter", someParameter);
-    CriminalCase appendCriminalCase = new CriminalCase();
-    if (description != null && number != null) {
-      appendCriminalCase.setNumber(number);
-      appendCriminalCase.setDescription(description);
-    }
-    CriminalCase newAddedCase = caseRepository.save(appendCriminalCase);
     return "index";
   }
 
- /* @RequestMapping(value = "/", method=RequestMethod.POST)
-  public String index(Model model,
-                      @RequestParam(name = "description", required = false) String description,
-                      @RequestParam(name = "number", required = false) Integer number) {
+  @RequestMapping(value = "/", method=RequestMethod.POST)
+  public String sendingform(Model model, @RequestParam(name = "description") String description,
+                      @RequestParam(name = "number") String number) {
     CriminalCase appendCriminalCase = new CriminalCase();
     if (description != null && number != null) {
       appendCriminalCase.setNumber(number);
       appendCriminalCase.setDescription(description);
     }
     CriminalCase newAddedCase = caseRepository.save(appendCriminalCase);
+    model.addAttribute("listOfCase", getListOfCase());
+    model.addAttribute("caseCount", getListOfCase().size());
     return "index";
   }
-*/
+
+  public List<CriminalCase> getListOfCase() {
+    Iterable<CriminalCase> criminalCaseIterable = caseRepository.findAll();
+    List<CriminalCase> listOfCase = Streamable.of(criminalCaseIterable).toList();
+    return listOfCase;
+  }
 }
 

@@ -1,5 +1,6 @@
 package main.model;
 
+//import javax.persistence.Entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,23 +12,24 @@ public class CriminalCase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    private int number;
+    private Long id;
+    private String number;
     private String description;
 
-    public int getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
@@ -39,27 +41,4 @@ public class CriminalCase {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CriminalCase)) return false;
-        CriminalCase that = (CriminalCase) o;
-        return getId() == that.getId() &&
-                getNumber() == that.getNumber() &&
-                getDescription().equals(that.getDescription());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getNumber(), getDescription());
-    }
-
-    @Override
-    public String toString() {
-        return "CriminalCase{" +
-                "id= " + id +
-                ", number= " + number +
-                ", description= '" + description + '\'' +
-                '}';
-    }
 }

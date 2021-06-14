@@ -10,7 +10,7 @@
 <body>
 <div id="case-form">
 
-     <form>
+     <form method="post">
       <h2>Добавление дела</h2>
       <label>Описание дела:</label>
       <input type="text" name="description" value="">
@@ -19,17 +19,6 @@
       <hr>
       <p><input type="reset"> <input type="submit" value="Сохранить в БД"></p>
   </form>
-
-<!--
-     <form th:action="@{/}" th:object="${criminalCase}" method="post">
-       <h2>Добавление дела</h2>
-       <label>Номер дела:</label>
-       <input type="text" th:field="*{number}" />
-       <label>Описание дела:</label>
-       <input type="text" th:field="*{description}" />
-       <p><input type="reset"> <input type="submit" value="Сохранить в БД"></p>
-     </form>
--->
 
    </div>
    <h1>Список дел (<span th:text="${caseCount}">0</span>)</h1>

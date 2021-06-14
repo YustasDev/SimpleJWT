@@ -36,15 +36,14 @@ public class CaseController {
         return Streamable.of(criminalCaseIterable).toList();
     }
 
-
     @PostMapping("/cases/")
-    public int add(CriminalCase criminalCase) {
+    public Long add(CriminalCase criminalCase) {
         CriminalCase addedCase = caseRepository.save(criminalCase);
         return addedCase.getId();
     }
 
     @PutMapping("/cases/")
-    public int replaceCase(CriminalCase newCase) {
+    public Long replaceCase(CriminalCase newCase) {
         CriminalCase updatedCase = caseRepository.save(newCase);
         return updatedCase.getId();
     }
