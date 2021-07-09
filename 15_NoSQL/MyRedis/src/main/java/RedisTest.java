@@ -1,6 +1,11 @@
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import org.redisson.client.protocol.ScoredEntry;
 
 public class RedisTest {
 
@@ -13,10 +18,10 @@ public class RedisTest {
   // Допустим пользователи делают 500 запросов к сайту в секунду
   private static final int RPS = 500;
 
-  // И всего на сайт заходило 1000 различных пользователей
-  private static final int USERS = 1000;
+  // В одном из 10 случаев случайный пользователь оплачивает услугу
+  private static final int USER_WHO_PAYS = 10;
 
-  // Также мы добавим задержку между регистрациями
+  // добавим задержку между регистрациями пользователей
   private static final int SLEEP = 100; // 100 миллисекунд
 
   private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm:ss");
@@ -35,12 +40,46 @@ public class RedisTest {
       // Зарегистрируем 20 пользователей
       for (int userId = 1; userId < 21; userId++) {
         redis.logPageVisit(userId);
-       // Thread.sleep(SLEEP);
+        Thread.sleep(SLEEP);
       }
 
-      System.out.println(redis.getAllusers());
-      System.out.println(redis.getRankUsers());
-      System.out.println(redis.getAllusers());
+//      System.out.println(redis.getAllusers());
+//      System.out.println(redis.getRankUsers());
+//      List <Double> listOfScore = new ArrayList<>();
+//      redis.getRankUsers().forEach(element ->
+//           listOfScore.add(redis.getScoreUsers(element)));
+//      listOfScore.forEach(System.out::println);
+//
+
+
+      // Создаем список пользователей по порядку регистрации
+      Collection<String> listUsers = new ArrayList<>();
+      listUsers = redis.getRankUsers();
+      int user_id = new Random().nextInt(USER_WHO_PAYS) + 1;
+      int sizelistUsers = listUsers.size();
+
+      listUsers.forEach(el ->
+
+          System.out.println(el)
+
+          
+      );
+
+      String user = redis.getUser(8);
+      System.out.println(user);
+
+
+//
+//      for (int userId = 1; userId <= sizelistUsers; userId++) {
+//
+//
+//        System.out.println(listUsers.("Пользователь № " + userId));
+
+
+
+      //listOfUsers.forEach(System.out::println);
+
+
 //.
 //
 //      for(int request = 0; request <= RPS; request++) {
