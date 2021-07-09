@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import org.redisson.Redisson;
 import org.redisson.api.RKeys;
@@ -55,6 +57,21 @@ public class RedisStorage {
     //ZADD ONLINE_USERS
     onlineUsers.add(getTs(), String.valueOf(user_id));
   }
+
+  public Collection<String> getAllusers() {
+    Collection<String> usersList = new ArrayList<String>();
+    usersList = onlineUsers.readAll();
+    return usersList;
+  }
+
+  public Collection<String> getRankUsers() {
+    Collection<String> usersRankList = new ArrayList<String>();
+    int userListSize = onlineUsers.size();
+    usersRankList = onlineUsers.valueRange(0, userListSize);
+    return usersRankList;
+  }
+
+
 
   // Удаляет
   void deleteOldEntries(int secondsAgo)

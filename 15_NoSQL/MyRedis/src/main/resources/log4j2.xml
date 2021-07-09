@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN">
+
+  <appenders>
+
+    <File name="HistoryFile" fileName="logs/history.log">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <Filters>
+        <MarkerFilter marker="INPUT_HISTORY" />
+      </Filters>
+    </File>
+
+    <File name="InputErrorsFile" fileName="logs/input_errors.log">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <Filters>
+        <MarkerFilter marker="INVALID_INPUT" />
+      </Filters>
+    </File>
+
+    <File name="ExceptionFile" fileName="logs/exceptions.log">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+
+  </appenders>
+
+  <loggers>
+    <root level="info">
+      <appender-ref ref="HistoryFile"/>
+      <appender-ref ref="InputErrorsFile"/>
+      <appender-ref ref="ExceptionFile" level="error"/>
+    </root>
+  </loggers>
+
+</configuration>

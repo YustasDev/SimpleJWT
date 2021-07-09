@@ -16,8 +16,8 @@ public class RedisTest {
   // И всего на сайт заходило 1000 различных пользователей
   private static final int USERS = 1000;
 
-  // Также мы добавим задержку между посещениями
-  private static final int SLEEP = 1; // 1 миллисекунда
+  // Также мы добавим задержку между регистрациями
+  private static final int SLEEP = 100; // 100 миллисекунд
 
   private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm:ss");
 
@@ -30,19 +30,32 @@ public class RedisTest {
 
     RedisStorage redis = new RedisStorage();
     redis.init();
-    // Эмулируем 10 секунд работы сайта
-    for(int seconds=0; seconds <= 10; seconds++) {
-      // Выполним 500 запросов
-      for(int request = 0; request <= RPS; request++) {
-        int user_id = new Random().nextInt(USERS);
-        redis.logPageVisit(user_id);
-        Thread.sleep(SLEEP);
+    // запускаем бесконечный цикл
+    for (; ; ) {
+      // Зарегистрируем 20 пользователей
+      for (int userId = 1; userId < 21; userId++) {
+        redis.logPageVisit(userId);
+       // Thread.sleep(SLEEP);
       }
-      redis.deleteOldEntries(DELETE_SECONDS_AGO);
-      int usersOnline = redis.calculateUsersNumber();
-      log(usersOnline);
+
+      System.out.println(redis.getAllusers());
+      System.out.println(redis.getRankUsers());
+      System.out.println(redis.getAllusers());
+//.
+//
+//      for(int request = 0; request <= RPS; request++) {
+//        int user_id = new Random().nextInt(USERS);
+//        redis.logPageVisit(user_id);
+//
+//
+//        Thread.sleep(SLEEP);
+//      }
+//      redis.deleteOldEntries(DELETE_SECONDS_AGO);
+//      int usersOnline = redis.calculateUsersNumber();
+//      log(usersOnline);
+//    }
+      redis.shutdown();
     }
-    redis.shutdown();
   }
 }
 
