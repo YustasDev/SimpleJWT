@@ -14,9 +14,6 @@ import org.redisson.config.Config;
 
 public class RedisStorage {
 
-  // В одном из 10 случаев случайный пользователь оплачивает услугу
-  private static final int USER_WHO_PAYS = 10;
-
   // Объект для работы с Redis
   private RedissonClient redisson;
 
@@ -77,7 +74,6 @@ public class RedisStorage {
     return user;
   }
 
-
   public Collection<String> getRankUsers() {
     Collection<String> usersRankList = new ArrayList<>();
     int userListSize = onlineUsers.size();
@@ -92,13 +88,9 @@ public class RedisStorage {
   }
 
   public Integer addScoreUsers(String element, Number number) {
-    int user_id = new Random().nextInt(USER_WHO_PAYS) + 1;
     Integer addScoreElement = onlineUsers.addScoreAndGetRank(element, number);
     return addScoreElement;
   }
-
-  //public Integer getRank (String element)
-
 
   public void deleteUser(String user) {
     onlineUsers.remove(user);
