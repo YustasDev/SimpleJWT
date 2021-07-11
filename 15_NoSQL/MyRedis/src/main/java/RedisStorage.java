@@ -32,7 +32,7 @@ public class RedisStorage {
   // Пример вывода всех ключей
   public void listKeys() {
     Iterable<String> keys = rKeys.getKeys();
-    for(String key: keys) {
+    for (String key : keys) {
       System.out.println("KEY: " + key + ", type:" + rKeys.getType(key));
     }
   }
@@ -56,8 +56,7 @@ public class RedisStorage {
   }
 
   // Фиксирует посещение пользователем страницы
-  void logPageVisit(int user_id)
-  {
+  void logPageVisit(int user_id) {
     //ZADD ONLINE_USERS
     onlineUsers.add(getTs(), "Пользователь № " + String.valueOf(user_id));
   }
@@ -69,7 +68,8 @@ public class RedisStorage {
   }
 
   public String getUser(int user_id) {
-    Optional<String> userOptional = onlineUsers.stream().filter(x -> x.contains(String.valueOf(user_id))).findFirst();
+    Optional<String> userOptional = onlineUsers.stream()
+        .filter(x -> x.contains(String.valueOf(user_id))).findFirst();
     String user = userOptional.orElse("");
     return user;
   }
@@ -81,33 +81,9 @@ public class RedisStorage {
     return usersRankList;
   }
 
-  public Double getScoreUsers(String element) {
-    //Optional <String> userScore = Optional.of(usersScoreList)
-    Double scoreElement = onlineUsers.getScore(element);
-    return scoreElement;
-  }
-
-  public Integer addScoreUsers(String element, Number number) {
-    Integer addScoreElement = onlineUsers.addScoreAndGetRank(element, number);
-    return addScoreElement;
-  }
-
   public void deleteUser(String user) {
     onlineUsers.remove(user);
   }
-  
-  // Удаляет
-  void deleteOldEntries(int secondsAgo)
-  {
-    //ZREVRANGEBYSCORE ONLINE_USERS 0 <time_5_seconds_ago>
-    onlineUsers.removeRangeByScore(0, true, getTs() - secondsAgo, true);
 
-
-  }
-  int calculateUsersNumber()
-  {
-    //ZCOUNT ONLINE_USERS
-    return onlineUsers.count(Double.NEGATIVE_INFINITY, true, Double.POSITIVE_INFINITY, true);
-  }
 }
 
