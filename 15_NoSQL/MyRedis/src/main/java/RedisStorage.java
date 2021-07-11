@@ -100,6 +100,10 @@ public class RedisStorage {
   //public Integer getRank (String element)
 
 
+  public void deleteUser(String user) {
+    onlineUsers.remove(user);
+  }
+  
   // Удаляет
   void deleteOldEntries(int secondsAgo)
   {

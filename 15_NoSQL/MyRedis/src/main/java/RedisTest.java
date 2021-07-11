@@ -18,11 +18,14 @@ public class RedisTest {
   // Допустим пользователи делают 500 запросов к сайту в секунду
   private static final int RPS = 500;
 
-  // В одном из 10 случаев случайный пользователь оплачивает услугу
-  private static final int USER_WHO_PAYS = 10;
+  // Один из 20 пользователей оплачивает услугу
+  private static final int USER_WHO_PAYS = 20;
 
   // добавим задержку между регистрациями пользователей
-  private static final int SLEEP = 100; // 100 миллисекунд
+  private static final int PAUSE_REGISTRATION = 10; // 10 миллисекунд
+
+  // задержка между циклами показа
+  private static final int SLEEP = 1000;
 
   private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm:ss");
 
@@ -38,9 +41,10 @@ public class RedisTest {
     // запускаем бесконечный цикл
     for (; ; ) {
       // Зарегистрируем 20 пользователей
-      for (int userId = 1; userId < 21; userId++) {
+      int numberOfUsers = 20;
+      for (int userId = 1; userId < numberOfUsers +1; userId++) {
         redis.logPageVisit(userId);
-        Thread.sleep(SLEEP);
+        Thread.sleep(PAUSE_REGISTRATION);
       }
 
 //      System.out.println(redis.getAllusers());
@@ -55,18 +59,60 @@ public class RedisTest {
       // Создаем список пользователей по порядку регистрации
       Collection<String> listUsers = new ArrayList<>();
       listUsers = redis.getRankUsers();
-      int user_id = new Random().nextInt(USER_WHO_PAYS) + 1;
-      int sizelistUsers = listUsers.size();
+      int count = 1;
+      int chance = new Random().nextInt(10) +1; // в одном из 10 случаев
+      //Collection<String> finalListUsers = listUsers;
+      //redis.deleteUser(user);
 
-      listUsers.forEach(el ->
+      for (int userId = 1; userId < listUsers.size() +1; userId++) {
 
-          System.out.println(el)
+        if (count == chance) {
+          int numberUserWhoPaid = new Random().nextInt(USER_WHO_PAYS) + 1;
+          String userWhoPaid = redis.getUser(numberUserWhoPaid);
+          System.out.println("Пользователь " + numberUserWhoPaid + " оплатил платную услугу");
+          System.out.println(userWhoPaid);
+          redis.deleteUser(userWhoPaid);
+        }
+        String user = redis.getUser(userId);
+        System.out.println(user);
+        count++;
+        if (count % 10 == 0) {
+          chance = new Random().nextInt(10) +1;
+        }
 
-          
-      );
+      }
 
-      String user = redis.getUser(8);
-      System.out.println(user);
+
+//
+//
+//      for (String visitor : listUsers) {
+//        System.out.println(visitor);
+//        if (listUsers.contains(user)) {
+//          System.out.println("Пользователь " + user_id + " оплатил платную услугу");
+//          System.out.println(user);
+//          listUsers.remove(user);
+//        }
+//      }
+
+//      finalListUsers.forEach(el -> {
+//
+//        if (finalListUsers.contains(user)){
+//          System.out.println("Пользователь " + user_id + " оплатил платную услугу");
+//          System.out.println(user);
+//          finalListUsers.remove(user);
+//        }
+//        try {
+//          Thread.sleep(SLEEP);
+//        } catch (InterruptedException e) {
+//          e.printStackTrace();
+//        }
+//        System.out.println(el);
+//
+//          }
+//      );
+
+
+
 
 
 //
@@ -93,6 +139,7 @@ public class RedisTest {
 //      int usersOnline = redis.calculateUsersNumber();
 //      log(usersOnline);
 //    }
+      Thread.sleep(SLEEP);
       redis.shutdown();
     }
   }
