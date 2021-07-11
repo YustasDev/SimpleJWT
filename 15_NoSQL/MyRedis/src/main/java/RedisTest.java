@@ -54,11 +54,14 @@ public class RedisTest {
           int numberUserWhoPaid = new Random().nextInt(USER_WHO_PAYS) + 1;
           if (redis.getUser(numberUserWhoPaid).isEmpty()){
             System.out.println("В этот раз никто не оплатил услугу показа на главной странице");
+            numberUserWhoPaid = 0;
           }
-          String userWhoPaid = redis.getUser(numberUserWhoPaid);
-          System.out.println("Пользователь " + numberUserWhoPaid + " оплатил платную услугу");
-          System.out.println(userWhoPaid);
-          redis.deleteUser(userWhoPaid);
+          if (numberUserWhoPaid != 0) {
+            String userWhoPaid = redis.getUser(numberUserWhoPaid);
+            System.out.println("Пользователь " + numberUserWhoPaid + " оплатил услугу показа");
+            System.out.println(userWhoPaid);
+            redis.deleteUser(userWhoPaid);
+          }
         }
         String user = redis.getUser(userId);
         System.out.println(user);
@@ -68,7 +71,7 @@ public class RedisTest {
           countChance++;
         }
       }
-
+      System.out.println();
       Thread.sleep(SLEEP);
     //  redis.shutdown();
     }
