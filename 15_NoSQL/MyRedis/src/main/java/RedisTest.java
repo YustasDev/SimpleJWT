@@ -63,6 +63,7 @@ public class RedisTest {
         }
       }
       System.out.println();
+      redis.clearListUsers();
       Thread.sleep(SLEEP);
       //  redis.shutdown();
     }

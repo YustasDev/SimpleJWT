@@ -85,5 +85,8 @@ public class RedisStorage {
     onlineUsers.remove(user);
   }
 
+  public void clearListUsers() {
+    onlineUsers.clear();
+  }
 }
 
