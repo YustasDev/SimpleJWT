@@ -2,6 +2,7 @@ import static com.mongodb.client.model.Aggregates.limit;
 import static com.mongodb.client.model.Aggregates.sample;
 import static com.mongodb.client.model.Aggregates.sort;
 import static com.mongodb.client.model.Aggregates.sortByCount;
+import static com.mongodb.client.model.Filters.eq;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -12,6 +13,8 @@ import java.util.function.Consumer;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriterSettings;
 
 public class MongoDBtest {
 
@@ -62,11 +65,21 @@ public class MongoDBtest {
 
     //database.getCollection("books").aggregate( [ { $project : { Year_of_publication : 1 } } ] )
 
-    var year = collection.find(new BsonDocument()).filter(sortByCount("Year_of_publication"));
+   // var year = collection.find(new BsonDocument()).filter(sortByCount("Year_of_publication"));
 
-    System.out.println(year.toString());
 
-    collection.aggregate(listOfBooks).     // ????
+    
+
+    collection.find()
+
+
+//    for(Document doc : ) {
+//      System.out.println(printDoc(doc));
+//    }
+//
+
+
+
 
 
         //min(y -> y.getField("Year_of_publication"));
@@ -79,4 +92,15 @@ public class MongoDBtest {
 
 
   }
+
+  private static String printDoc(Document document) {
+    var settings = JsonWriterSettings.builder()
+        .indent(true)
+        .outputMode(JsonMode.SHELL)
+        .build();
+    return document.toJson(settings);
+  }
+
+
+
 }
