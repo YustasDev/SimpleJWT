@@ -1,9 +1,5 @@
 import static com.mongodb.client.model.Aggregates.count;
 import static com.mongodb.client.model.Aggregates.match;
-import static com.mongodb.client.model.Filters.eq;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -17,8 +13,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
-import org.apache.commons.lang3.ArrayUtils;
 import org.bson.Document;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
@@ -40,42 +34,29 @@ public class MongoDBtest {
     MongoCollection<Document> collection = database.getCollection("listStudents");
 
     collection.drop();
-    List <Document> listingEnrolledStudents = loadExtractFromFile(dataFile);
+    List<Document> listingEnrolledStudents = loadExtractFromFile(dataFile);
     collection.insertMany(listingEnrolledStudents);
 
-    long studentNumber = collection
-        .countDocuments();
+    long studentNumber = collection.countDocuments();
 
-//    var query = new BasicDBObject("ageStudent",
-//        new BasicDBObject("$gt", 40));
-//    collection.find(query).forEach((Consumer<Document>) doc ->
-//        System.out.println(doc.toJson()));
+    Document gt40 = collection.aggregate(Arrays.asList(
+        match(Filters.gt("ageStudent", 40)),
+        count())).first();
 
+    FindIterable<Document> youngestStudent = collection
+        .find()
+        .sort(new Document("ageStudent", 1))
+        .limit(1);
 
-    BasicDBObject query40 = new BasicDBObject();
-    query40.put("ageStudent", new BasicDBObject("$gt", 40));
-    FindIterable<Document> cur = collection.find(query40);
-   // long olderThan40 = cur.
-    //collection.aggregate([....]).toArray().length
+    FindIterable<Document> oldestStudent = collection
+        .find()
+        .sort(new Document("ageStudent", -1))
+        .limit(1);
 
-
-    collection.aggregate([{$match: { "ageStudent": {$gt: 40 }}}, {$count: "Total"}])
-
-
-
-    System.out.println(studentNumber);
-
-
-
-
-//    FindIterable<Document> doc = collection
-//        .find()
-//        .sort(new Document("nameStudent", 1));
-//
-//    for(Document document: doc) {
-//      System.out.println(document);
-//    }
-
+    System.out.println("Oбщее количество студентов в базе:  " + studentNumber);
+    System.out.println("Количество студентов старше 40 лет:  " + gt40.get("count"));
+    System.out.println("Имя самого молодого студента:  " + youngestStudent.first().get("nameStudent"));
+    System.out.println("Cписок курсов самого старого студента:  " + oldestStudent.first().get("coursesStudent"));
   }
 
   private static String printDoc(Document document) {
