@@ -1,95 +1,80 @@
-import static com.mongodb.client.model.Aggregates.limit;
-import static com.mongodb.client.model.Aggregates.sample;
-import static com.mongodb.client.model.Aggregates.sort;
-import static com.mongodb.client.model.Aggregates.sortByCount;
+import static com.mongodb.client.model.Aggregates.count;
+import static com.mongodb.client.model.Aggregates.match;
 import static com.mongodb.client.model.Filters.eq;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import org.bson.BsonDocument;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 
 public class MongoDBtest {
 
+  private static final int INDEX_NAMESTUDENT = 0;
+  private static final int INDEX_AGESTUDENT = 1;
+  private static final int INDEX_COURSESSTUDENT = 2;
+  private static String dataFile = "data/mongo.csv";
+
+
   public static void main(String[] args) {
-    MongoClient mongoClient = new MongoClient( "127.0.0.1" , 27017 );
 
-    MongoDatabase database = mongoClient.getDatabase("my_books");
+    MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
 
-    MongoCollection<Document> collection = database.getCollection("books");
+    MongoDatabase database = mongoClient.getDatabase("students");
+
+    MongoCollection<Document> collection = database.getCollection("listStudents");
 
     collection.drop();
+    List <Document> listingEnrolledStudents = loadExtractFromFile(dataFile);
+    collection.insertMany(listingEnrolledStudents);
 
-    Document book1 = new Document()
-        .append("Book_title", "Игра в бисер")
-        .append("Author", "Герман Гессе")
-        .append("Year_of_publication", 1971);
+    long studentNumber = collection
+        .countDocuments();
 
-    Document book2 = new Document()
-        .append("Book_title", "Степной волк")
-        .append("Author", "Герман Гессе")
-        .append("Year_of_publication", 1965);
-
-    Document book3 = new Document()
-        .append("Book_title", "Морской волк")
-        .append("Author", "Джек Лондон")
-        .append("Year_of_publication", 1972);
-
-    Document book4 = new Document()
-        .append("Book_title", "Человек в поисках смысла")
-        .append("Author", "Виктор Франкл")
-        .append("Year_of_publication", 1985);
-
-    Document book5 = new Document()
-        .append("Book_title", "Мастер и Маргарита")
-        .append("Author", "Михаил Булгаков")
-        .append("Year_of_publication", 1971);
-
-    List<Document> listOfBooks = new ArrayList<>();
-    listOfBooks.add(book1);
-    listOfBooks.add(book2);
-    listOfBooks.add(book3);
-    listOfBooks.add(book4);
-    listOfBooks.add(book5);
-
-    collection.insertMany(listOfBooks);
-
-    //var bookNeed = database.getCollection("books").find().sort({"Year_of_publication" : -1}).limit(1);
-
-    //database.getCollection("books").aggregate( [ { $project : { Year_of_publication : 1 } } ] )
-
-   // var year = collection.find(new BsonDocument()).filter(sortByCount("Year_of_publication"));
+//    var query = new BasicDBObject("ageStudent",
+//        new BasicDBObject("$gt", 40));
+//    collection.find(query).forEach((Consumer<Document>) doc ->
+//        System.out.println(doc.toJson()));
 
 
-    
+    BasicDBObject query40 = new BasicDBObject();
+    query40.put("ageStudent", new BasicDBObject("$gt", 40));
+    FindIterable<Document> cur = collection.find(query40);
+   // long olderThan40 = cur.
+    //collection.aggregate([....]).toArray().length
 
-    collection.find()
+
+    collection.aggregate([{$match: { "ageStudent": {$gt: 40 }}}, {$count: "Total"}])
 
 
-//    for(Document doc : ) {
-//      System.out.println(printDoc(doc));
-//    }
+
+    System.out.println(studentNumber);
+
+
+
+
+//    FindIterable<Document> doc = collection
+//        .find()
+//        .sort(new Document("nameStudent", 1));
 //
-
-
-
-
-
-        //min(y -> y.getField("Year_of_publication"));
-
-        //sort(y -> y.getField("Year_of_publication");
-
-   // collection.aggregate([ { $project : { Year_of_publication : 1 } } ])
-
-
-
+//    for(Document document: doc) {
+//      System.out.println(document);
+//    }
 
   }
 
@@ -101,6 +86,39 @@ public class MongoDBtest {
     return document.toJson(settings);
   }
 
+  private static List<Document> loadExtractFromFile(String dataFile) {
 
+    List<Document> extract = new ArrayList<>();
+    try {
+      FileReader filereader = new FileReader(dataFile);
+      CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+      CSVReader csvReader = new CSVReaderBuilder(filereader).withCSVParser(parser).build();
+      List<String[]> lines = csvReader.readAll();
 
+      for (int i = 0; i < lines.size(); i++) {
+        String[] oneLine = lines.get(i);
+        if (oneLine.length != 3) {
+          System.out.println("Wrong line in dataFile: " + oneLine);
+          System.out.println("There is an urgent need to address this issue!");
+          lines.remove(i);
+        }
+      }
+
+      for (String[] row : lines) {
+        String nameStudent = row[INDEX_NAMESTUDENT];
+        Integer ageStudent = Integer.parseInt(row[INDEX_AGESTUDENT]);
+        String coursesStudent = row[INDEX_COURSESSTUDENT];
+
+        Document student = new Document()
+            .append("nameStudent", nameStudent)
+            .append("ageStudent", ageStudent)
+            .append("coursesStudent", coursesStudent);
+
+        extract.add(student);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return extract;
+  }
 }
