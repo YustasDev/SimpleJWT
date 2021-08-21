@@ -1,6 +1,8 @@
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bson.Document;
@@ -23,8 +25,10 @@ public class Main {
 
     MongoDatabase database = mongoClient.getDatabase("mongoStores");
 
-    MongoCollection<Document> listStore = database.getCollection("stores");
-    MongoCollection<Document> productsRegistry = database.getCollection("products");
+    MongoCollection<Document> listStores = database.getCollection("stores");
+    MongoCollection<Document> ListProducts = database.getCollection("products");
+    listStores.drop();
+    ListProducts.drop();
     printСondition();
 
     for (; ; ) {
@@ -71,33 +75,52 @@ public class Main {
         + "5. Если Вы хотите прекратить выполнение программы, наберите команду: END ");
   }
 
-  private static String commandRecognition (String command){
+  private static Map<String, Document> commandRecognition (String command){
+    Map<String, Document> dataMap = new HashMap<>();
 
     if (command.matches(COMMAND_SET)) {
       Pattern pattern = Pattern.compile(COMMAND_SET);
       Matcher matcher = pattern.matcher(command);
       if (matcher.find()) {
         String storeName = matcher.group(2);
+        Document store = new Document()
+            .append("storeName", storeName);
+        dataMap.put("store", store);
       }
     }
-    if (command.matches(COMMAND_ADD)) {
+    else if (command.matches(COMMAND_ADD)) {
       Pattern pattern = Pattern.compile(COMMAND_ADD);
       Matcher matcher = pattern.matcher(command);
       if (matcher.find()) {
         String productName = matcher.group(2);
         String productPrice = matcher.group(3);
+        Document product = new Document()
+            .append("productName", productName)
+            .append("productPrice", productPrice);
+        dataMap.put("product", product);
       }
     }
-    if (command.matches(COMMAND_PLACE)) {
+    else if (command.matches(COMMAND_PLACE)) {
       String[] delimiter = command.split(" ");
-        String productName = delimiter[1];
-        String storeName = delimiter[2];
+        String placeProductName = delimiter[1];
+        String placeStoreName = delimiter[2];
+      Document placeProductInStore = new Document()
+          .append("placeProductName", placeProductName)
+          .append("placeStoreName", placeStoreName);
+        dataMap.put("placeProductInStore", placeProductInStore);
   }
+    else if (command.matches(COMMAND_STATISTICS)) {
 
 
+    }
 
-
-
-
+    else if (command.matches(COMMAND_END)) {
+    System.exit(0);
+    }
+    else {
+      System.out.println("Команда не распознана. Введите еще раз.");
+    }
+    return dataMap;
+  }
 }
 
