@@ -1,25 +1,48 @@
 import java.lang.reflect.Proxy;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
   public static void main(String[] args) {
+    String str = "addбатон25";
+    String pattern = "(add)(\\D+)(\\d+)";
 
-    Person person = new Person();
+    // Создание Pattern объекта
+    Pattern r = Pattern.compile(pattern);
 
-    IPerson personproxy = (IPerson) Proxy.newProxyInstance(Person.class.getClassLoader(),
-        Person.class.getInterfaces(),
-        new NeverSleepingEye(person));
+    // Создание matcher объекта
+    Matcher m = r.matcher(str);
+    if (m.find( )) {
+      System.out.println("Найдено значение: " + m.group(0));
+      System.out.println("Найдено значение: " + m.group(1));
+      System.out.println("Найдено значение: " + m.group(2));
+      System.out.println("Найдено значение: " + m.group(3));
+    }else {
+      System.out.println("НЕ СОВПАДАЕТ");
+    }
 
-    person.setName("Гриша");
-    String h = person.getName();
-    person.rename("Вася");
+    String str1 = "setПятерочка";
+    String pattern1 = "(set)(\\D+)";
 
-    System.out.println(h + person);
+    // Создание Pattern объекта
+    Pattern r1 = Pattern.compile(pattern1);
 
-    personproxy.setName("Петя");
-    String hh = personproxy.getName();
-    personproxy.rename("Федя");
+    // Создание matcher объекта
+    Matcher m1 = r1.matcher(str1);
+    if (m1.find( )) {
+      System.out.println("Найдено значение: " + m1.group(0));
+      System.out.println("Найдено значение: " + m1.group(1));
+      System.out.println("Найдено значение: " + m1.group(2));
+    }else {
+      System.out.println("НЕ СОВПАДАЕТ");
+    }
 
-    System.out.println(personproxy);
+
+
+
+
+
+
   }
 }
