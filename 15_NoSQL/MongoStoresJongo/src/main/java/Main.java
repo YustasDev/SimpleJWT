@@ -48,9 +48,15 @@ public class Main {
             String input = inputCommand(
                     "Введите команду:  ");
 
-            commandRecognition(input);
-
-           // if
+            Map<String, Document> mapDocument = commandRecognition(input);
+            Document storeDocument = mapDocument.get("store");
+            Document productDocument = mapDocument.get("product");
+            if (storeDocument != null) {
+                stores.save(storeDocument);
+            }
+            if (productDocument != null) {
+                products.save(productDocument);
+            }
 
 
 
