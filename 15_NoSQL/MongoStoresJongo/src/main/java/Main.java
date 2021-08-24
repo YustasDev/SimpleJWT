@@ -35,12 +35,6 @@ public class Main {
         MongoCollection stores = jongo.getCollection("stores");
         MongoCollection products = jongo.getCollection("products");
 
-
-
-
-
-
-
         printСondition();
 
         for (; ; ) {
@@ -51,13 +45,18 @@ public class Main {
             Map<String, Document> mapDocument = commandRecognition(input);
             Document storeDocument = mapDocument.get("store");
             Document productDocument = mapDocument.get("product");
+            Document placeProductInStore = mapDocument.get("placeProductInStore");
             if (storeDocument != null) {
                 stores.save(storeDocument);
             }
             if (productDocument != null) {
                 products.save(productDocument);
             }
+            if (placeProductInStore!= null) {
 
+
+
+            }
 
 
 

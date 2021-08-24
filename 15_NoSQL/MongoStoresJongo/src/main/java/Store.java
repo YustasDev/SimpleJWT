@@ -1,21 +1,23 @@
 import org.jongo.marshall.jackson.oid.MongoObjectId;
 
+import java.util.List;
+
 public class Store {
 
     @MongoObjectId
     private String _id;
     private String storeName;
-    private Product product;
-
+    private List<Product> listProduct;
 
     public Store() {
     }
 
-    public Store(String _id, String storeName, Product product) {
+    public Store(String _id, String storeName, List<Product> listProduct) {
         this._id = _id;
         this.storeName = storeName;
-        this.product = product;
+        this.listProduct = listProduct;
     }
+
 
     public String get_id() {
         return _id;
@@ -33,12 +35,12 @@ public class Store {
         this.storeName = storeName;
     }
 
-    public Product getProduct() {
-        return product;
+    public List<Product> getListProduct() {
+        return listProduct;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setListProduct(List<Product> listProduct) {
+        this.listProduct = listProduct;
     }
 
 
