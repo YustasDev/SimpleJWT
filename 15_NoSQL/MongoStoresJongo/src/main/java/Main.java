@@ -1,8 +1,9 @@
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import org.bson.Document;
-import org.jongo.Jongo;
-import org.jongo.MongoCollection;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriterSettings;
+import org.jongo.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +54,23 @@ public class Main {
                 products.save(productDocument);
             }
             if (placeProductInStore!= null) {
+                String store = String.valueOf(placeProductInStore.get("placeStoreName"));
+                String product = String.valueOf(placeProductInStore.get("placeProductName"));
+
+                FindOne productForSale = products.findOne("{productName:#}", product);
+                Product forSale = productForSale.as(Product.class);
+
+                FindOne storeForProduct = stores.findOne("{storeName:#}", store);
+                Store forProduct = storeForProduct.as(Store.class);
+
+
+
+
+
+
+
+                System.out.println(one.getProductName());
+
 
 
 
@@ -74,6 +92,14 @@ public class Main {
                 return line;
             }
         }
+    }
+
+    private static String printDoc(Document document) {
+        var settings = JsonWriterSettings.builder()
+                .indent(true)
+                .outputMode(JsonMode.SHELL)
+                .build();
+        return document.toJson(settings);
     }
 
     private static void printСondition() {
