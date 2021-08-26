@@ -7,15 +7,18 @@ public class Store {
     @MongoObjectId
     private String _id;
     private String storeName;
-    private List<Product> listProduct;
+    private List<Product> listProducts;
 
     public Store() {
     }
 
-    public Store(String _id, String storeName, List<Product> listProduct) {
+    public Store(Store storeWithNewProduct) {
+    }
+
+    public Store(String _id, String storeName, List<Product> listProducts) {
         this._id = _id;
         this.storeName = storeName;
-        this.listProduct = listProduct;
+        this.listProducts = listProducts;
     }
 
 
@@ -35,21 +38,11 @@ public class Store {
         this.storeName = storeName;
     }
 
-    public List<Product> getListProduct() {
-        return listProduct;
+    public List<Product> getListProducts() {
+        return listProducts;
     }
 
-    public void setListProduct(List<Product> listProduct) {
-        this.listProduct = listProduct;
+    public void setListProducts(List<Product> listProducts) {
+        this.listProducts = listProducts;
     }
-
-    @Override
-    public String toString() {
-        return "Store{" +
-                "_id='" + _id + '\'' +
-                ", storeName='" + storeName + '\'' +
-                ", listProduct=" + listProduct +
-                '}';
-    }
-
-}
+   }

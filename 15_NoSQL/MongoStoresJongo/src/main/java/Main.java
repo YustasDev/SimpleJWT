@@ -18,7 +18,8 @@ public class Main {
     private final static String COMMAND_PLACE = "(place)\\s+(\\D+)\\s+(\\D+)";
     private final static String COMMAND_STATISTICS = "statistics";
     private final static String COMMAND_END = "END";
-
+    private static boolean statistics = false;
+    private static List<Product> listProducts = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -29,10 +30,15 @@ public class Main {
 //        listStores.drop();
 //        ListProducts.drop();
 
+        /*
+        working with the Jongo library replaces the top (commented out) lines
+         */
         DB db = new MongoClient().getDB("mongoStores");
         Jongo jongo = new Jongo(db);
         MongoCollection stores = jongo.getCollection("stores");
         MongoCollection products = jongo.getCollection("products");
+        stores.drop();
+        products.drop();
 
         printСondition();
 
@@ -45,16 +51,20 @@ public class Main {
             Document storeDocument = mapDocument.get("store");
             Document productDocument = mapDocument.get("product");
             Document placeProductInStore = mapDocument.get("placeProductInStore");
+
             if (storeDocument != null) {
                 stores.save(storeDocument);
+                System.out.println("Магазин: " + printDoc(storeDocument) + " внесен в базу данных. \n");
             }
             if (productDocument != null) {
                 products.save(productDocument);
+                System.out.println("Продукт: " + printDoc(productDocument) + " внесен в базу данных. \n");
             }
             if (placeProductInStore!= null) {
                 String store = String.valueOf(placeProductInStore.get("placeStoreName"));
                 String product = String.valueOf(placeProductInStore.get("placeProductName"));
 
+                //  I have not found any other way how to check if records exist in the database
                 MongoCursor<Product> cursorProduct = products.find("{productName:#}", product).as(Product.class);
                 MongoCursor<Store> cursorStore = stores.find("{storeName:#}", store).as(Store.class);
 
@@ -67,14 +77,18 @@ public class Main {
                 FindOne storeForProduct = stores.findOne("{storeName:#}", store);
                 Store storeWithNewProduct = storeForProduct.as(Store.class);
 
-                List<Product> productList = new ArrayList<>();
-                productList.add(forSaleProduct);
-                storeWithNewProduct.setListProduct(productList);
-                stores.save(storeWithNewProduct);
+
+                listProducts.add(forSaleProduct);
+               // storeWithNewProduct.setListProducts(listProducts);
+                stores.update(String.valueOf(storeWithNewProduct)).with("{$inc: {listProducts: listProducts}}");
                 }
                 else {
-                       System.out.println("Информация о введенном магазине и/или продукте отсутствует в БД");
+                System.out.println("Информация о введенном магазине и/или продукте отсутствует в БД");
                 }
+            }
+            if (statistics = true) {
+
+                statistics = false;
             }
         }
     }
@@ -149,10 +163,8 @@ public class Main {
             dataMap.put("placeProductInStore", placeProductInStore);
         }
         else if (command.matches(COMMAND_STATISTICS)) {
-
-
+            statistics = true;
         }
-
         else if (command.matches(COMMAND_END)) {
             System.exit(0);
         }
