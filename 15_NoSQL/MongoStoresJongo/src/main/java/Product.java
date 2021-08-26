@@ -39,4 +39,13 @@ public class Product {
     public void setProductPrice(Integer productPrice) {
         this.productPrice = productPrice;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "_id='" + _id + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                '}';
+    }
 }

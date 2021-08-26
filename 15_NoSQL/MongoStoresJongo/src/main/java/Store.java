@@ -43,5 +43,13 @@ public class Store {
         this.listProduct = listProduct;
     }
 
+    @Override
+    public String toString() {
+        return "Store{" +
+                "_id='" + _id + '\'' +
+                ", storeName='" + storeName + '\'' +
+                ", listProduct=" + listProduct +
+                '}';
+    }
 
 }

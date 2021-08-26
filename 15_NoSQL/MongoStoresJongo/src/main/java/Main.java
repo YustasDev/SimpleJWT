@@ -5,9 +5,7 @@ import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 import org.jongo.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,18 +56,45 @@ public class Main {
                 String product = String.valueOf(placeProductInStore.get("placeProductName"));
 
                 FindOne productForSale = products.findOne("{productName:#}", product);
-                Product forSale = productForSale.as(Product.class);
 
-                FindOne storeForProduct = stores.findOne("{storeName:#}", store);
-                Store forProduct = storeForProduct.as(Store.class);
+                long c = products.count("{name: product}");
+                System.out.println(c);
+
+//                if ((products.count("{name: product}")) > 0) {
+//                    Product forSale = productForSale.as(Product.class);
+//
+//                    FindOne storeForProduct = stores.findOne("{storeName:#}", store);
+//                    if (storeForProduct !=null) {
+//                        Store storeWithNewProduct = storeForProduct.as(Store.class);
+//
+//                        List<Product> productList = new ArrayList<>();
+//                        productList.add(forSale);
+//                        storeWithNewProduct.setListProduct(productList);
+//                        stores.save(storeWithNewProduct);
+//                    }
+//                    else {
+//                            System.out.println("Информация о введенном магазине отсутствует в БД");
+//                            continue;
+//                        }
+//                    }
+//                else {
+//                    System.out.println("Информация о введенном продукте отсутствует в БД");
+//                    continue;
+//                }
+//
+
+
+
+
+
+               // forProduct.setListProduct()
 
 
 
 
 
 
-
-                System.out.println(one.getProductName());
+             //   System.out.println(one.getProductName());
 
 
 
