@@ -55,58 +55,28 @@ public class Main {
                 String store = String.valueOf(placeProductInStore.get("placeStoreName"));
                 String product = String.valueOf(placeProductInStore.get("placeProductName"));
 
+                MongoCursor<Product> cursorProduct = products.find("{productName:#}", product).as(Product.class);
+                MongoCursor<Store> cursorStore = stores.find("{storeName:#}", store).as(Store.class);
+
+                int productQuantity = cursorProduct.count();
+                int storeQuantity = cursorStore.count();
+                if (productQuantity > 0 && storeQuantity > 0) {
                 FindOne productForSale = products.findOne("{productName:#}", product);
+                Product forSaleProduct = productForSale.as(Product.class);
 
-                long c = products.count("{name: product}");
-                System.out.println(c);
+                FindOne storeForProduct = stores.findOne("{storeName:#}", store);
+                Store storeWithNewProduct = storeForProduct.as(Store.class);
 
-//                if ((products.count("{name: product}")) > 0) {
-//                    Product forSale = productForSale.as(Product.class);
-//
-//                    FindOne storeForProduct = stores.findOne("{storeName:#}", store);
-//                    if (storeForProduct !=null) {
-//                        Store storeWithNewProduct = storeForProduct.as(Store.class);
-//
-//                        List<Product> productList = new ArrayList<>();
-//                        productList.add(forSale);
-//                        storeWithNewProduct.setListProduct(productList);
-//                        stores.save(storeWithNewProduct);
-//                    }
-//                    else {
-//                            System.out.println("Информация о введенном магазине отсутствует в БД");
-//                            continue;
-//                        }
-//                    }
-//                else {
-//                    System.out.println("Информация о введенном продукте отсутствует в БД");
-//                    continue;
-//                }
-//
-
-
-
-
-
-               // forProduct.setListProduct()
-
-
-
-
-
-
-             //   System.out.println(one.getProductName());
-
-
-
-
+                List<Product> productList = new ArrayList<>();
+                productList.add(forSaleProduct);
+                storeWithNewProduct.setListProduct(productList);
+                stores.save(storeWithNewProduct);
+                }
+                else {
+                       System.out.println("Информация о введенном магазине и/или продукте отсутствует в БД");
+                }
             }
-
-
-
-
         }
-
-
     }
 
     private static String inputCommand(String message) {
