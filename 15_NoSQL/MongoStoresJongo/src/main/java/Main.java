@@ -1,5 +1,6 @@
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import org.bson.Document;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
@@ -81,17 +82,19 @@ public class Main {
                 availableProductsInStore.add(forSaleProduct);
                 storeWithNewProduct.setListProducts(availableProductsInStore);
                 stores.save(storeWithNewProduct);
-
                 System.out.println("Продукт: " + "'" + product + "' выставлен на продажу в магазине '" + store + "'");
-
-
                 }
                 else {
                 System.out.println("Информация о введенном магазине и/или продукте отсутствует в БД");
                 }
             }
             if (statistics = true) {
+                FindIterable<Document> youngestStudent = stores
+                        .find()
+                        .sort("", 1))
 
+                int numberProductsNames =
+                        find().sort("{firstname: 1}").as(Friend.class);
                 statistics = false;
             }
         }
