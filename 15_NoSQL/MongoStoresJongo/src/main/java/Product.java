@@ -16,6 +16,9 @@ public class Product {
         this.productPrice = productPrice;
     }
 
+    public Product(Product forSaleProduct) {
+    }
+
     public String get_id() {
         return _id;
     }

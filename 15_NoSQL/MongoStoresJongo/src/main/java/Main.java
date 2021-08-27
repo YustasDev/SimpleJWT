@@ -19,7 +19,7 @@ public class Main {
     private final static String COMMAND_STATISTICS = "statistics";
     private final static String COMMAND_END = "END";
     private static boolean statistics = false;
-    private static List<Product> listProducts = new ArrayList<>();
+   // private static List<Product> listProducts = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -37,8 +37,8 @@ public class Main {
         Jongo jongo = new Jongo(db);
         MongoCollection stores = jongo.getCollection("stores");
         MongoCollection products = jongo.getCollection("products");
-        stores.drop();
-        products.drop();
+        //stores.drop();
+        //products.drop();
 
         printСondition();
 
@@ -77,10 +77,14 @@ public class Main {
                 FindOne storeForProduct = stores.findOne("{storeName:#}", store);
                 Store storeWithNewProduct = storeForProduct.as(Store.class);
 
+                List<Product> availableProductsInStore = storeWithNewProduct.getListProducts();
+                availableProductsInStore.add(forSaleProduct);
+                storeWithNewProduct.setListProducts(availableProductsInStore);
+                stores.save(storeWithNewProduct);
 
-                listProducts.add(forSaleProduct);
-               // storeWithNewProduct.setListProducts(listProducts);
-                stores.update(String.valueOf(storeWithNewProduct)).with("{$inc: {listProducts: listProducts}}");
+                System.out.println("Продукт: " + "'" + product + "' выставлен на продажу в магазине '" + store + "'");
+
+
                 }
                 else {
                 System.out.println("Информация о введенном магазине и/или продукте отсутствует в БД");
