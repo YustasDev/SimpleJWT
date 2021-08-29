@@ -1,13 +1,10 @@
 
-import static com.mongodb.client.model.Accumulators.avg;
 import static com.mongodb.client.model.Aggregates.count;
 import static com.mongodb.client.model.Aggregates.group;
 import static com.mongodb.client.model.Aggregates.unwind;
 import static com.mongodb.client.model.Filters.eq;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.model.Accumulators;
 import java.io.IOException;
@@ -19,7 +16,6 @@ import org.jongo.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jongo.Aggregate.ResultsIterator;
 
 
 public class Main {
@@ -115,11 +111,15 @@ public class Main {
                   + numberProductsNames);
         }
 
-
+//        Aggregate aggregateAVG = stores.aggregate(
+//            String.valueOf(Arrays
+//                .asList(group("$storeName", Accumulators.avg("_avg", "$productPrice"))
+//            ))
+//        );
 
 
    //     Aggregate avgq = stores.aggregate(String.valueOf(Arrays.asList(unwind("$listProducts"),
-     //       group("$storeName", Accumulators.avg("avgPrice", "$$listProducts.productPrice")))));
+     //       group("$storeName", Accumulators.avg("avgPrice", "$listProducts.productPrice")))));
 
      //   ResultsIterator<Store> avgq = stores.aggregate(String.valueOf(unwind("$listProducts")))
        //     .and(String.valueOf(group("$storeName", avg("avgPrice", "$listProduct.productPrice"))))
