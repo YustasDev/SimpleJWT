@@ -111,11 +111,13 @@ public class Main {
                   + numberProductsNames);
         }
 
-//        Aggregate aggregateAVG = stores.aggregate(
-//            String.valueOf(Arrays
-//                .asList(group("$storeName", Accumulators.avg("_avg", "$productPrice"))
-//            ))
-//        );
+        stores.aggregate("{$unwind:{$listProducts}}")
+           // .and("{$group: {storeName}}")
+            .and("{$group : { _id : '$storeName'}, $avg : {$listProduct.productPrice}}")
+            //.and( "{$avg : {listProduct.productPrice}")
+            .as(Store.class);
+
+
 
 
    //     Aggregate avgq = stores.aggregate(String.valueOf(Arrays.asList(unwind("$listProducts"),
@@ -148,10 +150,6 @@ public class Main {
 //        }
 // ])
 //
-
-
-
-
 
 
 
