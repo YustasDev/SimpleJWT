@@ -1,4 +1,5 @@
 
+
 import static com.mongodb.client.model.Aggregates.count;
 import static com.mongodb.client.model.Aggregates.group;
 import static com.mongodb.client.model.Aggregates.match;
@@ -100,7 +101,7 @@ public class Main {
           System.out.println("Информация о введенном магазине и/или продукте отсутствует в БД");
         }
       }
-      if (statistics = true) {
+      if (statistics != false ) {
         MongoCursor<Store> allStores = stores
             .find()
             .sort("{storeName: 1}").as(Store.class);
@@ -113,64 +114,23 @@ public class Main {
                   + numberProductsNames);
         }
 
-        Aggregate lt100 = stores.aggregate(String.valueOf(Arrays.asList(
-            match(Filters.lt("productPrice", 100)),
-            count())));
-
-
-      //  stores.aggregate("{$unwind:{$listProducts}}")
-           // .and("{$group: {storeName}}")
-        //    .and("{$group : { _id : '$storeName'}, $avg : {$listProduct.productPrice}}")
-            //.and( "{$avg : {listProduct.productPrice}")
-          //  .as(Store.class);
-
-
-
-
-   //     Aggregate avgq = stores.aggregate(String.valueOf(Arrays.asList(unwind("$listProducts"),
-     //       group("$storeName", Accumulators.avg("avgPrice", "$listProducts.productPrice")))));
-
-     //   ResultsIterator<Store> avgq = stores.aggregate(String.valueOf(unwind("$listProducts")))
-       //     .and(String.valueOf(group("$storeName", avg("avgPrice", "$listProduct.productPrice"))))
-         //   .as(Store.class);
-
-
-
-//            stores.aggregate([
-//            {
-//                $unwind: "$listProducts"
-//    },
-//        {
-//          $match : {
-//            "listProducts.productPrice" : { $ne : 0 }
-//          }
-//        },
-//        {
-//          $group : {
-//            _id : {
-//              storeName : "$storeName",
-//            },
-//            AVG_Products : {
-//              $avg : "$listProducts.productPrice"
-//            }
-//          }
-//        }
-// ])
+//        Aggregate lt100 = stores.aggregate(String.valueOf(Arrays.asList(
+//            match(Filters.lt("productPrice", 100)),
+//            count())));
 //
 
 
+        allStores.close();
 
-          allStores.close();
-
-        }
-
-
-
-
-
-        statistics = false;
       }
+
+
+
+
+
+      statistics = false;
     }
+  }
 
 
 
