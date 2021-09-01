@@ -9,9 +9,12 @@ import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import java.io.IOException;
+import java.util.function.Consumer;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 import org.jongo.*;
@@ -113,14 +116,46 @@ public class Main {
                   + "' общее количество наименований товаров, составляет: "
                   + numberProductsNames);
         }
-
-//        Aggregate lt100 = stores.aggregate(String.valueOf(Arrays.asList(
-//            match(Filters.lt("productPrice", 100)),
-//            count())));
-//
-
-
         allStores.close();
+
+        Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
+        Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
+            Constants.PRODUCTS_LIST);
+        Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
+        Bson minGroup = Aggregates.group(Constants.$NAME,
+            Accumulators.min(Constants.MIN_PRICE, Constants.$PRODUCTS_LIST_PRICE));
+        Bson maxGroup = Aggregates.group(Constants.$NAME,
+            Accumulators.max(Constants.MAX_PRICE, Constants.$PRODUCTS_LIST_PRICE));
+        Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
+
+        System.out.println(Constants.MINIMUM_PRICE);
+        stores.aggregate(Arrays.asList(unwindListProducts,         unwind, lookup, unwindProducts, minGroup));
+           // .forEach((Consumer<Document>) System.out::println);
+
+//        db.stores.aggregate([
+//... {
+//...         $unwind: "$listProducts"
+//...     },
+//...     {
+//...         $match : {
+//...             "listProducts.productPrice" : { $ne : 0 }
+//...         }
+//...     },
+//...     {
+//...         $group : {
+//...             _id : {
+//...                 storeName : "$storeName",
+//...             },
+//...             MAX_Products : {
+//...                 $max : "$listProducts.productPrice"
+//...             }
+//...         }
+//...      }
+//...  ])
+
+
+
+
 
       }
 
