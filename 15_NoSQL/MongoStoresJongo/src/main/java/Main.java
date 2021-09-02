@@ -1,7 +1,10 @@
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 import org.jongo.*;
@@ -11,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Main {
+public class Main<statistics> {
 
     private static Scanner scanner;
     private final static String COMMAND_SET = "(set)(\\D+)";
@@ -19,8 +22,7 @@ public class Main {
     private final static String COMMAND_PLACE = "(place)\\s+(\\D+)\\s+(\\D+)";
     private final static String COMMAND_STATISTICS = "statistics";
     private final static String COMMAND_END = "END";
-    private static boolean statistics = false;
-   // private static List<Product> listProducts = new ArrayList<>();
+    private static volatile boolean statistics = false;
 
     public static void main(String[] args) {
 
@@ -38,6 +40,9 @@ public class Main {
         Jongo jongo = new Jongo(db);
         MongoCollection stores = jongo.getCollection("stores");
         MongoCollection products = jongo.getCollection("products");
+        /*
+         commented out for development, so as not to create collections every time you run
+        */
         //stores.drop();
         //products.drop();
 
@@ -88,13 +93,66 @@ public class Main {
                 System.out.println("Информация о введенном магазине и/или продукте отсутствует в БД");
                 }
             }
-            if (statistics = true) {
-                FindIterable<Document> youngestStudent = stores
+            if (statistics != false) {
+                MongoCursor<Store> allStores = stores
                         .find()
-                        .sort("", 1))
+                        .sort("{storeName: 1}").as(Store.class);
 
-                int numberProductsNames =
-                        find().sort("{firstname: 1}").as(Friend.class);
+                for (Store store : allStores) {
+                    int numberProductsNames = store.getListProducts().size();
+                    System.out.println("В магазине: " + "'" + store.getStoreName()
+                                    + "' общее количество наименований товаров, составляет: "
+                                    + numberProductsNames);
+                }
+
+                Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
+                Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
+                        Constants.PRODUCTS_LIST);
+                Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
+                Bson minGroup = Aggregates.group(Constants.$NAME,
+                        Accumulators.min(Constants.MIN_PRICE, Constants.$PRODUCTS_LIST_PRICE));
+                Bson maxGroup = Aggregates.group(Constants.$NAME,
+                        Accumulators.max(Constants.MAX_PRICE, Constants.$PRODUCTS_LIST_PRICE));
+                Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
+
+                System.out.println(Constants.MINIMUM_PRICE);
+                stores.aggregate(Arrays.asList(unwindListProducts,         unwind, lookup, unwindProducts, minGroup));
+                // .forEach((Consumer<Document>) System.out::println);
+
+//        db.stores.aggregate([
+//... {
+//...         $unwind: "$listProducts"
+//...     },
+//...     {
+//...         $match : {
+//...             "listProducts.productPrice" : { $ne : 0 }
+//...         }
+//...     },
+//...     {
+//...         $group : {
+//...             _id : {
+//...                 storeName : "$storeName",
+//...             },
+//...             MAX_Products : {
+//...                 $max : "$listProducts.productPrice"
+//...             }
+//...         }
+//...      }
+//...  ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 statistics = false;
             }
         }

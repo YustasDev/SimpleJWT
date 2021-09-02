@@ -1,5 +1,6 @@
 import org.jongo.marshall.jackson.oid.MongoObjectId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Store {
@@ -7,7 +8,7 @@ public class Store {
     @MongoObjectId
     private String _id;
     private String storeName;
-    private List<Product> listProducts;
+    private List<Product> listProducts = new ArrayList<>();
 
     public Store() {
     }
