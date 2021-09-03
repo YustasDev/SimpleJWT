@@ -23,6 +23,8 @@ public class Constants {
     // =====================================================================================
     public static final String $LISTPRODUCTS = "$listProducts";
     public static final String LISTPRODUCTS_PRODUCTSPRICE = "listProducts.productPrice";
+    public static final String $STORENAME = "$storeName";
+    public static final String $LISTPRODUCTS_PRODUCTPRICE ="$listProducts.productPrice" ;
 
 
 }

@@ -13,6 +13,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.mongodb.client.model.Aggregates.group;
+
 
 public class Main<statistics> {
 
@@ -105,18 +107,36 @@ public class Main<statistics> {
                                     + numberProductsNames);
                 }
 
-                Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
-                Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
-                        Constants.PRODUCTS_LIST);
-                Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
-                Bson minGroup = Aggregates.group(Constants.$NAME,
-                        Accumulators.min(Constants.MIN_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-                Bson maxGroup = Aggregates.group(Constants.$NAME,
-                        Accumulators.max(Constants.MAX_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-                Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
+//                Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
+//                Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
+//                        Constants.PRODUCTS_LIST);
+//                Bson minGroup = Aggregates.group(Constants.$NAME,
+//                        Accumulators.min(Constants.MIN_PRICE, Constants.$PRODUCTS_LIST_PRICE));
+//                Bson maxGroup = Aggregates.group(Constants.$NAME,
+//                        Accumulators.max(Constants.MAX_PRICE, Constants.$PRODUCTS_LIST_PRICE));
+//                Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
 
-                System.out.println(Constants.MINIMUM_PRICE);
-                stores.aggregate(Arrays.asList(unwindListProducts,         unwind, lookup, unwindProducts, minGroup));
+
+                Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
+
+                Bson match2 = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
+
+             //   Bson maxGroup = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
+
+                Bson maxGroup1 = group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
+
+             //   stores.aggregate(Arrays.asList(unwindListProducts, match2, maxGroup1        ));
+
+                int max = stores.aggregate(Arrays.asList(unwindListProducts,
+                        group(null, Accumulators.max("max", "$listProducts.productPrice"))))
+                        .first().getInteger("max");
+                System.out.println(max);
+
+
+
+
+//                System.out.println(Constants.MINIMUM_PRICE);
+//                stores.aggregate(Arrays.asList(unwindListProducts,         unwind, lookup, unwindProducts, minGroup));
                 // .forEach((Consumer<Document>) System.out::println);
 
 //        db.stores.aggregate([
