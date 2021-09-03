@@ -13,7 +13,9 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import java.io.IOException;
 import java.util.function.Consumer;
+import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
@@ -121,16 +123,28 @@ public class Main {
         Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
         Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
             Constants.PRODUCTS_LIST);
-        Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
+
         Bson minGroup = Aggregates.group(Constants.$NAME,
             Accumulators.min(Constants.MIN_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-        Bson maxGroup = Aggregates.group(Constants.$NAME,
-            Accumulators.max(Constants.MAX_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-        Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
 
         System.out.println(Constants.MINIMUM_PRICE);
-        stores.aggregate(Arrays.asList(unwindListProducts,         unwind, lookup, unwindProducts, minGroup));
-           // .forEach((Consumer<Document>) System.out::println);
+
+
+
+        Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
+        Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }");
+
+        Bson match1 = Aggregates.match(new Bson (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
+
+        Bson match2 = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
+
+        Bson maxGroup = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
+
+        Bson maxGroup1 = Aggregates.group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
+
+        stores.aggregate(Arrays.asList(unwindListProducts, match2, maxGroup1        ));
+
+        // .forEach((Consumer<Document>) System.out::println);
 
 //        db.stores.aggregate([
 //... {
