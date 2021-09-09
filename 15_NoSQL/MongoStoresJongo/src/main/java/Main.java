@@ -119,18 +119,33 @@ public class Main<statistics> {
 
                 Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
 
-                Bson match2 = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
+                Bson match = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
 
              //   Bson maxGroup = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
 
+                Bson group = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
+
                 Bson maxGroup1 = group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
 
-             //   stores.aggregate(Arrays.asList(unwindListProducts, match2, maxGroup1        ));
+                //stores.aggregate(Arrays.asList(unwindListProducts, match, group))
 
-                int max = stores.aggregate(Arrays.asList(unwindListProducts,
-                        group(null, Accumulators.max("max", "$listProducts.productPrice"))))
-                        .first().getInteger("max");
-                System.out.println(max);
+                Aggregate.ResultsIterator<Store> max = stores.aggregate("{$unwind:{$listProducts}")
+                        .and("{$match:{ $ne : 0 }")
+                        .and("{$group:{$storeName}")
+                        .and("{$max:{$listProducts.productPrice}")
+                        .as(Store.class);
+
+                for (Store store: max) {
+                    System.out.println(store);
+                }
+
+
+
+
+//                int max = stores.aggregate(Arrays.asList(unwindListProducts,
+//                        group(null, Accumulators.max("max", "$listProducts.productPrice"))))
+//                        .first().getInteger("max");
+//                System.out.println(max);
 
 
 
@@ -159,19 +174,6 @@ public class Main<statistics> {
 //...         }
 //...      }
 //...  ])
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 statistics = false;
             }
