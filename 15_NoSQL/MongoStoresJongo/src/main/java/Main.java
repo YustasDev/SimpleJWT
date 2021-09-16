@@ -1,14 +1,19 @@
 import com.mongodb.DB;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
+import org.bson.BSON;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 import org.jongo.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -129,15 +134,42 @@ public class Main<statistics> {
 
                 //stores.aggregate(Arrays.asList(unwindListProducts, match, group))
 
-                Aggregate.ResultsIterator<Store> max = stores.aggregate("{$unwind:{$listProducts}")
-                        .and("{$match:{ $ne : 0 }")
-                        .and("{$group:{$storeName}")
-                        .and("{$max:{$listProducts.productPrice}")
-                        .as(Store.class);
 
-                for (Store store: max) {
-                    System.out.println(store);
+                MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
+                MongoDatabase database = mongoClient.getDatabase("driverMongoStores");
+                com.mongodb.client.MongoCollection<Document> listStores = database.getCollection("driverStores");
+                com.mongodb.client.MongoCollection<Document> ListProducts = database.getCollection("driverProducts");
+
+                List<Document> inDriverProducts = new ArrayList<>();
+                DBCursor cursorP = db.getCollection("products").find();
+                for (DBObject dbo : cursorP){
+                    Document doc = getDocument(dbo);
+                    inDriverProducts.add(doc);
                 }
+                listStores.insertMany(inDriverProducts);
+
+
+                List<Document> inDriverStores = new ArrayList<>();
+                DBCursor cursorS = db.getCollection("stores").find();
+                for (DBObject dbo : cursorS){
+                    Document doc = getDocument(dbo);
+                    inDriverStores.add(doc);
+                }
+                listStores.insertMany(inDriverStores);
+
+                long count = listStores.countDocuments();
+                System.out.println(count);
+
+           //     Aggregate.ResultsIterator<Store> max = stores.aggregate
+                       // ("{$unwind:{listProducts}}")
+                   //     .and("{$match:{$listProducts.productPrice: {$ne : 0}}}")
+                    //    .and("{$group:{$storeName}}")
+                      //  .and("{$max:{$listProducts.productPrice}}")
+      //                  .as(Store.class);
+
+        //        for (Store store: max) {
+     //               System.out.println(store);
+     //           }
 
 
 
@@ -175,10 +207,17 @@ public class Main<statistics> {
 //...      }
 //...  ])
 
-                statistics = false;
+                     statistics = false;
             }
         }
     }
+
+    public static Document getDocument(DBObject doc)
+    {
+        if(doc == null) return null;
+        return new Document(doc.toMap());
+    }
+
 
     private static String inputCommand(String message) {
         for (; ; ) {
@@ -213,6 +252,12 @@ public class Main<statistics> {
                 + "\n"
                 + "4. Команда statistics выведет статистику товаров по каждому магазину \n"
                 + "5. Если Вы хотите прекратить выполнение программы, наберите команду: END ");
+
+        LocalDateTime ldt = LocalDateTime.now ();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timeNow = "Сегодня: " + ldt.format(formatter);
+        System.out.println(timeNow);
+
     }
 
     private static Map<String, Document> commandRecognition (String command){
