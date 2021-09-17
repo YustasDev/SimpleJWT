@@ -139,8 +139,8 @@ public class Main<statistics> {
                 MongoDatabase database = mongoClient.getDatabase("driverMongoStores");
                 com.mongodb.client.MongoCollection<Document> listStores = database.getCollection("driverStores");
                 com.mongodb.client.MongoCollection<Document> listProducts = database.getCollection("driverProducts");
-                listStores.drop();
-                listProducts.drop();
+               // listStores.drop();
+               // listProducts.drop();
 
                 List<Document> inDriverProducts = new ArrayList<>();
                 DBCursor cursorP = db.getCollection("products").find();
