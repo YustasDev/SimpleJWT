@@ -37,8 +37,6 @@ public class Main<statistics> {
 //        MongoDatabase database = mongoClient.getDatabase("mongoStores");
 //        MongoCollection<Document> listStores = database.getCollection("stores");
 //        MongoCollection<Document> ListProducts = database.getCollection("products");
-//        listStores.drop();
-//        ListProducts.drop();
 
         /*
         working with the Jongo library replaces the top (commented out) lines
@@ -47,6 +45,8 @@ public class Main<statistics> {
         Jongo jongo = new Jongo(db);
         MongoCollection stores = jongo.getCollection("stores");
         MongoCollection products = jongo.getCollection("products");
+       // stores.drop();
+       // products.drop();
         /*
          commented out for development, so as not to create collections every time you run
         */
@@ -138,7 +138,9 @@ public class Main<statistics> {
                 MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
                 MongoDatabase database = mongoClient.getDatabase("driverMongoStores");
                 com.mongodb.client.MongoCollection<Document> listStores = database.getCollection("driverStores");
-                com.mongodb.client.MongoCollection<Document> ListProducts = database.getCollection("driverProducts");
+                com.mongodb.client.MongoCollection<Document> listProducts = database.getCollection("driverProducts");
+                listStores.drop();
+                listProducts.drop();
 
                 List<Document> inDriverProducts = new ArrayList<>();
                 DBCursor cursorP = db.getCollection("products").find();
@@ -146,8 +148,7 @@ public class Main<statistics> {
                     Document doc = getDocument(dbo);
                     inDriverProducts.add(doc);
                 }
-                listStores.insertMany(inDriverProducts);
-
+                listProducts.insertMany(inDriverProducts);
 
                 List<Document> inDriverStores = new ArrayList<>();
                 DBCursor cursorS = db.getCollection("stores").find();
