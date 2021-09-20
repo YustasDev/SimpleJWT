@@ -1,10 +1,9 @@
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
 import org.bson.BSON;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -19,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Aggregates.group;
+import static java.util.Arrays.asList;
 
 
 public class Main<statistics> {
@@ -112,6 +112,75 @@ public class Main<statistics> {
                                     + numberProductsNames);
                 }
 
+
+                MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
+                MongoDatabase database = mongoClient.getDatabase("driverMongoStores");
+                com.mongodb.client.MongoCollection<Document> listStores = database.getCollection("driverStores");
+                com.mongodb.client.MongoCollection<Document> listProducts = database.getCollection("driverProducts");
+               // listStores.drop();
+               // listProducts.drop();
+
+
+                DBCursor cursorP = db.getCollection("products").find();
+                for (DBObject dbo : cursorP){
+                    Document oldDoc = getDocument(dbo);
+                    Document newDoc = getDocument(dbo);
+
+                    BasicDBObject updateDoc = new BasicDBObject();
+                    updateDoc.put("$set", newDoc);
+                    listProducts.updateOne(oldDoc, updateDoc);
+                }
+
+
+                DBCursor cursorS = db.getCollection("stores").find();
+                for (DBObject dbo : cursorS){
+                    Document oldDoc = getDocument(dbo);
+                    Document newDoc = getDocument(dbo);
+
+                    BasicDBObject updateDoc = new BasicDBObject();
+                    updateDoc.put("$set", newDoc);
+                    listStores.updateOne(oldDoc, updateDoc);
+                }
+
+                long count = listStores.countDocuments();
+                System.out.println(count);
+
+                Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
+                Bson match = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
+                Bson maxGroup = group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
+
+              //  Block <Document> printBlock = document -> System.out.println(document.toJson());
+                AggregateIterable<Document> maxes = listStores.aggregate(asList(unwindListProducts, match, maxGroup))
+                  //      listStores.aggregate(Arrays.asList(unwindListProducts, match, maxGroup)).forEach(printBlock);
+//                for(Document doc : maxes) {
+//                    System.out.println("max Размер = " + doc);
+//                }
+
+                AggregateIterable<Document> iterable = listStores.aggregate(
+                        asList(
+                                new Document("$unwind", new Document("listProducts", )),
+                                new Document("$match", new Document("day", day)),
+                                new Document("$project",
+                                        new Document("_id", "0")
+                                                .append("day", 1)
+                                                .append(
+                                                        "events",
+                                                        new Document(
+                                                                "$filter",
+                                                                new Document("input", "$events")
+                                                                        .append("as", "event")
+                                                                        .append(
+                                                                                "cond",
+                                                                                new Document("eq", asList("$$event.year", year))
+                                                                        )
+                                                        )
+                                                )
+                                )
+                        )
+                )
+
+
+
 //                Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
 //                Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
 //                        Constants.PRODUCTS_LIST);
@@ -122,55 +191,13 @@ public class Main<statistics> {
 //                Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
 
 
-                Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
 
-                Bson match = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
+                //   Bson maxGroup = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
 
-             //   Bson maxGroup = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
-
-                Bson group = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
-
-                Bson maxGroup1 = group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
-
-                //stores.aggregate(Arrays.asList(unwindListProducts, match, group))
+               // Bson group = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
 
 
-                MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
-                MongoDatabase database = mongoClient.getDatabase("driverMongoStores");
-                com.mongodb.client.MongoCollection<Document> listStores = database.getCollection("driverStores");
-                com.mongodb.client.MongoCollection<Document> listProducts = database.getCollection("driverProducts");
-               // listStores.drop();
-               // listProducts.drop();
 
-                List<Document> inDriverProducts = new ArrayList<>();
-                DBCursor cursorP = db.getCollection("products").find();
-                for (DBObject dbo : cursorP){
-                    Document doc = getDocument(dbo);
-                    inDriverProducts.add(doc);
-                }
-                listProducts.insertMany(inDriverProducts);
-
-                List<Document> inDriverStores = new ArrayList<>();
-                DBCursor cursorS = db.getCollection("stores").find();
-                for (DBObject dbo : cursorS){
-                    Document doc = getDocument(dbo);
-                    inDriverStores.add(doc);
-                }
-                listStores.insertMany(inDriverStores);
-
-                long count = listStores.countDocuments();
-                System.out.println(count);
-
-           //     Aggregate.ResultsIterator<Store> max = stores.aggregate
-                       // ("{$unwind:{listProducts}}")
-                   //     .and("{$match:{$listProducts.productPrice: {$ne : 0}}}")
-                    //    .and("{$group:{$storeName}}")
-                      //  .and("{$max:{$listProducts.productPrice}}")
-      //                  .as(Store.class);
-
-        //        for (Store store: max) {
-     //               System.out.println(store);
-     //           }
 
 
 
