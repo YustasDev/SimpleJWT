@@ -6,6 +6,8 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import org.bson.BSON;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
@@ -19,6 +21,8 @@ import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Aggregates.group;
 import static java.util.Arrays.asList;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public class Main<statistics> {
@@ -142,43 +146,50 @@ public class Main<statistics> {
                     listStores.updateOne(oldDoc, updateDoc);
                 }
 
-                long count = listStores.countDocuments();
-                System.out.println(count);
+//                CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+//                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+//
+//                listProducts = listProducts.withCodecRegistry(pojoCodecRegistry);
+//                listStores = listStores.withCodecRegistry(pojoCodecRegistry);
+
+
+/*
+                DBObject unwind = new BasicDBObject("$unwind", new BasicDBObject("$listProducts"));
+                DBObject match = new BasicDBObject("$match", new BasicDBObject("listProducts.productPrice", new BasicDBObject("$ne", 0)));
+                DBObject groupFields = new BasicDBObject( "_id", "$storeName");
+                groupFields.put("average", new BasicDBObject( "$avg", "$listProducts.productPrice"));
+                DBObject group = new BasicDBObject("$group", groupFields);
+
+                List<DBObject> pipeline = Arrays.asList(unwind, match, group);
+                AggregationOptions options = AggregationOptions.builder()
+                        .outputMode(AggregationOptions.OutputMode.INLINE)
+                        .build();
+
+                Cursor cursor = listStores.aggregate(pipeline, options);
+                while (cursor.hasNext() ) {
+                    DBObject obj = cursor.next();
+                    System.out.println(obj);
+                }
+*/
 
                 Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
-                Bson match = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, "{ $ne : 0 }"));
+                Bson match1 = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, new Document("$ne", 0)));
                 Bson maxGroup = group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
 
-              //  Block <Document> printBlock = document -> System.out.println(document.toJson());
-                AggregateIterable<Document> maxes = listStores.aggregate(asList(unwindListProducts, match, maxGroup))
-                  //      listStores.aggregate(Arrays.asList(unwindListProducts, match, maxGroup)).forEach(printBlock);
-//                for(Document doc : maxes) {
-//                    System.out.println("max Размер = " + doc);
-//                }
+                Block <Document> printBlock = document -> System.out.println(document.toJson());
+                AggregateIterable<Document> maxes = listStores.aggregate(asList(unwindListProducts, match1, maxGroup));
+                listStores.aggregate(Arrays.asList(unwindListProducts, match1, maxGroup)).forEach(printBlock);
 
-                AggregateIterable<Document> iterable = listStores.aggregate(
-                        asList(
-                                new Document("$unwind", new Document("listProducts", )),
-                                new Document("$match", new Document("day", day)),
-                                new Document("$project",
-                                        new Document("_id", "0")
-                                                .append("day", 1)
-                                                .append(
-                                                        "events",
-                                                        new Document(
-                                                                "$filter",
-                                                                new Document("input", "$events")
-                                                                        .append("as", "event")
-                                                                        .append(
-                                                                                "cond",
-                                                                                new Document("eq", asList("$$event.year", year))
-                                                                        )
-                                                        )
-                                                )
-                                )
-                        )
-                )
+                for(Document doc : maxes){
+                    System.out.println(printDoc(doc));
+                }
 
+
+
+
+
+
+               // BasicDBObject unwind = BasicDBObject.parse("");
 
 
 //                Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
