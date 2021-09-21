@@ -1,9 +1,11 @@
 import com.mongodb.*;
 import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import org.bson.BSON;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -49,13 +51,13 @@ public class Main<statistics> {
         Jongo jongo = new Jongo(db);
         MongoCollection stores = jongo.getCollection("stores");
         MongoCollection products = jongo.getCollection("products");
-       // stores.drop();
-       // products.drop();
         /*
          commented out for development, so as not to create collections every time you run
         */
-        //stores.drop();
-        //products.drop();
+        // stores.drop();
+       // products.drop();
+
+
 
         printСondition();
 
@@ -107,7 +109,7 @@ public class Main<statistics> {
             if (statistics != false) {
                 MongoCursor<Store> allStores = stores
                         .find()
-                        .sort("{storeName: 1}").as(Store.class);
+                        .sort("{storeName: -1}").as(Store.class);
 
                 for (Store store : allStores) {
                     int numberProductsNames = store.getListProducts().size();
@@ -116,7 +118,10 @@ public class Main<statistics> {
                                     + numberProductsNames);
                 }
 
-
+                /*
+                I could not find how to do the aggregation using the Jongo library, so converting
+                the Jongo collections to MongoCollection <Document> and work with them further
+                 */
                 MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
                 MongoDatabase database = mongoClient.getDatabase("driverMongoStores");
                 com.mongodb.client.MongoCollection<Document> listStores = database.getCollection("driverStores");
@@ -152,99 +157,21 @@ public class Main<statistics> {
 //                listProducts = listProducts.withCodecRegistry(pojoCodecRegistry);
 //                listStores = listStores.withCodecRegistry(pojoCodecRegistry);
 
-
-/*
-                DBObject unwind = new BasicDBObject("$unwind", new BasicDBObject("$listProducts"));
-                DBObject match = new BasicDBObject("$match", new BasicDBObject("listProducts.productPrice", new BasicDBObject("$ne", 0)));
-                DBObject groupFields = new BasicDBObject( "_id", "$storeName");
-                groupFields.put("average", new BasicDBObject( "$avg", "$listProducts.productPrice"));
-                DBObject group = new BasicDBObject("$group", groupFields);
-
-                List<DBObject> pipeline = Arrays.asList(unwind, match, group);
-                AggregationOptions options = AggregationOptions.builder()
-                        .outputMode(AggregationOptions.OutputMode.INLINE)
-                        .build();
-
-                Cursor cursor = listStores.aggregate(pipeline, options);
-                while (cursor.hasNext() ) {
-                    DBObject obj = cursor.next();
-                    System.out.println(obj);
-                }
-*/
-
-                Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
-                Bson match1 = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, new Document("$ne", 0)));
+                Bson unwind = Aggregates.unwind(Constants.$LISTPRODUCTS);
+                Bson match = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, new Document("$ne", 0)));
+                Bson project = Aggregates.project(Projections.fields(Projections.excludeId(), Projections.include("storeName"), Projections.include("listProducts.productName"), Projections.include("listProducts.productPrice")));
                 Bson maxGroup = group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
 
-                Block <Document> printBlock = document -> System.out.println(document.toJson());
-                AggregateIterable<Document> maxes = listStores.aggregate(asList(unwindListProducts, match1, maxGroup));
-                listStores.aggregate(Arrays.asList(unwindListProducts, match1, maxGroup)).forEach(printBlock);
+           //     Block <Document> printBlock = document -> System.out.println(document.toJson());
+           //     listStores.aggregate(Arrays.asList(unwind, match, maxGroup)).forEach(printBlock);
 
-                for(Document doc : maxes){
-                    System.out.println(printDoc(doc));
+                AggregateIterable<Document> maxDocs = listStores.aggregate(asList(unwind, match, maxGroup));
+                for (Document doc : maxDocs) {
+                    String store = doc.getString("_id");
+                    Integer maxPrice = (Integer) doc.get("_max");
+
+                    System.out.println("В магазине '" + store + "' максимальная цена товара составляет " + maxPrice);
                 }
-
-
-
-
-
-
-               // BasicDBObject unwind = BasicDBObject.parse("");
-
-
-//                Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
-//                Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
-//                        Constants.PRODUCTS_LIST);
-//                Bson minGroup = Aggregates.group(Constants.$NAME,
-//                        Accumulators.min(Constants.MIN_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-//                Bson maxGroup = Aggregates.group(Constants.$NAME,
-//                        Accumulators.max(Constants.MAX_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-//                Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
-
-
-
-                //   Bson maxGroup = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
-
-               // Bson group = Aggregates.group(Constants.$STORENAME, Accumulators.max(Constants.MAX_PRICE, Constants.$LISTPRODUCTS_PRODUCTPRICE));
-
-
-
-
-
-
-
-//                int max = stores.aggregate(Arrays.asList(unwindListProducts,
-//                        group(null, Accumulators.max("max", "$listProducts.productPrice"))))
-//                        .first().getInteger("max");
-//                System.out.println(max);
-
-
-
-
-//                System.out.println(Constants.MINIMUM_PRICE);
-//                stores.aggregate(Arrays.asList(unwindListProducts,         unwind, lookup, unwindProducts, minGroup));
-                // .forEach((Consumer<Document>) System.out::println);
-
-//        db.stores.aggregate([
-//... {
-//...         $unwind: "$listProducts"
-//...     },
-//...     {
-//...         $match : {
-//...             "listProducts.productPrice" : { $ne : 0 }
-//...         }
-//...     },
-//...     {
-//...         $group : {
-//...             _id : {
-//...                 storeName : "$storeName",
-//...             },
-//...             MAX_Products : {
-//...                 $max : "$listProducts.productPrice"
-//...             }
-//...         }
-//...      }
-//...  ])
 
                      statistics = false;
             }
