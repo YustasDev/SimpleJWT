@@ -1,17 +1,30 @@
-import com.mongodb.DB;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
+import org.bson.BSON;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
 import org.jongo.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.mongodb.client.model.Aggregates.group;
+import static java.util.Arrays.asList;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public class Main<statistics> {
@@ -30,8 +43,6 @@ public class Main<statistics> {
 //        MongoDatabase database = mongoClient.getDatabase("mongoStores");
 //        MongoCollection<Document> listStores = database.getCollection("stores");
 //        MongoCollection<Document> ListProducts = database.getCollection("products");
-//        listStores.drop();
-//        ListProducts.drop();
 
         /*
         working with the Jongo library replaces the top (commented out) lines
@@ -43,8 +54,10 @@ public class Main<statistics> {
         /*
          commented out for development, so as not to create collections every time you run
         */
-        //stores.drop();
-        //products.drop();
+        // stores.drop();
+       // products.drop();
+
+
 
         printСondition();
 
@@ -96,7 +109,7 @@ public class Main<statistics> {
             if (statistics != false) {
                 MongoCursor<Store> allStores = stores
                         .find()
-                        .sort("{storeName: 1}").as(Store.class);
+                        .sort("{storeName: -1}").as(Store.class);
 
                 for (Store store : allStores) {
                     int numberProductsNames = store.getListProducts().size();
@@ -105,58 +118,72 @@ public class Main<statistics> {
                                     + numberProductsNames);
                 }
 
-                Bson unwind = Aggregates.unwind(Constants.$PRODUCTS);
-                Bson lookup = Aggregates.lookup(Constants.PRODUCTS, Constants.PRODUCTS, Constants.NAME,
-                        Constants.PRODUCTS_LIST);
-                Bson unwindListProducts = Aggregates.unwind(Constants.$LISTPRODUCTS);
-                Bson minGroup = Aggregates.group(Constants.$NAME,
-                        Accumulators.min(Constants.MIN_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-                Bson maxGroup = Aggregates.group(Constants.$NAME,
-                        Accumulators.max(Constants.MAX_PRICE, Constants.$PRODUCTS_LIST_PRICE));
-                Bson match = Aggregates.match(Constants.LISTPRODUCTS_PRODUCTSPRICE, )
-
-                System.out.println(Constants.MINIMUM_PRICE);
-                stores.aggregate(Arrays.asList(unwindListProducts,         unwind, lookup, unwindProducts, minGroup));
-                // .forEach((Consumer<Document>) System.out::println);
-
-//        db.stores.aggregate([
-//... {
-//...         $unwind: "$listProducts"
-//...     },
-//...     {
-//...         $match : {
-//...             "listProducts.productPrice" : { $ne : 0 }
-//...         }
-//...     },
-//...     {
-//...         $group : {
-//...             _id : {
-//...                 storeName : "$storeName",
-//...             },
-//...             MAX_Products : {
-//...                 $max : "$listProducts.productPrice"
-//...             }
-//...         }
-//...      }
-//...  ])
+                /*
+                I could not find how to do the aggregation using the Jongo library, so converting
+                the Jongo collections to MongoCollection <Document> and work with them further
+                 */
+                MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
+                MongoDatabase database = mongoClient.getDatabase("driverMongoStores");
+                com.mongodb.client.MongoCollection<Document> listStores = database.getCollection("driverStores");
+                com.mongodb.client.MongoCollection<Document> listProducts = database.getCollection("driverProducts");
+               // listStores.drop();
+               // listProducts.drop();
 
 
+                DBCursor cursorP = db.getCollection("products").find();
+                for (DBObject dbo : cursorP){
+                    Document oldDoc = getDocument(dbo);
+                    Document newDoc = getDocument(dbo);
+
+                    BasicDBObject updateDoc = new BasicDBObject();
+                    updateDoc.put("$set", newDoc);
+                    listProducts.updateOne(oldDoc, updateDoc);
+                }
 
 
+                DBCursor cursorS = db.getCollection("stores").find();
+                for (DBObject dbo : cursorS){
+                    Document oldDoc = getDocument(dbo);
+                    Document newDoc = getDocument(dbo);
 
+                    BasicDBObject updateDoc = new BasicDBObject();
+                    updateDoc.put("$set", newDoc);
+                    listStores.updateOne(oldDoc, updateDoc);
+                }
 
+//                CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+//                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+//
+//                listProducts = listProducts.withCodecRegistry(pojoCodecRegistry);
+//                listStores = listStores.withCodecRegistry(pojoCodecRegistry);
 
+                Bson unwind = Aggregates.unwind(Constants.$LISTPRODUCTS);
+                Bson match = Aggregates.match(new Document (Constants.LISTPRODUCTS_PRODUCTSPRICE, new Document("$ne", 0)));
+                Bson project = Aggregates.project(Projections.fields(Projections.excludeId(), Projections.include("storeName"), Projections.include("listProducts.productName"), Projections.include("listProducts.productPrice")));
+                Bson maxGroup = group(Constants.$STORENAME, Accumulators.max("_max", Constants.$LISTPRODUCTS_PRODUCTPRICE));
 
+           //     Block <Document> printBlock = document -> System.out.println(document.toJson());
+           //     listStores.aggregate(Arrays.asList(unwind, match, maxGroup)).forEach(printBlock);
 
+                AggregateIterable<Document> maxDocs = listStores.aggregate(asList(unwind, match, maxGroup));
+                for (Document doc : maxDocs) {
+                    String store = doc.getString("_id");
+                    Integer maxPrice = (Integer) doc.get("_max");
 
+                    System.out.println("В магазине '" + store + "' максимальная цена товара составляет " + maxPrice);
+                }
 
-
-
-
-                statistics = false;
+                     statistics = false;
             }
         }
     }
+
+    public static Document getDocument(DBObject doc)
+    {
+        if(doc == null) return null;
+        return new Document(doc.toMap());
+    }
+
 
     private static String inputCommand(String message) {
         for (; ; ) {
@@ -191,6 +218,12 @@ public class Main<statistics> {
                 + "\n"
                 + "4. Команда statistics выведет статистику товаров по каждому магазину \n"
                 + "5. Если Вы хотите прекратить выполнение программы, наберите команду: END ");
+
+        LocalDateTime ldt = LocalDateTime.now ();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timeNow = "Сегодня: " + ldt.format(formatter);
+        System.out.println(timeNow);
+
     }
 
     private static Map<String, Document> commandRecognition (String command){

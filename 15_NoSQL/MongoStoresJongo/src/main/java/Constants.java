@@ -8,7 +8,6 @@ public class Constants {
     public static final String PRODUCTS_LIST_PRICE = "products_list.price";
     public static final String AVG_PRICE = "avg_price";
     public static final String MIN_PRICE = "min_price";
-    public static final String MAX_PRICE = "max_price";
     public static final String PRODUCTS = "products";
     public static final String PRODUCTS_LIST = "products_list";
     public static final String SHOPS = "shops";
@@ -23,6 +22,9 @@ public class Constants {
     // =====================================================================================
     public static final String $LISTPRODUCTS = "$listProducts";
     public static final String LISTPRODUCTS_PRODUCTSPRICE = "listProducts.productPrice";
+    public static final String $STORENAME = "$storeName";
+    public static final String $LISTPRODUCTS_PRODUCTPRICE ="$listProducts.productPrice" ;
+    public static final String MAX_PRICE = "max_price";
 
 
 }
