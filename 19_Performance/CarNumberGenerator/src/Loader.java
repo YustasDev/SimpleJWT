@@ -1,7 +1,11 @@
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 public class Loader {
+    static final DecimalFormat dF00 = new DecimalFormat("00");
+    static final DecimalFormat dF000 = new DecimalFormat("000");
 
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
@@ -38,10 +42,16 @@ public class Loader {
         String numberStr = Integer.toString(number);
         int padSize = numberLength - numberStr.length();
 
-        for (int i = 0; i < padSize; i++) {
-            numberStr = '0' + numberStr;
+        if (padSize==1) {
+            numberStr = dF00.format(number);
+        }
+        if (padSize==2) {
+            numberStr = dF000.format(number);
         }
 
+//        for (int i = 0; i < padSize; i++) {
+//            numberStr = '0' + numberStr;
+//        }
         return numberStr;
     }
 }
