@@ -1,27 +1,33 @@
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
 
 public class Loader {
 
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
 
-        FileOutputStream writer = new FileOutputStream("res/numbers.txt");
+       // FileOutputStream writer = new FileOutputStream("res/numbers.txt");
+        PrintWriter writer = new PrintWriter("res/numbers.txt");
 
         char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
-        for (int number = 1; number < 1000; number++) {
-            int regionCode = 199;
-            for (char firstLetter : letters) {
-                for (char secondLetter : letters) {
-                    for (char thirdLetter : letters) {
-                        String carNumber = firstLetter + padNumber(number, 3) +
-                            secondLetter + thirdLetter + padNumber(regionCode, 2);
-                        writer.write(carNumber.getBytes());
-                        writer.write('\n');
+        for (int regionCode = 1; regionCode < 100; regionCode++) {
+            StringBuffer buffer = new StringBuffer();
+            for (int number = 1; number < 1000; number++) {
+                for (char firstLetter : letters) {
+                    for (char secondLetter : letters) {
+                        for (char thirdLetter : letters) {
+                            buffer.append(firstLetter);
+                            buffer.append(padNumber(number, 3));
+                            buffer.append(secondLetter);
+                            buffer.append(thirdLetter);
+                            buffer.append(padNumber(regionCode, 2));
+                            buffer.append("\n");
+                        }
                     }
                 }
             }
+          writer.write(buffer.toString());
         }
-
         writer.flush();
         writer.close();
 
