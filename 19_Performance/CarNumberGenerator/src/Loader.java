@@ -1,19 +1,25 @@
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 
-public class Loader {
+public class Loader extends Thread {
     static final DecimalFormat dF00 = new DecimalFormat("00");
     static final DecimalFormat dF000 = new DecimalFormat("000");
 
-    public static void main(String[] args) throws Exception {
-        long start = System.currentTimeMillis();
+   @Override
+    public void run() {
 
        // FileOutputStream writer = new FileOutputStream("res/numbers.txt");
-        PrintWriter writer = new PrintWriter("res/numbers.txt");
+       PrintWriter writer = null;
+       try {
+           writer = new PrintWriter("res/numbers.txt");
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       }
 
-        char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
+       char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
         for (int regionCode = 1; regionCode < 100; regionCode++) {
             StringBuffer buffer = new StringBuffer();
             for (int number = 1; number < 1000; number++) {
@@ -34,8 +40,6 @@ public class Loader {
         }
         writer.flush();
         writer.close();
-
-        System.out.println((System.currentTimeMillis() - start) + " ms");
     }
 
     private static String padNumber(int number, int numberLength) {
