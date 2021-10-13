@@ -1,5 +1,7 @@
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -8,11 +10,11 @@ public class Loader extends Thread {
   static final DecimalFormat dF00 = new DecimalFormat("00");
   static final DecimalFormat dF000 = new DecimalFormat("000");
 
-  private PrintWriter writer;
+  private BufferedWriter writer;
   private int regionCode;
   private long start;
 
-  public Loader(PrintWriter writer, int regionCode, long start) {
+  public Loader(BufferedWriter writer, int regionCode, long start) {
     this.writer = writer;
     this.regionCode = regionCode;
     this.start = start;
@@ -22,8 +24,9 @@ public class Loader extends Thread {
     public void run() {
 
        char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
-            StringBuilder builder = new StringBuilder();
+
             for (int number = 1; number < 1000; number++) {
+              StringBuilder builder = new StringBuilder();
                 for (char firstLetter : letters) {
                     for (char secondLetter : letters) {
                         for (char thirdLetter : letters) {
@@ -36,10 +39,18 @@ public class Loader extends Thread {
                         }
                     }
                 }
+              try {
+                writer.write(builder.toString());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
             }
-          writer.write(builder.toString());
-          writer.flush();
-          writer.close();
+     try {
+       writer.flush();
+       writer.close();
+     } catch (IOException e) {
+       e.printStackTrace();
+     }
      System.out.println((System.currentTimeMillis() - start) + " ms");
     }
 

@@ -1,4 +1,7 @@
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.FilterWriter;
 import java.io.PrintWriter;
 
 public class Main {
@@ -10,7 +13,7 @@ public class Main {
       Integer regCode = regionCode;
       String fileName = "res/number";
       fileName = fileName.concat(regCode.toString()).concat(".txt");
-      PrintWriter writer = new PrintWriter(fileName);
+      BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
       Loader loader = new Loader(writer, regionCode, start);
       loader.start();
     }
