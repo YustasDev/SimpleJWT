@@ -5,41 +5,38 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 
 public class Loader extends Thread {
-    static final DecimalFormat dF00 = new DecimalFormat("00");
-    static final DecimalFormat dF000 = new DecimalFormat("000");
+  static final DecimalFormat dF00 = new DecimalFormat("00");
+  static final DecimalFormat dF000 = new DecimalFormat("000");
+
+  private PrintWriter writer;
+  private Integer regionCode;
+
+  public Loader(PrintWriter writer, Integer regionCode) {
+    this.writer = writer;
+  }
 
    @Override
     public void run() {
 
-       // FileOutputStream writer = new FileOutputStream("res/numbers.txt");
-       PrintWriter writer = null;
-       try {
-           writer = new PrintWriter("res/numbers.txt");
-       } catch (FileNotFoundException e) {
-           e.printStackTrace();
-       }
-
        char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
-        for (int regionCode = 1; regionCode < 100; regionCode++) {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder builder = new StringBuilder();
             for (int number = 1; number < 1000; number++) {
                 for (char firstLetter : letters) {
                     for (char secondLetter : letters) {
                         for (char thirdLetter : letters) {
-                            buffer.append(firstLetter);
-                            buffer.append(padNumber(number, 3));
-                            buffer.append(secondLetter);
-                            buffer.append(thirdLetter);
-                            buffer.append(padNumber(regionCode, 2));
-                            buffer.append("\n");
+                            builder.append(firstLetter);
+                            builder.append(padNumber(number, 3));
+                            builder.append(secondLetter);
+                            builder.append(thirdLetter);
+                            builder.append(padNumber(regionCode, 2));
+                            builder.append("\n");
                         }
                     }
                 }
             }
-          writer.write(buffer.toString());
-        }
-        writer.flush();
-        writer.close();
+          writer.write(builder.toString());
+          writer.flush();
+          writer.close();
     }
 
     private static String padNumber(int number, int numberLength) {
