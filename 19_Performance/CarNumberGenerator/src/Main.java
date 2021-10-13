@@ -11,12 +11,8 @@ public class Main {
       String fileName = "res/number";
       fileName = fileName.concat(regCode.toString()).concat(".txt");
       PrintWriter writer = new PrintWriter(fileName);
-      Loader loader = new Loader(writer, regCode);
+      Loader loader = new Loader(writer, regionCode, start);
       loader.start();
     }
-
-
-
-    System.out.println((System.currentTimeMillis() - start) + " ms");
   }
 }

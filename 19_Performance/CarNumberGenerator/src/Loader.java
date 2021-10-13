@@ -9,10 +9,13 @@ public class Loader extends Thread {
   static final DecimalFormat dF000 = new DecimalFormat("000");
 
   private PrintWriter writer;
-  private Integer regionCode;
+  private int regionCode;
+  private long start;
 
-  public Loader(PrintWriter writer, Integer regionCode) {
+  public Loader(PrintWriter writer, int regionCode, long start) {
     this.writer = writer;
+    this.regionCode = regionCode;
+    this.start = start;
   }
 
    @Override
@@ -37,6 +40,7 @@ public class Loader extends Thread {
           writer.write(builder.toString());
           writer.flush();
           writer.close();
+     System.out.println((System.currentTimeMillis() - start) + " ms");
     }
 
     private static String padNumber(int number, int numberLength) {
