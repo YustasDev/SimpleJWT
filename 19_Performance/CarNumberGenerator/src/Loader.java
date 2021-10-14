@@ -24,9 +24,8 @@ public class Loader extends Thread {
     public void run() {
 
        char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
-
+            StringBuilder builder = new StringBuilder();
             for (int number = 1; number < 1000; number++) {
-              StringBuilder builder = new StringBuilder();
                 for (char firstLetter : letters) {
                     for (char secondLetter : letters) {
                         for (char thirdLetter : letters) {
@@ -39,13 +38,9 @@ public class Loader extends Thread {
                         }
                     }
                 }
-              try {
-                writer.write(builder.toString());
-              } catch (IOException e) {
-                e.printStackTrace();
-              }
             }
      try {
+       writer.write(builder.toString());
        writer.flush();
        writer.close();
      } catch (IOException e) {
