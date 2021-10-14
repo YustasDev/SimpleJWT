@@ -20,49 +20,49 @@ public class Loader extends Thread {
     this.start = start;
   }
 
-   @Override
-    public void run() {
+  @Override
+  public void run() {
 
-       char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
-            StringBuilder builder = new StringBuilder();
-            for (int number = 1; number < 1000; number++) {
-                for (char firstLetter : letters) {
-                    for (char secondLetter : letters) {
-                        for (char thirdLetter : letters) {
-                            builder.append(firstLetter);
-                            builder.append(padNumber(number, 3));
-                            builder.append(secondLetter);
-                            builder.append(thirdLetter);
-                            builder.append(padNumber(regionCode, 2));
-                            builder.append("\n");
-                        }
-                    }
-                }
-            }
-     try {
-       writer.write(builder.toString());
-       writer.flush();
-       writer.close();
-     } catch (IOException e) {
-       e.printStackTrace();
-     }
-     System.out.println((System.currentTimeMillis() - start) + " ms");
+    char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
+    StringBuilder builder = new StringBuilder();
+    for (int number = 1; number < 1000; number++) {
+      for (char firstLetter : letters) {
+        for (char secondLetter : letters) {
+          for (char thirdLetter : letters) {
+            builder.append(firstLetter);
+            builder.append(padNumber(number, 3));
+            builder.append(secondLetter);
+            builder.append(thirdLetter);
+            builder.append(padNumber(regionCode, 2));
+            builder.append("\n");
+          }
+        }
+      }
     }
+    try {
+      writer.write(builder.toString());
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    System.out.println((System.currentTimeMillis() - start) + " ms");
+  }
 
-    private static String padNumber(int number, int numberLength) {
-        String numberStr = Integer.toString(number);
-        int padSize = numberLength - numberStr.length();
+  private static String padNumber(int number, int numberLength) {
+    String numberStr = Integer.toString(number);
+    int padSize = numberLength - numberStr.length();
 
-        if (padSize==1) {
-            numberStr = dF00.format(number);
-        }
-        if (padSize==2) {
-            numberStr = dF000.format(number);
-        }
+    if (padSize==1) {
+      numberStr = dF00.format(number);
+    }
+    if (padSize==2) {
+      numberStr = dF000.format(number);
+    }
 
 //        for (int i = 0; i < padSize; i++) {
 //            numberStr = '0' + numberStr;
 //        }
-        return numberStr;
-    }
+    return numberStr;
+  }
 }
