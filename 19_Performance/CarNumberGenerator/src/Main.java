@@ -18,7 +18,7 @@ public class Main {
 
     ExecutorService executorService = Executors.newFixedThreadPool(4);
     int regCode = 1;
-    while (regCode < 100) {
+    while (regCode < 99) {
       for (int count = 1; count < 5; count++) {
         String regionCode = Loader.padNumber(regCode, 2);
         String fileName = "res/number";
