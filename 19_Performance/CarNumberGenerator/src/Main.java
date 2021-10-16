@@ -17,20 +17,24 @@ public class Main {
     long start = System.currentTimeMillis();
 
     ExecutorService executorService = Executors.newFixedThreadPool(4);
-
-    for (int regCode = 1; regCode < 100; regCode++) {
-      String regionCode = Loader.padNumber(regCode, 2);
-      String fileName = "res/numbers.txt";
-      BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
-      executorService.submit(new Loader(writer, regionCode, start));
+    int regCode = 1;
+    while (regCode < 100) {
+      for (int count = 1; count < 5; count++) {
+        String regionCode = Loader.padNumber(regCode, 2);
+        String fileName = "res/number";
+        fileName = fileName.concat(String.valueOf(count)).concat(".txt");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
+        executorService.execute(new Loader(writer, regionCode, start));
+        regCode++;
+      }
     }
-    executorService.shutdown();
+      executorService.shutdown();
 
-    try {
-      executorService.awaitTermination(1, TimeUnit.MINUTES);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+      try {
+        executorService.awaitTermination(1, TimeUnit.MINUTES);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
     }
-    System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
   }
-}

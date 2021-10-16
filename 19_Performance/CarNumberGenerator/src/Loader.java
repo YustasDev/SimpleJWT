@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 
-public class Loader extends Thread {
+public class Loader implements Runnable {
   static final DecimalFormat dF00 = new DecimalFormat("00");
   static final DecimalFormat dF000 = new DecimalFormat("000");
 
