@@ -11,10 +11,10 @@ public class Loader extends Thread {
   static final DecimalFormat dF000 = new DecimalFormat("000");
 
   private BufferedWriter writer;
-  private int regionCode;
+  private String regionCode;
   private long start;
 
-  public Loader(BufferedWriter writer, int regionCode, long start) {
+  public Loader(BufferedWriter writer, String regionCode, long start) {
     this.writer = writer;
     this.regionCode = regionCode;
     this.start = start;
@@ -30,10 +30,15 @@ public class Loader extends Thread {
         for (char secondLetter : letters) {
           for (char thirdLetter : letters) {
             builder.append(firstLetter);
-            builder.append(padNumber(number, 3));
+            if (number<100) {
+              builder.append(padNumber(number, 3));
+            }
+            else {
+              builder.append(String.valueOf(number));
+            }
             builder.append(secondLetter);
             builder.append(thirdLetter);
-            builder.append(padNumber(regionCode, 2));
+            builder.append(regionCode);
             builder.append("\n");
           }
         }
@@ -49,7 +54,7 @@ public class Loader extends Thread {
     System.out.println((System.currentTimeMillis() - start) + " ms");
   }
 
-  private static String padNumber(int number, int numberLength) {
+  public static String padNumber(int number, int numberLength) {
     String numberStr = Integer.toString(number);
     int padSize = numberLength - numberStr.length();
 
@@ -59,10 +64,6 @@ public class Loader extends Thread {
     if (padSize==2) {
       numberStr = dF000.format(number);
     }
-
-//        for (int i = 0; i < padSize; i++) {
-//            numberStr = '0' + numberStr;
-//        }
     return numberStr;
   }
 }

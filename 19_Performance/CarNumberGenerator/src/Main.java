@@ -18,10 +18,8 @@ public class Main {
 
     ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-    for (int regionCode = 1; regionCode < 100; regionCode++) {
-//      Integer regCode = regionCode;
-//      String fileName = "res/number";
-//      fileName = fileName.concat(regCode.toString()).concat(".txt");
+    for (int regCode = 1; regCode < 100; regCode++) {
+      String regionCode = Loader.padNumber(regCode, 2);
       String fileName = "res/numbers.txt";
       BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
       executorService.submit(new Loader(writer, regionCode, start));
