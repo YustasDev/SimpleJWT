@@ -1,41 +1,59 @@
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.FilterWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.concurrent.Executor;
+
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
 
+  private static int firstNumberRegion;
+  private static int lastRegionNumber;
+  private static String fileName;
+
+
   public static void main(String[] args) throws Exception {
     long GeneralStart = System.currentTimeMillis();
-    long start = System.currentTimeMillis();
 
-    ExecutorService executorService = Executors.newFixedThreadPool(4);
-    int regCode = 1;
-    int counterThreads = 0;
+    String[] filesName = {"res/number1.txt", "res/number2.txt", "res/number3.txt",
+        "res/number4.txt"};
 
-    while (regCode < 100) {
-           String regionCode = Loader.padNumber(regCode, 2);
-           executorService.execute(new Loader(regionCode, start, counterThreads));
-           regCode++;
-           counterThreads++;
-           if (counterThreads>3) {counterThreads = 0;} // в массиве имен файлов - 4 элемента
+    for (int i = 0; i < filesName.length; i++) {
+      if (i == 0) {
+        firstNumberRegion = 1;
+        lastRegionNumber = 25;
+      } else if (i == 1) {
+        firstNumberRegion = 26;
+        lastRegionNumber = 50;
+      } else if (i == 2) {
+        firstNumberRegion = 51;
+        lastRegionNumber = 75;
+      } else if (i == 3) {
+        firstNumberRegion = 76;
+        lastRegionNumber = 99;
       }
-
-      executorService.shutdown();
-
-      try {
-        executorService.awaitTermination(1, TimeUnit.MINUTES);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-      System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
+      fileName = filesName[i];
+      quadroLaunch(firstNumberRegion, lastRegionNumber, fileName);
     }
+
+    System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
   }
+
+  private static void quadroLaunch(int firstNumberRegion, int lastRegionNumber, String fileName)
+      throws IOException {
+    ExecutorService executorService = Executors.newFixedThreadPool(1);
+    for (int i = firstNumberRegion; i <= lastRegionNumber; i++) {
+      String regionCode = Loader.padNumber(i, 2);
+      long start = System.currentTimeMillis();
+      executorService.submit(new Loader(regionCode, start, fileName));
+    }
+
+    executorService.shutdown();
+
+    try {
+      executorService.awaitTermination(1, TimeUnit.MINUTES);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+  }
+}
