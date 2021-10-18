@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -10,18 +11,30 @@ public class Loader implements Runnable {
   static final DecimalFormat dF00 = new DecimalFormat("00");
   static final DecimalFormat dF000 = new DecimalFormat("000");
 
-  private BufferedWriter writer;
   private String regionCode;
   private long start;
+  int counterTreads;
 
-  public Loader(BufferedWriter writer, String regionCode, long start) {
-    this.writer = writer;
+
+  public Loader(String regionCode, long start, int counterThreads) throws IOException {
     this.regionCode = regionCode;
     this.start = start;
+    this.counterTreads = counterThreads;
   }
 
   @Override
   public void run() {
+
+    String [] filesName = {"res/number1.txt", "res/number2.txt", "res/number3.txt", "res/number4.txt"};
+    ThreadLocal<String> fileNameLocal = new ThreadLocal<>();
+    fileNameLocal.set(filesName[counterTreads]);
+    String fileName = fileNameLocal.get();
+    BufferedWriter writer = null;
+    try {
+      writer = new BufferedWriter(new FileWriter(fileName, true));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
     StringBuilder builder = new StringBuilder();

@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.FilterWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,16 +19,16 @@ public class Main {
 
     ExecutorService executorService = Executors.newFixedThreadPool(4);
     int regCode = 1;
-    while (regCode < 99) {
-      for (int count = 1; count < 5; count++) {
-        String regionCode = Loader.padNumber(regCode, 2);
-        String fileName = "res/number";
-        fileName = fileName.concat(String.valueOf(count)).concat(".txt");
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
-        executorService.execute(new Loader(writer, regionCode, start));
-        regCode++;
+    int counterThreads = 0;
+
+    while (regCode < 100) {
+           String regionCode = Loader.padNumber(regCode, 2);
+           executorService.execute(new Loader(regionCode, start, counterThreads));
+           regCode++;
+           counterThreads++;
+           if (counterThreads>3) {counterThreads = 0;} // в массиве имен файлов - 4 элемента
       }
-    }
+
       executorService.shutdown();
 
       try {
