@@ -9,13 +9,14 @@ public class Main {
   private static int firstNumberRegion;
   private static int lastRegionNumber;
   private static String fileName;
-
+  private static ExecutorService executorService;
 
   public static void main(String[] args) throws Exception {
     long GeneralStart = System.currentTimeMillis();
 
     String[] filesName = {"res/number1.txt", "res/number2.txt", "res/number3.txt",
         "res/number4.txt"};
+    executorService = Executors.newFixedThreadPool(4);
 
     for (int i = 0; i < filesName.length; i++) {
       if (i == 0) {
@@ -34,19 +35,6 @@ public class Main {
       fileName = filesName[i];
       quadroLaunch(firstNumberRegion, lastRegionNumber, fileName);
     }
-
-    System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
-  }
-
-  private static void quadroLaunch(int firstNumberRegion, int lastRegionNumber, String fileName)
-      throws IOException {
-    ExecutorService executorService = Executors.newFixedThreadPool(1);
-    for (int i = firstNumberRegion; i <= lastRegionNumber; i++) {
-      String regionCode = Loader.padNumber(i, 2);
-      long start = System.currentTimeMillis();
-      executorService.submit(new Loader(regionCode, start, fileName));
-    }
-
     executorService.shutdown();
 
     try {
@@ -54,6 +42,21 @@ public class Main {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+    System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
+  }
 
+  private static void quadroLaunch(int firstNumberRegion, int lastRegionNumber, String fileName)
+      throws IOException {
+
+    for (int i = firstNumberRegion; i <= lastRegionNumber; i++) {
+      String regionCode;
+      long start = System.currentTimeMillis();
+      if (i < 10) {
+        regionCode = Loader.padNumber(i, 2);
+      } else {
+        regionCode = (String.valueOf(i));
+      }
+      executorService.submit(new Loader(regionCode, start, fileName));
+    }
   }
 }
