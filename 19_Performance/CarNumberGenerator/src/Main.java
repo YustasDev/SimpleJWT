@@ -1,62 +1,63 @@
-
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-  private static int firstNumberRegion;
-  private static int lastRegionNumber;
-  private static String fileName;
-  private static ExecutorService executorService;
-
   public static void main(String[] args) throws Exception {
-    long GeneralStart = System.currentTimeMillis();
+    final String filePrefix = "res/region";
 
-    String[] filesName = {"res/number1.txt", "res/number2.txt", "res/number3.txt",
-        "res/number4.txt"};
-    executorService = Executors.newFixedThreadPool(4);
+    // it's necessary to delete the files created during the last launch
+    Files.list(Path.of("."))
+        .filter(Files::isRegularFile)
+        .filter(p -> p.getFileName().toString().startsWith(filePrefix))
+        .forEach(path -> {
+          try {
+            Files.deleteIfExists(path);
+          } catch (IOException e) {
+            e.printStackTrace();
+            System.out
+                .println("Log: error while delete file:" + path.getFileName().toAbsolutePath());
+          }
+        });
 
-    for (int i = 0; i < filesName.length; i++) {
-      if (i == 0) {
-        firstNumberRegion = 1;
-        lastRegionNumber = 25;
-      } else if (i == 1) {
-        firstNumberRegion = 26;
-        lastRegionNumber = 50;
-      } else if (i == 2) {
-        firstNumberRegion = 51;
-        lastRegionNumber = 75;
-      } else if (i == 3) {
-        firstNumberRegion = 76;
-        lastRegionNumber = 99;
-      }
-      fileName = filesName[i];
-      quadroLaunch(firstNumberRegion, lastRegionNumber, fileName);
-    }
+    long generalStart = System.currentTimeMillis();
+    final int maxThreads = 4;
+
+    ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
+    int firstNumberRegion = 1;
+    int lastRegionNumber = 100;
+
+    Collection<Runnable> threads = quadroLaunch(firstNumberRegion, lastRegionNumber, filePrefix,
+        maxThreads);
+    threads.forEach(executorService::submit);
     executorService.shutdown();
 
     try {
       executorService.awaitTermination(1, TimeUnit.MINUTES);
     } catch (InterruptedException e) {
       e.printStackTrace();
+      System.exit(0);
     }
-    System.out.println("The final time " + (System.currentTimeMillis() - GeneralStart) + " ms");
+    System.out
+        .println("SUCCESS: The final time " + (System.currentTimeMillis() - generalStart) + " ms");
   }
 
-  private static void quadroLaunch(int firstNumberRegion, int lastRegionNumber, String fileName)
-      throws IOException {
+  private static Collection<Runnable> quadroLaunch(int firstNumberRegion, int lastRegionNumber,
+      String prefix, int maxThreads) throws IOException {
+
+    Collection<Runnable> threads = new ArrayList<>();
 
     for (int i = firstNumberRegion; i <= lastRegionNumber; i++) {
-      String regionCode;
       long start = System.currentTimeMillis();
-      if (i < 10) {
-        regionCode = Loader.padNumber(i, 2);
-      } else {
-        regionCode = (String.valueOf(i));
-      }
-      executorService.submit(new Loader(regionCode, start, fileName));
+      String regionCode = i < 10 ? Loader.padNumber(i, 2) : String.valueOf(i);
+      threads.add(new Loader(regionCode, start, prefix + i % maxThreads + ".txt"));
     }
+    return threads;
   }
 }

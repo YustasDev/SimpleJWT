@@ -9,51 +9,38 @@ import java.text.DecimalFormat;
 
 public class Loader implements Runnable {
 
-  static final DecimalFormat dF00 = new DecimalFormat("00");
-  static final DecimalFormat dF000 = new DecimalFormat("000");
-
-  private String regionCode;
-  private long start;
-  private String fileName;
+  static char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
+  private final String regionCode;
+  private final long start;
+  private final String filePrefix;
 
 
   public Loader(String regionCode, long start, String fileName) throws IOException {
     this.regionCode = regionCode;
     this.start = start;
-    this.fileName = fileName;
+    this.filePrefix = fileName;
   }
 
   @Override
   public void run() {
-
-    BufferedWriter writer = null;
-    try {
-      writer = new BufferedWriter(new FileWriter(fileName, true));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
     StringBuilder builder = new StringBuilder();
     for (int number = 1; number < 1000; number++) {
+      String numberFormatted = number < 100 ? padNumber(number, 3) : String.valueOf(number);
       for (char firstLetter : letters) {
         for (char secondLetter : letters) {
           for (char thirdLetter : letters) {
-            builder.append(firstLetter);
-            if (number < 100) {
-              builder.append(padNumber(number, 3));
-            } else {
-              builder.append(String.valueOf(number));
-            }
-            builder.append(secondLetter);
-            builder.append(thirdLetter);
-            builder.append(regionCode);
-            builder.append("\n");
+            builder.append(firstLetter)
+                .append(numberFormatted)
+                .append(secondLetter)
+                .append(thirdLetter)
+                .append(regionCode)
+                .append("\n");
           }
         }
       }
     }
     try {
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filePrefix, true));
       writer.write(builder.toString());
       writer.flush();
       writer.close();
@@ -64,15 +51,6 @@ public class Loader implements Runnable {
   }
 
   public static String padNumber(int number, int numberLength) {
-    String numberStr = Integer.toString(number);
-    int padSize = numberLength - numberStr.length();
-
-    if (padSize == 1) {
-      numberStr = dF00.format(number);
-    }
-    if (padSize == 2) {
-      numberStr = dF000.format(number);
-    }
-    return numberStr;
+    return String.format("%0" + numberLength + "d", number);
   }
 }
