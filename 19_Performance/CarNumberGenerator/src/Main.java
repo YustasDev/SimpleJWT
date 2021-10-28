@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
   public static void main(String[] args) throws Exception {
-    final String filePrefix = "res/region";
+    final String filePrefix = "region";
 
     // it's necessary to delete the files created during the last launch
     Files.list(Path.of("."))
@@ -27,7 +27,7 @@ public class Main {
         });
 
     long generalStart = System.currentTimeMillis();
-    final int maxThreads = 4;
+    final int maxThreads = 1;
 
     ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
     int firstNumberRegion = 1;
