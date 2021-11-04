@@ -20,9 +20,8 @@ public class Loader
 
     public static void main(String[] args) throws Exception
     {
-
+        long before = memoryUsed();
         String fileName = "res/data-18M.xml";
-
         parseFile(fileName);
 
         //Printing results
@@ -41,7 +40,15 @@ public class Loader
                 System.out.println("\t" + voter + " - " + count);
             }
         }
+        long after = memoryUsed();
+        System.out.println("Diff: " + (after - before));
     }
+
+    public static long memoryUsed () {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() - runtime.freeMemory();
+    }
+
 
     private static void parseFile(String fileName) throws Exception
     {
