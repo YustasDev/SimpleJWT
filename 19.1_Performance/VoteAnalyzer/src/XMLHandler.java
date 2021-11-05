@@ -13,11 +13,13 @@ public class XMLHandler extends DefaultHandler {
   private static SimpleDateFormat visitDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
   private static SimpleDateFormat birthDayFormat = new SimpleDateFormat("yyyy.MM.dd");
   private Map<Voter, Integer> voterCounts;
+  private HashMap<Integer, WorkTime> voteStationWorkTimes;
   long countIndexForSearchErrors = 0;
 
 
   public XMLHandler() {
     voterCounts = new HashMap<>();
+    voteStationWorkTimes = new HashMap<>();
   }
 
 
@@ -29,16 +31,24 @@ public class XMLHandler extends DefaultHandler {
         Date birthDay = birthDayFormat.parse(attributes.getValue("birthDay"));
         voter = new Voter(attributes.getValue("name"), birthDay);
         ++countIndexForSearchErrors;
-      }
-      else if (qName.equals("visit") && voter != null) {
+      } else if (qName.equals("visit") && voter != null) {
+        Date visitTime = visitDateFormat.parse(attributes.getValue("time"));
+        Integer station = Integer.valueOf(attributes.getValue("station"));
+        WorkTime workTime = voteStationWorkTimes.get(station);
+        if (workTime == null) {
+          workTime = new WorkTime();
+        }
+        workTime.addVisitTime(visitTime.getTime());
+        voteStationWorkTimes.put(station, workTime);
+
         int count = voterCounts.getOrDefault(voter, 0);
         voterCounts.put(voter, ++count);
-      }
-      else if (qName.equals("voters")){
-      }
-      else {
-        System.err.println(qName.toString() + " <- current qName" + "  errorIndex  -> " + countIndexForSearchErrors);
-        throw new InvalidPropertiesFormatException("Record in XML document not conform the requirements for parse of properties, as per the Properties specification.");
+      } else if (qName.equals("voters")) {
+      } else {
+        System.err.println(qName.toString() + " <- current qName" + "  errorIndex  -> "
+            + countIndexForSearchErrors);
+        throw new InvalidPropertiesFormatException(
+            "Record in XML document not conform the requirements for parse of properties, as per the Properties specification.");
       }
     } catch (Exception pe) {
       pe.printStackTrace();
@@ -53,18 +63,20 @@ public class XMLHandler extends DefaultHandler {
   }
 
   public void printDuplicatedVoters() {
-    for(Voter voter : voterCounts.keySet()){
+    System.out.println("Duplicated voters: ");
+    for (Voter voter : voterCounts.keySet()) {
       int count = voterCounts.get(voter);
-      if (count > 1){
+      if (count > 1) {
         System.out.println(voter.toString() + " - " + count);
       }
-
     }
-
-
   }
 
-
-
-
+  public void printVotingStationWorkTimes() {
+    System.out.println("Voting station work times: ");
+    for (Integer votingStation : voteStationWorkTimes.keySet()) {
+      WorkTime workTime = voteStationWorkTimes.get(votingStation);
+      System.out.println("\t" + votingStation + " - " + workTime);
+    }
+  }
 }
