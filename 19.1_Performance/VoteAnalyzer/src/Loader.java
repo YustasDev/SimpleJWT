@@ -1,3 +1,5 @@
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -22,6 +24,16 @@ public class Loader
     {
         long before = memoryUsed();
         String fileName = "res/data-18M.xml";
+
+        SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+        SAXParser saxParser = saxFactory.newSAXParser();
+        XMLHandler xmlHandler = new XMLHandler();
+        saxParser.parse(new File(fileName), xmlHandler);
+        xmlHandler.printDuplicatedVoters();
+
+
+
+        /*
         parseFile(fileName);
 
         //Printing results
@@ -40,6 +52,8 @@ public class Loader
                 System.out.println("\t" + voter + " - " + count);
             }
         }
+
+         */
         long after = memoryUsed();
         System.out.println("Diff: " + (after - before));
     }
