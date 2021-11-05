@@ -70,6 +70,7 @@ public class XMLHandler extends DefaultHandler {
         System.out.println(voter.toString() + " - " + count);
       }
     }
+    voterCounts = null;
   }
 
   public void printVotingStationWorkTimes() {
@@ -78,5 +79,6 @@ public class XMLHandler extends DefaultHandler {
       WorkTime workTime = voteStationWorkTimes.get(votingStation);
       System.out.println("\t" + votingStation + " - " + workTime);
     }
+    voteStationWorkTimes = null;
   }
 }
