@@ -19,12 +19,15 @@ public class Loader {
     private static HashMap<Voter, Integer> voterCounts = new HashMap<>();
 
     public static void main(String[] args) throws Exception {
-        String fileName = "res/data-1M.xml";
+        long before = memoryUsed();
+        String fileName = "res/data-18M.xml";
 
         parseFile(fileName);
 
+        DBConnection.printVoterCounts();
+
         //Printing results
-        System.out.println("Voting station work times: ");
+      /*  System.out.println("Voting station work times: ");
         for (Integer votingStation : voteStationWorkTimes.keySet()) {
             WorkTime workTime = voteStationWorkTimes.get(votingStation);
             System.out.println("\t" + votingStation + " - " + workTime);
@@ -37,7 +40,20 @@ public class Loader {
                 System.out.println("\t" + voter + " - " + count);
             }
         }
+
+       */
+
+        long after = memoryUsed();
+        System.out.println("Diff: " + (after - before));
     }
+
+    public static long memoryUsed() {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() - runtime.freeMemory();
+    }
+
+
+
 
     private static void parseFile(String fileName) throws Exception {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -45,7 +61,7 @@ public class Loader {
         Document doc = db.parse(new File(fileName));
 
         findEqualVoters(doc);
-        fixWorkTimes(doc);
+       // fixWorkTimes(doc);
     }
 
     private static void findEqualVoters(Document doc) throws Exception {
@@ -56,12 +72,13 @@ public class Loader {
             NamedNodeMap attributes = node.getAttributes();
 
             String name = attributes.getNamedItem("name").getNodeValue();
-            Date birthDay = birthDayFormat
-                .parse(attributes.getNamedItem("birthDay").getNodeValue());
+            //Date birthDay = birthDayFormat.parse(attributes.getNamedItem("birthDay").getNodeValue());
+            String birthDay = attributes.getNamedItem("birthDay").getNodeValue();
+            DBConnection.countVoter(name, birthDay);
 
-            Voter voter = new Voter(name, birthDay);
-            Integer count = voterCounts.get(voter);
-            voterCounts.put(voter, count == null ? 1 : count + 1);
+        //    Voter voter = new Voter(name, birthDay);
+        //    Integer count = voterCounts.get(voter);
+        //    voterCounts.put(voter, count == null ? 1 : count + 1);
         }
     }
 
