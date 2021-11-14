@@ -8,6 +8,7 @@ public class DBConnection {
   private static String url = "jdbc:mysql://localhost:3306/learn?useSSL=false&serverTimezone=Europe/Moscow&useUnicode=true&characterEncoding=utf8";
   private static String user = "root";
   private static String password = "testtest";
+  private static StringBuilder insertQuerry = new StringBuilder();
 
   public static Connection getConnection() {
     if (connection == null) {
@@ -28,12 +29,19 @@ public class DBConnection {
     return connection;
   }
 
-  public static void countVoter(String name, String birthDay) throws SQLException {
-    birthDay = birthDay.replace('.', '-');
+  public static void executeMultyInsert() throws SQLException {
+
     String sql = "INSERT INTO voter_count(name, birthDate, count)" +
-        "VALUE ('" + name + "', '" + birthDay + "', 1)" +
+        "VALUE" + insertQuerry.toString() +
         "ON DUPLICATE KEY UPDATE count = count + 1";
     DBConnection.getConnection().createStatement().execute(sql);
+
+  }
+
+
+  public static void countVoter(String name, String birthDay) throws SQLException {
+    birthDay = birthDay.replace('.', '-');
+    insertQuerry.append((insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
   }
 
   public static void printVoterCounts() throws SQLException {

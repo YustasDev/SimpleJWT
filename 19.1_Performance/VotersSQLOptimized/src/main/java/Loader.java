@@ -25,7 +25,6 @@ public class Loader {
     parseFile(fileName);
     System.err.println("Parsing duration: " + (System.currentTimeMillis() - startTime) + " ms");
 
-    DBConnection.getConnection();
     DBConnection.printVoterCounts();
 
     long after = memoryUsed();
@@ -57,6 +56,7 @@ public class Loader {
       String birthDay = attributes.getNamedItem("birthDay").getNodeValue();
       DBConnection.countVoter(name, birthDay);
     }
+    DBConnection.executeMultyInsert();
   }
 
   private static void fixWorkTimes(Document doc) throws Exception {
