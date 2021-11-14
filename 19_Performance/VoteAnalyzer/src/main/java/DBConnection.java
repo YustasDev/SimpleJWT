@@ -4,9 +4,9 @@ public class DBConnection {
 
     private static Connection connection;
 
-    //private static String dbName = "learn";
-    // private static String dbUser = "root";
-    // private static String dbPass = "testtest";
+    private static String dbName = "learn";
+    private static String dbUser = "root";
+    private static String dbPass = "testtest";
     //private static String dbPass = "ya78yrc8n4w3984";
 
     private static String url = "jdbc:mysql://localhost:3306/learn?useSSL=false&serverTimezone=Europe/Moscow&useUnicode=true&characterEncoding=utf8";
@@ -19,7 +19,8 @@ public class DBConnection {
 //                connection = DriverManager.getConnection(
 //                    "jdbc:mysql://localhost:3306/" + dbName +
 //                        "?user=" + dbUser + "&password=" + dbPass);
-                Connection connection = DriverManager.getConnection(url, user, password);
+
+                connection = DriverManager.getConnection(url, user, password);
                 connection.createStatement().execute("DROP TABLE IF EXISTS voter_count");
                 connection.createStatement().execute("CREATE TABLE voter_count(" +
                     "id INT NOT NULL AUTO_INCREMENT, " +

@@ -20,10 +20,11 @@ public class Loader {
 
     public static void main(String[] args) throws Exception {
         long before = memoryUsed();
-        String fileName = "res/data-18M.xml";
+        String fileName = "res/data-0.2M.xml";
 
         parseFile(fileName);
 
+        DBConnection.getConnection();
         DBConnection.printVoterCounts();
 
         //Printing results
