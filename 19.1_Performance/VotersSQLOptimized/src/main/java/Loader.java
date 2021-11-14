@@ -21,8 +21,9 @@ public class Loader {
   public static void main(String[] args) throws Exception {
     long before = memoryUsed();
     String fileName = "res/data-0.2M.xml";
-
+    long startTime = System.currentTimeMillis();
     parseFile(fileName);
+    System.err.println("Parsing duration: " + (System.currentTimeMillis() - startTime) + " ms");
 
     DBConnection.getConnection();
     DBConnection.printVoterCounts();

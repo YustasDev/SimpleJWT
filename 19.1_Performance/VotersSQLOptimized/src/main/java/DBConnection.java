@@ -5,11 +5,6 @@ public class DBConnection {
 
   private static Connection connection;
 
-  private static String dbName = "learn";
-  private static String dbUser = "root";
-  private static String dbPass = "testtest";
-  //private static String dbPass = "ya78yrc8n4w3984";
-
   private static String url = "jdbc:mysql://localhost:3306/learn?useSSL=false&serverTimezone=Europe/Moscow&useUnicode=true&characterEncoding=utf8";
   private static String user = "root";
   private static String password = "testtest";
@@ -17,10 +12,6 @@ public class DBConnection {
   public static Connection getConnection() {
     if (connection == null) {
       try {
-//                connection = DriverManager.getConnection(
-//                    "jdbc:mysql://localhost:3306/" + dbName +
-//                        "?user=" + dbUser + "&password=" + dbPass);
-
         connection = DriverManager.getConnection(url, user, password);
         connection.createStatement().execute("DROP TABLE IF EXISTS voter_count");
         connection.createStatement().execute("CREATE TABLE voter_count(" +
@@ -28,7 +19,8 @@ public class DBConnection {
             "name TINYTEXT NOT NULL, " +
             "birthDate DATE NOT NULL, " +
             "`count` INT NOT NULL, " +
-            "PRIMARY KEY(id))");
+            "PRIMARY KEY(id), " +
+            "UNIQUE KEY name_date(name(50), birthDate))");
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -38,19 +30,10 @@ public class DBConnection {
 
   public static void countVoter(String name, String birthDay) throws SQLException {
     birthDay = birthDay.replace('.', '-');
-    String sql =
-        "SELECT id FROM voter_count WHERE birthDate='" + birthDay + "' AND name='" + name + "'";
-    ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
-    if (!rs.next()) {
-      DBConnection.getConnection().createStatement()
-          .execute("INSERT INTO voter_count(name, birthDate, `count`) VALUES('" +
-              name + "', '" + birthDay + "', 1)");
-    } else {
-      Integer id = rs.getInt("id");
-      DBConnection.getConnection().createStatement()
-          .execute("UPDATE voter_count SET `count`=`count`+1 WHERE id=" + id);
-    }
-    rs.close();
+    String sql = "INSERT INTO voter_count(name, birthDate, count)" +
+        "VALUE ('" + name + "', '" + birthDay + "', 1)" +
+        "ON DUPLICATE KEY UPDATE count = count + 1";
+    DBConnection.getConnection().createStatement().execute(sql);
   }
 
   public static void printVoterCounts() throws SQLException {
