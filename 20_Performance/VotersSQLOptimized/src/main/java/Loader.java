@@ -1,3 +1,5 @@
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -20,16 +22,19 @@ public class Loader {
 
   public static void main(String[] args) throws Exception {
     long before = memoryUsed();
-    String fileName = "res/data-1572M.xml";
+    String fileName = "res/data-0.2M.xml";
     long startTime = System.currentTimeMillis();
-
-    parseFile(fileName);
+    SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+    SAXParser saxParser = saxFactory.newSAXParser();
+    XMLHandler xmlHandler = new XMLHandler();
+    saxParser.parse(new File(fileName), xmlHandler);
+    //parseFile(fileName);
     System.err.println("Parsing duration: " + (System.currentTimeMillis() - startTime) + " ms");
-
-    DBConnection.printVoterCounts();
 
     long after = memoryUsed();
     System.out.println("Diff: " + (after - before));
+
+    DBConnection.printVoterCounts();
   }
 
   public static long memoryUsed() {

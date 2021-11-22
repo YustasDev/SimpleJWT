@@ -34,7 +34,7 @@ public class XMLHandler extends DefaultHandler {
       } else if (qName.equals("visit") && voter != null) {
         Date visitTime = visitDateFormat.parse(attributes.getValue("time"));
         Integer station = Integer.valueOf(attributes.getValue("station"));
-        WorkTime workTime = voteStationWorkTimes.get(station);
+        WorkTime workTime = getVoteStationWorkTimes().get(station);
         if (workTime == null) {
           workTime = new WorkTime();
         }
@@ -53,6 +53,10 @@ public class XMLHandler extends DefaultHandler {
     } catch (Exception pe) {
       pe.printStackTrace();
     }
+  }
+
+  private HashMap<Integer, WorkTime> getVoteStationWorkTimes() {
+    return voteStationWorkTimes;
   }
 
   @Override

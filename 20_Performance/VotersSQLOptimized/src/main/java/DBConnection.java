@@ -31,16 +31,18 @@ public class DBConnection {
 
   public static void executeMultyInsert() throws SQLException {
     String sql = "INSERT INTO voter_count(name, birthDate, count)" +
-        "VALUE" + insertQuerry.toString() +
+      //  "VALUE" + insertQuerry.toString() +
+        "VALUE" + XMLHandler.getInsertQuerry().toString() +
         "ON DUPLICATE KEY UPDATE count = count + 1";
     DBConnection.getConnection().createStatement().execute(sql);
 
   }
 
-  public static void countVoter(String name, String birthDay) throws SQLException {
-    birthDay = birthDay.replace('.', '-');
-    insertQuerry.append((insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
-  }
+
+//  public static void countVoter(String name, String birthDay) throws SQLException {
+//    birthDay = birthDay.replace('.', '-');
+//    insertQuerry.append((insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
+//  }
 
   public static void printVoterCounts() throws SQLException {
     String sql = "SELECT name, birthDate, `count` FROM voter_count WHERE `count` > 1";
