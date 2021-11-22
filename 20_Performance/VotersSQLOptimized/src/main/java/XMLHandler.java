@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,13 +34,14 @@ import org.xml.sax.helpers.DefaultHandler;
       try {
         if (qName.equals("voter") && voter == null) {
           //Date birthDay = birthDayFormat.parse(attributes.getValue("birthDay"));
-          String birthDay = attributes.getValue("name");
+          Date plug = new Date();
+          String birthDay = attributes.getValue("birthDay");
           birthDay = birthDay.replace('.', '-');
           String name = attributes.getValue("name");
+          voter = new Voter("plug", plug);
           //voter = new Voter(attributes.getValue("name"), birthDay);
-          insertQuerry.append((insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
-
-
+          insertQuerry.append(
+              (insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
 
         } else if (qName.equals("visit") && voter != null) {
           Date visitTime = visitDateFormat.parse(attributes.getValue("time"));
@@ -74,6 +76,7 @@ import org.xml.sax.helpers.DefaultHandler;
       }
     }
 
+
     public void printDuplicatedVoters() {
       System.out.println("Duplicated voters: ");
       for (Voter voter : voterCounts.keySet()) {
@@ -92,5 +95,6 @@ import org.xml.sax.helpers.DefaultHandler;
         System.out.println("\t" + votingStation + " - " + workTime);
       }
       voteStationWorkTimes = null;
+
     }
   }
