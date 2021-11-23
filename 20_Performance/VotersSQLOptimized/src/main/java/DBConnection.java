@@ -44,5 +44,6 @@ public class DBConnection {
       System.out.println("\t" + rs.getString("name") + " (" +
           rs.getString("birthDate") + ") - " + rs.getInt("count"));
     }
+    rs.close();
   }
 }
