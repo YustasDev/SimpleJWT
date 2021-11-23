@@ -21,7 +21,7 @@ public class DBConnection {
             "birthDate DATE NOT NULL, " +
             "`count` INT NOT NULL, " +
             "PRIMARY KEY(id), " +
-            "UNIQUE KEY name_date(name(50), birthDate))");
+            "UNIQUE KEY (id))");
       } catch (SQLException e) {
         e.printStackTrace();
       }

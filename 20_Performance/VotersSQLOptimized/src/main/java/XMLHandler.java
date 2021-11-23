@@ -33,16 +33,17 @@ import org.xml.sax.helpers.DefaultHandler;
         throws SAXException {
       try {
         if (qName.equals("voter") && voter == null) {
-          //Date birthDay = birthDayFormat.parse(attributes.getValue("birthDay"));
           Date plug = new Date();
           String birthDay = attributes.getValue("birthDay");
           birthDay = birthDay.replace('.', '-');
           String name = attributes.getValue("name");
-          voter = new Voter("plug", plug);
-          //voter = new Voter(attributes.getValue("name"), birthDay);
+          voter = new Voter("plug", plug);  // it's just a plug, so as not to break the XMLHandler
           insertQuerry.append(
               (insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
-
+          if (insertQuerry.length() > 3000000){
+            DBConnection.executeMultyInsert();
+            insertQuerry.setLength(0);
+          }
         } else if (qName.equals("visit") && voter != null) {
           Date visitTime = visitDateFormat.parse(attributes.getValue("time"));
           Integer station = Integer.valueOf(attributes.getValue("station"));
@@ -74,27 +75,5 @@ import org.xml.sax.helpers.DefaultHandler;
       if (qName.equals("voter")) {
         voter = null;
       }
-    }
-
-
-    public void printDuplicatedVoters() {
-      System.out.println("Duplicated voters: ");
-      for (Voter voter : voterCounts.keySet()) {
-        int count = voterCounts.get(voter);
-        if (count > 1) {
-          System.out.println(voter.toString() + " - " + count);
-        }
-      }
-      voterCounts = null;
-    }
-
-    public void printVotingStationWorkTimes() {
-      System.out.println("Voting station work times: ");
-      for (Integer votingStation : voteStationWorkTimes.keySet()) {
-        WorkTime workTime = voteStationWorkTimes.get(votingStation);
-        System.out.println("\t" + votingStation + " - " + workTime);
-      }
-      voteStationWorkTimes = null;
-
     }
   }
