@@ -33,6 +33,7 @@ public class Loader {
     System.out.println("Diff: " + (after - before));
 
     DBConnection.printVoterCounts();
+
   }
 
   public static long memoryUsed() {

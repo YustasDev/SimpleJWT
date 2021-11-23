@@ -40,7 +40,7 @@ import org.xml.sax.helpers.DefaultHandler;
           voter = new Voter("plug", plug);  // it's just a plug, so as not to break the XMLHandler
           insertQuerry.append(
               (insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
-          if (insertQuerry.length() > 3000000){
+          if (insertQuerry.length() > 3000000) {
             DBConnection.executeMultyInsert();
             insertQuerry.setLength(0);
           }
@@ -74,6 +74,16 @@ import org.xml.sax.helpers.DefaultHandler;
     public void endElement(String uri, String localName, String qName) throws SAXException {
       if (qName.equals("voter")) {
         voter = null;
+      }
+      if (qName.equals("voters")) {
+        if (insertQuerry.length() != 0) {
+          try {
+            DBConnection.executeMultyInsert();
+          } catch (SQLException throwables) {
+            throwables.printStackTrace();
+          }
+          insertQuerry.setLength(0);
+        }
       }
     }
   }
