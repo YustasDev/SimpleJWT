@@ -20,8 +20,8 @@ public class DBConnection {
             "name TINYTEXT NOT NULL, " +
             "birthDate DATE NOT NULL, " +
             "`count` INT NOT NULL, " +
-            "PRIMARY KEY(id), " +
-            "UNIQUE KEY name_date(name(50), birthDate))");
+            "PRIMARY KEY(id))");
+      //      "UNIQUE KEY name_date(name(50), birthDate))");
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -31,8 +31,9 @@ public class DBConnection {
 
   public static void executeMultyInsert() throws SQLException {
     String sql = "INSERT INTO voter_count(name, birthDate, count)" +
-        "VALUE" + XMLHandler.getInsertQuerry().toString() +
-        "ON DUPLICATE KEY UPDATE count = count + 1";
+        "VALUE" + XMLHandler.getInsertQuerry().toString();
+
+     //   "ON DUPLICATE KEY UPDATE count = count + 1";
     DBConnection.getConnection().createStatement().execute(sql);
 
   }

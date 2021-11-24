@@ -32,7 +32,7 @@ public class Loader {
     long after = memoryUsed();
     System.out.println("Diff: " + (after - before));
 
-    DBConnection.printVoterCounts();
+ //   DBConnection.printVoterCounts();
 
   }
 
