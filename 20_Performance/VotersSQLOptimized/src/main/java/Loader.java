@@ -33,7 +33,7 @@ public class Loader {
     System.out.println("Diff: " + (after - before));
 
  //   DBConnection.printVoterCounts();
-
+    DBConnection.createDuplicatesVotersTable();
   }
 
   public static long memoryUsed() {

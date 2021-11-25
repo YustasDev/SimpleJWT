@@ -47,4 +47,11 @@ public class DBConnection {
     }
     rs.close();
   }
+
+  public static void createDuplicatesVotersTable() throws SQLException{
+    String createSql = "CREATE table dupVoters AS SELECT * FROM voter_count WHERE name IN (SELECT name FROM voter_count GROUP BY name HAVING COUNT(*) > 1)"
+        + " and birthDate IN (SELECT birthDate FROM voter_count GROUP BY birthDate HAVING COUNT(*) > 1) ORDER BY name;";
+    ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(createSql);
+    rs.close();
+  }
 }
