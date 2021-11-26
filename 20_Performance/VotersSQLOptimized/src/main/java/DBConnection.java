@@ -14,14 +14,14 @@ public class DBConnection {
     if (connection == null) {
       try {
         connection = DriverManager.getConnection(url, user, password);
-        connection.createStatement().execute("DROP TABLE IF EXISTS voter_count");
-        connection.createStatement().execute("CREATE TABLE voter_count(" +
+        connection.createStatement().execute("DROP TABLE IF EXISTS voter_count1");
+        connection.createStatement().execute("CREATE TABLE voter_count1(" +
             "id INT NOT NULL AUTO_INCREMENT, " +
             "name TINYTEXT NOT NULL, " +
             "birthDate DATE NOT NULL, " +
             "`count` INT NOT NULL, " +
             "PRIMARY KEY(id))");
-      //      "UNIQUE KEY name_date(name(50), birthDate))");
+        //      "UNIQUE KEY name_date(name(50), birthDate))");
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -30,10 +30,10 @@ public class DBConnection {
   }
 
   public static void executeMultyInsert() throws SQLException {
-    String sql = "INSERT INTO voter_count(name, birthDate, count)" +
+    String sql = "INSERT INTO voter_count1(name, birthDate, count)" +
         "VALUE" + XMLHandler.getInsertQuerry().toString();
 
-     //   "ON DUPLICATE KEY UPDATE count = count + 1";
+    //   "ON DUPLICATE KEY UPDATE count = count + 1";
     DBConnection.getConnection().createStatement().execute(sql);
 
   }
@@ -48,12 +48,20 @@ public class DBConnection {
     rs.close();
   }
 
-  public static void createDuplicatesVotersTable() throws SQLException{
+  public static void createDuplicatesVotersTable() throws SQLException {
+    Statement statement = null;
     String dropSql = "DROP TABLE IF EXISTS dupVoters";
-    String createSql = "CREATE table dupVoters AS SELECT name, birthDate, COUNT(*) cnt FROM voter_count group by name, birthDate having cnt >1;";
-    ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(dropSql);
-    ResultSet rs1 = DBConnection.getConnection().createStatement().executeQuery(createSql);
-    rs.close();
-    rs1.close();
+    String createSql = "CREATE table dupVoters AS SELECT name, birthDate, COUNT(*) cnt FROM voter_count1 group by name, birthDate having cnt >1;";
+    try {
+      statement = connection.createStatement();
+      statement.executeUpdate(dropSql);
+      statement.executeUpdate(createSql);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      if (statement != null) {
+        statement.close();
+      }
+    }
   }
 }
