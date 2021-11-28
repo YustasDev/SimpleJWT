@@ -147,7 +147,7 @@ public class MainForm {
 
       }
     });
-    
+
   }
 
   public JPanel getMainPanel(){
