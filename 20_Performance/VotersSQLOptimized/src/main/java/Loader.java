@@ -22,7 +22,7 @@ public class Loader {
 
   public static void main(String[] args) throws Exception {
     long before = memoryUsed();
-    String fileName = "res/data-1572M.xml";
+    String fileName = "res/data-0.2M.xml";
     long startTime = System.currentTimeMillis();
     SAXParserFactory saxFactory = SAXParserFactory.newInstance();
     SAXParser saxParser = saxFactory.newSAXParser();

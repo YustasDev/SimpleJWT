@@ -49,6 +49,7 @@ public class DBConnection {
   }
 
   public static void createDuplicatesVotersTable() throws SQLException {
+    System.out.println("The process of creating a duplicate table has started");
     Statement statement = null;
     String dropSql = "DROP TABLE IF EXISTS dupVoters";
     String createSql = "CREATE table dupVoters AS SELECT name, birthDate, COUNT(*) cnt FROM voter_count1 group by name, birthDate having cnt >1;";
@@ -56,6 +57,7 @@ public class DBConnection {
       statement = connection.createStatement();
       statement.executeUpdate(dropSql);
       statement.executeUpdate(createSql);
+      System.out.println("Duplicate table created successfully!");
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
