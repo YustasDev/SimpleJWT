@@ -32,8 +32,9 @@ public class Loader {
     long after = memoryUsed();
     System.out.println("Diff: " + (after - before));
 
- //   DBConnection.printVoterCounts();
+    DBConnection.createDuplicatesVotersTable();
 
+    System.err.println("Duration of work with creating a duplicate table: " + (System.currentTimeMillis() - startTime) + " ms");
   }
 
   public static long memoryUsed() {
