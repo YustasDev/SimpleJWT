@@ -16,6 +16,7 @@ import org.xml.sax.helpers.DefaultHandler;
     private static SimpleDateFormat birthDayFormat = new SimpleDateFormat("yyyy.MM.dd");
     private Map<Voter, Integer> voterCounts;
     private HashMap<Integer, WorkTime> voteStationWorkTimes;
+    private static int countElementsForMultyInsert = 3000000;
 
     private static StringBuilder insertQuerry = new StringBuilder();
 
@@ -40,7 +41,7 @@ import org.xml.sax.helpers.DefaultHandler;
           voter = new Voter("plug", plug);  // it's just a plug, so as not to break the XMLHandler
           insertQuerry.append(
               (insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
-          if (insertQuerry.length() > 1) {
+          if (insertQuerry.length() > countElementsForMultyInsert) {
             DBConnection.executeMultyInsert();
             insertQuerry.setLength(0);
           }
