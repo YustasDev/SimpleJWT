@@ -40,7 +40,7 @@ import org.xml.sax.helpers.DefaultHandler;
           voter = new Voter("plug", plug);  // it's just a plug, so as not to break the XMLHandler
           insertQuerry.append(
               (insertQuerry.length() == 0 ? "" : ",") + "('" + name + "', '" + birthDay + "', 1)");
-          if (insertQuerry.length() > 3000000) {
+          if (insertQuerry.length() > 1) {
             DBConnection.executeMultyInsert();
             insertQuerry.setLength(0);
           }
