@@ -2,15 +2,23 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="MainForm">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="7" vgap="8">
     <constraints>
-      <xy x="20" y="20" width="500" height="436"/>
+      <xy x="20" y="20" width="600" height="450"/>
     </constraints>
-    <properties/>
+    <properties>
+      <opaque value="false"/>
+      <preferredSize width="600" height="400"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="2211b" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="South"/>
-        <properties/>
-        <border type="none"/>
+        <properties>
+          <doubleBuffered value="false"/>
+          <preferredSize width="140" height="45"/>
+        </properties>
+        <border type="line">
+          <color color="-4517089"/>
+        </border>
         <children>
           <component id="40436" class="javax.swing.JButton" binding="collapseButton">
             <constraints/>
@@ -23,42 +31,120 @@
           </component>
         </children>
       </grid>
-      <grid id="61409" binding="namePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="7ff18" binding="namePanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <minimumSize width="600" height="400"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="d2c6" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
-            <constraints border-constraint="North"/>
+          <grid id="49676" binding="surname" layout-manager="GridBagLayout">
+            <constraints/>
             <properties>
-              <lineWrap value="true"/>
-              <name value="surname"/>
-              <preferredSize width="250" height="100"/>
-              <rows value="1"/>
-              <toolTipText value="Укажите  фамилию"/>
+              <preferredSize width="600" height="100"/>
+              <toolTipText value="Укажите фамилию"/>
             </properties>
-          </component>
-          <component id="efde1" class="javax.swing.JTextArea" binding="textArea2" default-binding="true">
-            <constraints border-constraint="Center"/>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
+            <children>
+              <component id="77a81" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <alignmentY value="1.0"/>
+                  <horizontalAlignment value="2"/>
+                  <preferredSize width="250" height="30"/>
+                  <toolTipText value="Укажите  фамилию"/>
+                  <verifyInputWhenFocusTarget value="false"/>
+                </properties>
+              </component>
+              <component id="4bb54" class="javax.swing.JLabel" binding="surnameLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <horizontalTextPosition value="0"/>
+                  <preferredSize width="150" height="30"/>
+                  <text value="Укажите  фамилию"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="827d5" binding="nname" layout-manager="GridBagLayout">
+            <constraints/>
             <properties>
-              <lineWrap value="true"/>
-              <name value="name"/>
-              <preferredSize width="250" height="100"/>
-              <rows value="1"/>
-              <toolTipText value="Укажите  имя"/>
+              <preferredSize width="600" height="100"/>
+              <toolTipText value="Укажите имя"/>
             </properties>
-          </component>
-          <component id="42309" class="javax.swing.JTextArea" binding="textArea3" default-binding="true">
-            <constraints border-constraint="South"/>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
+            <children>
+              <component id="7d594" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <opaque value="false"/>
+                  <preferredSize width="250" height="30"/>
+                  <toolTipText value="Укажите  имя"/>
+                </properties>
+              </component>
+              <component id="7e1f9" class="javax.swing.JLabel" binding="nameLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <preferredSize width="150" height="30"/>
+                  <text value="Укажите  имя"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="e5e1f" binding="lastname" layout-manager="GridBagLayout">
+            <constraints/>
             <properties>
-              <lineWrap value="true"/>
-              <minimumSize width="250" height="10"/>
-              <name value="lastName"/>
-              <preferredSize width="250" height="100"/>
-              <rows value="1"/>
-              <toolTipText value="Укажите  отчество"/>
+              <preferredSize width="600" height="100"/>
+              <toolTipText value="Укажите отчество"/>
             </properties>
-          </component>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
+            <children>
+              <component id="7d527" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <preferredSize width="250" height="30"/>
+                  <toolTipText value="Укажите  отчество"/>
+                </properties>
+              </component>
+              <component id="d1dc1" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <preferredSize width="150" height="30"/>
+                  <text value="Укажите  отчество"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
     </children>

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
@@ -7,24 +8,31 @@ public class MainForm extends JFrame {
 
   private JPanel mainPanel;
   private JButton collapseButton;
-  private JTextArea textArea1;
-  private JTextArea textArea2;
-  private JTextArea textArea3;
   private JPanel namePanel;
+  private JPanel surname;
+  private JPanel lastname;
+  private JPanel nname;
+  private JTextField textField1;
+  private JLabel surnameLabel;
+  private JTextField textField2;
+  private JLabel nameLabel;
+  private JTextField textField3;
 
   public MainForm() {
 
-    textArea1.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.BLACK, 2),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-    textArea2.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.BLACK, 2),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-    textArea3.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.BLACK, 2),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+
+//    textArea1.setBorder(BorderFactory.createCompoundBorder(
+//            BorderFactory.createLineBorder(Color.BLACK, 2),
+//            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+//    textArea2.setBorder(BorderFactory.createCompoundBorder(
+//            BorderFactory.createLineBorder(Color.BLACK, 2),
+//            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+//    textArea3.setBorder(BorderFactory.createCompoundBorder(
+//            BorderFactory.createLineBorder(Color.BLACK, 2),
+//            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
     collapseButton.addActionListener(new Action() {
+
       @Override
       public Object getValue(String key) {
         return null;
@@ -57,12 +65,13 @@ public class MainForm extends JFrame {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        String surname = textArea1.getText();
-        String name = textArea2.getText();
+        String surname = textField1.getText();
+        String name = textField2.getText();
+        String lastName = textField3.getText();
         if (surname.length() > 0 && name.length() > 0) {
-          collapseButton.setText("Expand");
-        }
-        else {
+          dispose();
+          getCollapse(surname, name, lastName);
+        } else {
           JOptionPane.showMessageDialog(
                   mainPanel,
                   "Поля: Фамилия (первое сверху) и Имя (второе сверху) не заполнены, их необходимо заполнить",
@@ -72,10 +81,16 @@ public class MainForm extends JFrame {
         }
 
       }
+
+      private void getCollapse(String surname, String name, String lastName) {
+        dispose();
+        new AnotherJFrame(surname, name, lastName);
+      }
     });
 
 
   }
+
 
   public JPanel getMainPanel() {
     return mainPanel;
@@ -102,9 +117,14 @@ public class MainForm extends JFrame {
   private void $$$setupUI$$$() {
     mainPanel = new JPanel();
     mainPanel.setLayout(new BorderLayout(7, 8));
+    mainPanel.setOpaque(false);
+    mainPanel.setPreferredSize(new Dimension(600, 400));
     final JPanel panel1 = new JPanel();
     panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    panel1.setDoubleBuffered(false);
+    panel1.setPreferredSize(new Dimension(140, 45));
     mainPanel.add(panel1, BorderLayout.SOUTH);
+    panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-4517089)), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
     collapseButton = new JButton();
     collapseButton.setAutoscrolls(false);
     collapseButton.setContentAreaFilled(false);
@@ -112,30 +132,85 @@ public class MainForm extends JFrame {
     collapseButton.setText("Collapse");
     panel1.add(collapseButton);
     namePanel = new JPanel();
-    namePanel.setLayout(new BorderLayout(0, 0));
+    namePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    namePanel.setMinimumSize(new Dimension(600, 400));
     mainPanel.add(namePanel, BorderLayout.CENTER);
-    textArea1 = new JTextArea();
-    textArea1.setLineWrap(true);
-    textArea1.setName("surname");
-    textArea1.setPreferredSize(new Dimension(250, 100));
-    textArea1.setRows(1);
-    textArea1.setToolTipText("Укажите  фамилию");
-    namePanel.add(textArea1, BorderLayout.NORTH);
-    textArea2 = new JTextArea();
-    textArea2.setLineWrap(true);
-    textArea2.setName("name");
-    textArea2.setPreferredSize(new Dimension(250, 100));
-    textArea2.setRows(1);
-    textArea2.setToolTipText("Укажите  имя");
-    namePanel.add(textArea2, BorderLayout.CENTER);
-    textArea3 = new JTextArea();
-    textArea3.setLineWrap(true);
-    textArea3.setMinimumSize(new Dimension(250, 10));
-    textArea3.setName("lastName");
-    textArea3.setPreferredSize(new Dimension(250, 100));
-    textArea3.setRows(1);
-    textArea3.setToolTipText("Укажите  отчество");
-    namePanel.add(textArea3, BorderLayout.SOUTH);
+    surname = new JPanel();
+    surname.setLayout(new GridBagLayout());
+    surname.setPreferredSize(new Dimension(600, 100));
+    surname.setToolTipText("Укажите фамилию");
+    namePanel.add(surname);
+    surname.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+    textField1 = new JTextField();
+    textField1.setAlignmentY(1.0f);
+    textField1.setHorizontalAlignment(2);
+    textField1.setPreferredSize(new Dimension(250, 30));
+    textField1.setToolTipText("Укажите  фамилию");
+    textField1.setVerifyInputWhenFocusTarget(false);
+    GridBagConstraints gbc;
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    surname.add(textField1, gbc);
+    surnameLabel = new JLabel();
+    surnameLabel.setHorizontalAlignment(2);
+    surnameLabel.setHorizontalTextPosition(0);
+    surnameLabel.setPreferredSize(new Dimension(150, 30));
+    surnameLabel.setText("Укажите  фамилию");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    surname.add(surnameLabel, gbc);
+    nname = new JPanel();
+    nname.setLayout(new GridBagLayout());
+    nname.setPreferredSize(new Dimension(600, 100));
+    nname.setToolTipText("Укажите имя");
+    namePanel.add(nname);
+    nname.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+    textField2 = new JTextField();
+    textField2.setHorizontalAlignment(2);
+    textField2.setOpaque(false);
+    textField2.setPreferredSize(new Dimension(250, 30));
+    textField2.setToolTipText("Укажите  имя");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    nname.add(textField2, gbc);
+    nameLabel = new JLabel();
+    nameLabel.setPreferredSize(new Dimension(150, 30));
+    nameLabel.setText("Укажите  имя");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    nname.add(nameLabel, gbc);
+    lastname = new JPanel();
+    lastname.setLayout(new GridBagLayout());
+    lastname.setPreferredSize(new Dimension(600, 100));
+    lastname.setToolTipText("Укажите отчество");
+    namePanel.add(lastname);
+    lastname.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+    textField3 = new JTextField();
+    textField3.setPreferredSize(new Dimension(250, 30));
+    textField3.setToolTipText("Укажите  отчество");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    lastname.add(textField3, gbc);
+    final JLabel label1 = new JLabel();
+    label1.setPreferredSize(new Dimension(150, 30));
+    label1.setText("Укажите  отчество");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    lastname.add(label1, gbc);
   }
 
   /**
@@ -145,4 +220,7 @@ public class MainForm extends JFrame {
     return mainPanel;
   }
 
+  private void createUIComponents() {
+    // TODO: place custom component creation code here
+  }
 }
