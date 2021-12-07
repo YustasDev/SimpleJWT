@@ -2,45 +2,64 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="MainForm">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="7" vgap="8">
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="500" height="436"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="e0510" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="2211b" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="South"/>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="6d6e5" class="javax.swing.JButton" binding="clearItButton" default-binding="true">
+          <component id="40436" class="javax.swing.JButton" binding="collapseButton">
             <constraints/>
             <properties>
-              <text value="Clear it!"/>
-            </properties>
-          </component>
-          <component id="9419f" class="javax.swing.JButton" binding="countButton">
-            <constraints/>
-            <properties>
-              <preferredSize width="130" height="30"/>
-              <text value="Count it!"/>
+              <autoscrolls value="false"/>
+              <contentAreaFilled value="false"/>
+              <preferredSize width="130" height="35"/>
+              <text value="Collapse"/>
             </properties>
           </component>
         </children>
       </grid>
-      <hspacer id="3b018">
-        <constraints border-constraint="North"/>
-      </hspacer>
-      <vspacer id="829d5">
-        <constraints border-constraint="East"/>
-      </vspacer>
-      <vspacer id="2a2f0">
-        <constraints border-constraint="West"/>
-      </vspacer>
-      <grid id="49435" binding="drawPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="61409" binding="namePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
-        <children/>
+        <children>
+          <component id="d2c6" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+            <constraints border-constraint="North"/>
+            <properties>
+              <lineWrap value="true"/>
+              <name value="surname"/>
+              <preferredSize width="250" height="100"/>
+              <rows value="1"/>
+              <toolTipText value="Укажите  фамилию"/>
+            </properties>
+          </component>
+          <component id="efde1" class="javax.swing.JTextArea" binding="textArea2" default-binding="true">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <lineWrap value="true"/>
+              <name value="name"/>
+              <preferredSize width="250" height="100"/>
+              <rows value="1"/>
+              <toolTipText value="Укажите  имя"/>
+            </properties>
+          </component>
+          <component id="42309" class="javax.swing.JTextArea" binding="textArea3" default-binding="true">
+            <constraints border-constraint="South"/>
+            <properties>
+              <lineWrap value="true"/>
+              <minimumSize width="250" height="10"/>
+              <name value="lastName"/>
+              <preferredSize width="250" height="100"/>
+              <rows value="1"/>
+              <toolTipText value="Укажите  отчество"/>
+            </properties>
+          </component>
+        </children>
       </grid>
     </children>
   </grid>
