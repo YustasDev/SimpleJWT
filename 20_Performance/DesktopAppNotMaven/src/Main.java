@@ -5,16 +5,14 @@ import javax.swing.WindowConstants;
 
 public class Main {
 
+  public static JFrame frame;
+  public static JFrame newFrame;
+
   public static void main(String[] args) {
 
-    JFrame frame = new JFrame();
+    frame = new JFrame();
     frame.setSize(600, 400);
     frame.setTitle("JFrame Based Contact Form");
-
-
-
-
-
 
 
     frame.add(new MainForm().getNamePanel());

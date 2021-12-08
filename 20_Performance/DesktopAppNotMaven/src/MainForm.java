@@ -8,6 +8,7 @@ public class MainForm extends JFrame {
 
   private JPanel mainPanel;
   private JButton collapseButton;
+  private JPanel newPanel;
   private JPanel namePanel;
   private JPanel surname;
   private JPanel lastname;
@@ -69,7 +70,6 @@ public class MainForm extends JFrame {
         String name = textField2.getText();
         String lastName = textField3.getText();
         if (surname.length() > 0 && name.length() > 0) {
-          dispose();
           getCollapse(surname, name, lastName);
         } else {
           JOptionPane.showMessageDialog(
@@ -83,8 +83,17 @@ public class MainForm extends JFrame {
       }
 
       private void getCollapse(String surname, String name, String lastName) {
-        dispose();
-        new AnotherJFrame(surname, name, lastName);
+        Main.newFrame = new AnotherJFrame(surname, name, lastName);
+        Main.frame.setVisible(false);
+        Main.frame.dispose();
+
+        Main.newFrame.setSize(600, 400);
+        Main.newFrame.setTitle("JFrame New Contact Form");
+
+        Main.newFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Main.newFrame.setLocationRelativeTo(null);
+        Main.newFrame.setVisible(true);
+
       }
     });
 
@@ -223,4 +232,43 @@ public class MainForm extends JFrame {
   private void createUIComponents() {
     // TODO: place custom component creation code here
   }
+
+  public static class AnotherJFrame extends JFrame {
+
+    public static JPanel newPanel;
+    private JButton expandButton;
+    private JTextArea textAreaNew;
+
+    public AnotherJFrame(String surname, String name, String lastName) {
+
+      newPanel = new JPanel();
+      newPanel.setLayout(new BorderLayout(7, 8));
+      final JPanel panel1 = new JPanel();
+      panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+      newPanel.add(panel1, BorderLayout.SOUTH);
+      expandButton = new JButton();
+      expandButton.setContentAreaFilled(false);
+      expandButton.setPreferredSize(new Dimension(130, 35));
+      expandButton.setText("Expand");
+      panel1.add(expandButton);
+
+
+      textAreaNew = new JTextArea();
+      textAreaNew.setLineWrap(true);
+      textAreaNew.setName("FullName");
+      textAreaNew.setRows(1);
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append(surname + "  " + name + "  " + lastName);
+      textAreaNew.setText(String.valueOf(stringBuilder));
+      newPanel.add(textAreaNew, BorderLayout.NORTH);
+
+    }
+
+    public static JPanel getNewPanel() {
+      return newPanel;
+    }
+
+  }
+
+
 }
