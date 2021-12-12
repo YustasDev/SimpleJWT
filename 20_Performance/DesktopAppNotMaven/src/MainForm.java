@@ -18,6 +18,12 @@ public class MainForm extends JFrame {
   private JLabel nameLabel;
   private JTextField textField3;
 
+  public MainForm(String surname, String name, String lastName) {
+    textField1.setText(surname);
+    textField2.setText(name);
+    textField3.setText(lastName);
+  }
+
   public MainForm() {
 
     collapseButton.addActionListener(new Action() {

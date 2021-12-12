@@ -67,26 +67,28 @@ public class AnotherForm extends JFrame {
       public void actionPerformed(ActionEvent e) {
         String fullName = textPane1.getText();
         String[] words = fullName.split("  ");
-        if (words.length > 2) {
+        String lastName = "";
+        if (words.length > 1) {
           String surname = words[0];
           String name = words[1];
-          String lastName = words[2];
-
-          Main.frame = new JFrame();
-
-          Main.frame.setSize(600, 400);
-          Main.frame.setTitle("JFrame Old Contact Form");
+          if (words.length > 2) {
+            lastName = words[2];
+          }
 
           Main.newFrame.setVisible(false);
           Main.newFrame.dispose();
 
-          
-          Main.frame.add(new MainForm().getNamePanel());
-          Main.frame.add(new MainForm().getMainPanel());
+          Main.frame = new JFrame();
+          Main.frame.setSize(600, 400);
+          Main.frame.setTitle("JFrame Old Contact Form");
 
           Main.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
           Main.frame.setLocationRelativeTo(null);
           Main.frame.setVisible(true);
+
+          Main.frame.add(new MainForm(surname, name, lastName).getNamePanel());
+          Main.frame.add(new MainForm(surname, name, lastName).getMainPanel());
+
         } else {
           System.out.println("Контактная форма не заполнена");
         }
@@ -94,14 +96,13 @@ public class AnotherForm extends JFrame {
     });
   }
 
- public JPanel getPanel1() {
+  public JPanel getPanel1() {
     return panel1;
-    }
-
- public JPanel getFullName() {
-    return fullName;
   }
 
+  public JPanel getFullName() {
+    return fullName;
+  }
 
 
   private void createUIComponents() {
@@ -200,4 +201,5 @@ public class AnotherForm extends JFrame {
   public JComponent $$$getRootComponent$$$() {
     return panel1;
   }
+
 }
