@@ -6,7 +6,6 @@ import javax.swing.WindowConstants;
 public class Main {
 
   public static JFrame frame;
-  public static JFrame newFrame;
 
   public static void main(String[] args) {
 
@@ -14,11 +13,13 @@ public class Main {
     frame.setSize(600, 400);
     frame.setTitle("JFrame Based Contact Form");
 
-    frame.add(new MainForm().getNamePanel());
-    frame.add(new MainForm().getMainPanel());
+    HandlerForms visionForm = new HandlerForms();
+    frame.add(visionForm.mainForm.getMainPanel());
 
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
+
+
   }
 }

@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 
 public class MainForm extends JFrame {
 
@@ -17,6 +15,8 @@ public class MainForm extends JFrame {
   private JTextField textField2;
   private JLabel nameLabel;
   private JTextField textField3;
+
+  public static JFrame newFrame;
 
   public MainForm(String surname, String name, String lastName) {
     textField1.setText(surname);
@@ -40,26 +40,25 @@ public class MainForm extends JFrame {
                   JOptionPane.PLAIN_MESSAGE
           );
         }
-
       });
   }
 
       private void getCollapse(String surname, String name, String lastName) {
-        Main.newFrame = new JFrame();
+
+        newFrame = new JFrame();
 
         Main.frame.setVisible(false);
         Main.frame.dispose();
 
-        Main.newFrame.setSize(600, 400);
-        Main.newFrame.setTitle("JFrame New Contact Form");
+        newFrame.setSize(600, 400);
+        newFrame.setTitle("JFrame New Contact Form");
 
-        Main.newFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Main.newFrame.setLocationRelativeTo(null);
-        Main.newFrame.setVisible(true);
+        newFrame.add(new AnotherForm(surname, name, lastName).getFullName());
+        newFrame.add(new AnotherForm(surname, name, lastName).getPanel1());
 
-        Main.newFrame.add(new AnotherForm(surname, name, lastName).getFullName());
-        Main.newFrame.add(new AnotherForm(surname, name, lastName).getPanel1());
-
+        newFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        newFrame.setLocationRelativeTo(null);
+        newFrame.setVisible(true);
       }
 
 

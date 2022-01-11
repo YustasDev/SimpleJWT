@@ -78,8 +78,8 @@ public class AnotherForm extends JFrame {
                         lastName = words[2];
                     }
 
-                    Main.newFrame.setVisible(false);
-                    Main.newFrame.dispose();
+//                    Main.newFrame.setVisible(false);
+//                    Main.newFrame.dispose();
 
                     Main.frame = new JFrame();
                     Main.frame.setSize(600, 400);
