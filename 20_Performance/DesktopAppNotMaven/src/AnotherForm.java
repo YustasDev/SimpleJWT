@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Locale;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,190 +17,189 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 
 public class AnotherForm extends JFrame {
 
-  private JPanel panel1;
-  private JPanel NewButton;
-  private JButton expandButton;
-  private JPanel fullName;
-  private JLabel FullName;
-  private JTextPane textPane1;
+    private JPanel panel1;
+    private JPanel NewButton;
+    private JButton expandButton;
+    private JPanel fullName;
+    private JLabel FullName;
+    private JTextPane textPane1;
 
 
-  public AnotherForm(String surname, String name, String lastName) {
+    public AnotherForm(String surname, String name, String lastName) {
 
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(surname + "  " + name + "  " + lastName);
-    textPane1.setText(String.valueOf(stringBuilder));
-    expandButton.addActionListener(new Action() {
-      @Override
-      public Object getValue(String key) {
-        return null;
-      }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(surname + "  " + name + "  " + lastName);
+        textPane1.setText(String.valueOf(stringBuilder));
+        expandButton.addActionListener(new Action() {
+            @Override
+            public Object getValue(String key) {
+                return null;
+            }
 
-      @Override
-      public void putValue(String key, Object value) {
+            @Override
+            public void putValue(String key, Object value) {
 
-      }
+            }
 
-      @Override
-      public void setEnabled(boolean b) {
+            @Override
+            public void setEnabled(boolean b) {
 
-      }
+            }
 
-      @Override
-      public boolean isEnabled() {
-        return false;
-      }
+            @Override
+            public boolean isEnabled() {
+                return false;
+            }
 
-      @Override
-      public void addPropertyChangeListener(PropertyChangeListener listener) {
+            @Override
+            public void addPropertyChangeListener(PropertyChangeListener listener) {
 
-      }
+            }
 
-      @Override
-      public void removePropertyChangeListener(PropertyChangeListener listener) {
+            @Override
+            public void removePropertyChangeListener(PropertyChangeListener listener) {
 
-      }
+            }
 
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        String fullName = textPane1.getText();
-        String[] words = fullName.split("  ");
-        String lastName = "";
-        if (words.length > 1) {
-          String surname = words[0];
-          String name = words[1];
-          if (words.length > 2) {
-            lastName = words[2];
-          }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fullName = textPane1.getText();
+                String[] words = fullName.split("  ");
+                String lastName = "";
+                if (words.length > 1) {
+                    String surname = words[0];
+                    String name = words[1];
+                    if (words.length > 2) {
+                        lastName = words[2];
+                    }
 
-          Main.newFrame.setVisible(false);
-          Main.newFrame.dispose();
+                    Main.newFrame.setVisible(false);
+                    Main.newFrame.dispose();
 
-          Main.frame = new JFrame();
-          Main.frame.setSize(600, 400);
-          Main.frame.setTitle("JFrame Old Contact Form");
+                    Main.frame = new JFrame();
+                    Main.frame.setSize(600, 400);
+                    Main.frame.setTitle("JFrame Old Contact Form");
 
-          Main.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-          Main.frame.setLocationRelativeTo(null);
-          Main.frame.setVisible(true);
+                    Main.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    Main.frame.setLocationRelativeTo(null);
+                    Main.frame.setVisible(true);
 
-          Main.frame.add(new MainForm(surname, name, lastName).getNamePanel());
-          Main.frame.add(new MainForm(surname, name, lastName).getMainPanel());
+                    Main.frame.add(new MainForm(surname, name, lastName).getNamePanel());
+                    Main.frame.add(new MainForm(surname, name, lastName).getMainPanel());
 
-        } else {
-          System.out.println("Контактная форма не заполнена");
-        }
-      }
-    });
-  }
+                } else {
+                    System.out.println("Контактная форма не заполнена");
+                }
+            }
+        });
+    }
 
-  public JPanel getPanel1() {
-    return panel1;
-  }
+    public JPanel getPanel1() {
+        return panel1;
+    }
 
-  public JPanel getFullName() {
-    return fullName;
-  }
+    public JPanel getFullName() {
+        return fullName;
+    }
 
 
-  private void createUIComponents() {
-    // TODO: place custom component creation code here
-  }
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 
-  {
+    {
 // GUI initializer generated by IntelliJ IDEA GUI Designer
 // >>> IMPORTANT!! <<<
 // DO NOT EDIT OR ADD ANY CODE HERE!
-    $$$setupUI$$$();
-  }
-
-  /**
-   * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
-   * call it in your code!
-   *
-   * @noinspection ALL
-   */
-  private void $$$setupUI$$$() {
-    panel1 = new JPanel();
-    panel1.setLayout(new BorderLayout(0, 0));
-    NewButton = new JPanel();
-    NewButton.setLayout(new GridBagLayout());
-    NewButton.setPreferredSize(new Dimension(600, 100));
-    panel1.add(NewButton, BorderLayout.SOUTH);
-    expandButton = new JButton();
-    expandButton.setPreferredSize(new Dimension(130, 30));
-    expandButton.setText("Expand");
-    GridBagConstraints gbc;
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    NewButton.add(expandButton, gbc);
-    fullName = new JPanel();
-    fullName.setLayout(new GridBagLayout());
-    fullName.setAutoscrolls(true);
-    fullName.setPreferredSize(new Dimension(140, 30));
-    panel1.add(fullName, BorderLayout.CENTER);
-    fullName.setBorder(BorderFactory
-        .createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), "FullName",
-            TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-    FullName = new JLabel();
-    FullName.setAlignmentX(1.0f);
-    FullName.setAlignmentY(1.0f);
-    FullName.setAutoscrolls(false);
-    Font FullNameFont = this.$$$getFont$$$(null, Font.BOLD, 16, FullName.getFont());
-    if (FullNameFont != null) {
-      FullName.setFont(FullNameFont);
+        $$$setupUI$$$();
     }
-    FullName.setHorizontalAlignment(0);
-    FullName.setInheritsPopupMenu(false);
-    FullName.setPreferredSize(new Dimension(120, 30));
-    FullName.setText("FullName");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.WEST;
-    fullName.add(FullName, gbc);
-    textPane1 = new JTextPane();
-    textPane1.setPreferredSize(new Dimension(300, 40));
-    textPane1.setToolTipText("It's fullName here");
-    textPane1.setVerifyInputWhenFocusTarget(true);
-    gbc = new GridBagConstraints();
-    gbc.gridx = 1;
-    gbc.gridy = 0;
-    fullName.add(textPane1, gbc);
-  }
 
-  /**
-   * @noinspection ALL
-   */
-  private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
-    if (currentFont == null) {
-      return null;
+    /**
+     * Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout(0, 0));
+        NewButton = new JPanel();
+        NewButton.setLayout(new GridBagLayout());
+        NewButton.setPreferredSize(new Dimension(600, 100));
+        panel1.add(NewButton, BorderLayout.SOUTH);
+        expandButton = new JButton();
+        expandButton.setPreferredSize(new Dimension(130, 30));
+        expandButton.setText("Expand");
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        NewButton.add(expandButton, gbc);
+        fullName = new JPanel();
+        fullName.setLayout(new GridBagLayout());
+        fullName.setAutoscrolls(true);
+        fullName.setPreferredSize(new Dimension(140, 30));
+        panel1.add(fullName, BorderLayout.CENTER);
+        fullName.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), "FullName", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        FullName = new JLabel();
+        FullName.setAlignmentX(1.0f);
+        FullName.setAlignmentY(1.0f);
+        FullName.setAutoscrolls(false);
+        Font FullNameFont = this.$$$getFont$$$(null, Font.BOLD, 16, FullName.getFont());
+        if (FullNameFont != null) FullName.setFont(FullNameFont);
+        FullName.setHorizontalAlignment(0);
+        FullName.setInheritsPopupMenu(false);
+        FullName.setPreferredSize(new Dimension(120, 30));
+        FullName.setText("FullName");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        fullName.add(FullName, gbc);
+        textPane1 = new JTextPane();
+        textPane1.setPreferredSize(new Dimension(300, 40));
+        textPane1.setToolTipText("It's fullName here");
+        textPane1.setVerifyInputWhenFocusTarget(true);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        fullName.add(textPane1, gbc);
     }
-    String resultName;
-    if (fontName == null) {
-      resultName = currentFont.getName();
-    } else {
-      Font testFont = new Font(fontName, Font.PLAIN, 10);
-      if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
-        resultName = fontName;
-      } else {
-        resultName = currentFont.getName();
-      }
-    }
-    return new Font(resultName, style >= 0 ? style : currentFont.getStyle(),
-        size >= 0 ? size : currentFont.getSize());
-  }
 
-  /**
-   * @noinspection ALL
-   */
-  public JComponent $$$getRootComponent$$$() {
-    return panel1;
-  }
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
+        return panel1;
+    }
 
 }
