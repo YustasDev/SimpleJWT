@@ -19,7 +19,5 @@ public class Main {
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
-
-
   }
 }

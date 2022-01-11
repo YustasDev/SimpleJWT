@@ -68,6 +68,10 @@ public class AnotherForm extends JFrame {
 
             }
 
+            /*
+            clicking on the Expand button creates a new JFrame, pressing the Collapse button
+             again after that does not cause any actions, according to the text of the homework
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fullName = textPane1.getText();
