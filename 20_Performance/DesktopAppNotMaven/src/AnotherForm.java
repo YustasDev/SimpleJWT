@@ -29,6 +29,8 @@ public class AnotherForm extends JFrame {
     private JLabel FullName;
     private JTextPane textPane1;
 
+    public static JFrame likeOldFrame;
+
 
     public AnotherForm(String surname, String name, String lastName) {
 
@@ -78,19 +80,16 @@ public class AnotherForm extends JFrame {
                         lastName = words[2];
                     }
 
-//                    Main.newFrame.setVisible(false);
-//                    Main.newFrame.dispose();
+                    likeOldFrame = new JFrame();
+                    likeOldFrame.setSize(600, 400);
+                    likeOldFrame.setTitle("JFrame Old Contact Form");
 
-                    Main.frame = new JFrame();
-                    Main.frame.setSize(600, 400);
-                    Main.frame.setTitle("JFrame Old Contact Form");
+                    likeOldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    likeOldFrame.setLocationRelativeTo(null);
+                    likeOldFrame.setVisible(true);
 
-                    Main.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                    Main.frame.setLocationRelativeTo(null);
-                    Main.frame.setVisible(true);
-
-                    Main.frame.add(new MainForm(surname, name, lastName).getNamePanel());
-                    Main.frame.add(new MainForm(surname, name, lastName).getMainPanel());
+                    likeOldFrame.add(new MainForm(surname, name, lastName).getNamePanel());
+                    likeOldFrame.add(new MainForm(surname, name, lastName).getMainPanel());
 
                 } else {
                     System.out.println("Контактная форма не заполнена");
