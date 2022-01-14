@@ -39,8 +39,13 @@ public class Main
         br.flush();
         br.close();
 
-        Path dest = new Path("/home/progforce/myhadoop.txt");
-        hdfs.copyToLocalFile(file, dest);
+        //Path dest = new Path("/home/progforce/myhadoop.txt");
+        //hdfs.copyToLocalFile(file, dest);
+
+        Path sourceFile = new Path("/home/progforce/Downloads/1.txt");
+        Path dstFile = new Path("hdfs://127.0.0.1:8020/test/1.txt");
+
+        hdfs.copyFromLocalFile(sourceFile, dstFile);
 
         hdfs.close();
     }
