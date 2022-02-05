@@ -36,6 +36,7 @@ import org.jsoup.nodes.Element;
         docNeed = Jsoup
             .connect(url)
             .userAgent("Mozilla/5.0")
+            .referrer("http://www.google.com")
             .timeout(10 * 1000)
             .get();
       } catch (IOException e) {

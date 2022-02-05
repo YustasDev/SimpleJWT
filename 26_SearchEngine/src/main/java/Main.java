@@ -1,8 +1,10 @@
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,7 +14,10 @@ import java.util.stream.IntStream;
 
 public class Main {
 
-  public static final String URL_NEED = "http://sendel.ru/";
+  public static final String URL_NEED = "http://www.playback.ru/";
+
+  public static Set<String> uniqueURL = new HashSet<String>();
+
   private static String recordedFile = "output.txt";
 
   public static void main(String[] args) {
@@ -27,8 +32,7 @@ public class Main {
     });
 
     System.out.println("Сортировка коллекции стартовала");
-    try (FileOutputStream fos = new FileOutputStream(recordedFile);
-        PrintStream printStream = new PrintStream(fos)) {
+    try (PrintStream printStream = new PrintStream(new File(recordedFile))) {
       nonDuplicates.stream().sorted(Comparator.naturalOrder())
           .forEach(url ->
               {
