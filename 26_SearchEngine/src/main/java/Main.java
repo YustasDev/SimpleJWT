@@ -38,9 +38,7 @@ public class Main {
               {
                 String[] data = url.split("\\/");
                 int count = data.length;
-                /*
-                Если увидя следующую строку Вы захотите сжечь меня на костре, я прошу "Понять и простить"
-                 */
+
                 printStream.println(IntStream.range(0, count).boxed().map((i) -> "\t")
                     .collect(Collectors.joining()) + url);
               }
