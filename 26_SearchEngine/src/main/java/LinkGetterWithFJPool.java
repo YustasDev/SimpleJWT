@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,6 +24,7 @@ import org.jsoup.nodes.Element;
     static Set<String> visitedLinks = new ConcurrentSkipListSet<>();
     List<String> finalList = new ArrayList<>();
     String url;
+    public static List<Integer> allStatuses = new ArrayList<>();
 
     public LinkGetterWithFJPool(String url) {
       this.url = url;
@@ -32,18 +34,36 @@ import org.jsoup.nodes.Element;
     protected List<String> compute() {
       visitedLinks.add(url);
       Document docNeed = null;
+//      try {
+//        docNeed = Jsoup
+//            .connect(url)
+//            .userAgent("Mozilla/5.0")
+//            .referrer("http://www.google.com")
+//            .timeout(10 * 1000)
+//            .get();
+//      } catch (IOException e) {
+//        e.printStackTrace();
+//        LOGGER.error("Parsing failed {} ", e);
+//        throw new DuringParseException("Ошибка при парсинге страницы  ", e, url);
+//      }
+
+
+
+      Connection.Response response = null;
+      int statusCode = 0;
       try {
-        docNeed = Jsoup
-            .connect(url)
-            .userAgent("Mozilla/5.0")
-            .referrer("http://www.google.com")
-            .timeout(10 * 1000)
-            .get();
+        response = Jsoup.connect(url)
+            .userAgent(
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+            .timeout(10000)
+            .execute();
+        docNeed = response.parse();
+        statusCode = response.statusCode();
       } catch (IOException e) {
-        e.printStackTrace();
-        LOGGER.error("Parsing failed {} ", e);
-        throw new DuringParseException("Ошибка при парсинге страницы  ", e, url);
+        System.out.println("io - " + e);
       }
+
+      allStatuses.add(statusCode);
 
       try {
         Thread.sleep(150);

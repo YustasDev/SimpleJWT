@@ -47,6 +47,7 @@ public class Main {
       System.out.println(ex.getMessage());
     }
     System.out.println("Запись в файл произведена");
+    System.out.println(LinkGetterWithFJPool.allStatuses);
   }
 
   /*
