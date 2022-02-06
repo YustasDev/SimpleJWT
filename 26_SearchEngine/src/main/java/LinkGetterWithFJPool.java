@@ -24,7 +24,6 @@ import org.jsoup.nodes.Element;
     static Set<String> visitedLinks = new ConcurrentSkipListSet<>();
     List<String> finalList = new ArrayList<>();
     String url;
-    public static List<Integer> allStatuses = new ArrayList<>();
 
     public LinkGetterWithFJPool(String url) {
       this.url = url;
@@ -63,7 +62,8 @@ import org.jsoup.nodes.Element;
         System.out.println("io - " + e);
       }
 
-      allStatuses.add(statusCode);
+      
+      Page page = new Page(url, statusCode, )
 
       try {
         Thread.sleep(150);
