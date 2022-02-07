@@ -91,7 +91,7 @@ import org.jsoup.nodes.Element;
     Осуществляем фильтрацию полученных ссылок, в т.ч. исключаем ранее пройденные
      */
       for (String select : listURLtext) {
-        if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !visitedLinks
+        if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !select.endsWith("jpg") && !visitedLinks
             .contains(select)) {
           listURLSelect.add(select);
           LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);

@@ -67,10 +67,7 @@ public class Main {
     //System.out.println(LinkGetterWithFJPool.htmlStore);
   }
 
-  /*
-  Можно было избавиться от дубликатов с помощью Java Stream distinct()
-  но так нагляднее
-   */
+
 
   public static Connection getConnection() throws SQLException {
     ResourceBundle resource = ResourceBundle.getBundle("database");
@@ -81,7 +78,10 @@ public class Main {
     return DriverManager.getConnection(url, user, pass);
   }
 
-
+  /*
+  Можно было избавиться от дубликатов с помощью Java Stream distinct()
+  но так нагляднее
+   */
   public static Set<String> cleanDuplicates(Collection<String> collection) {
     Set<String> elements = new TreeSet<>();
     for (String element : collection) {
