@@ -40,9 +40,13 @@ public class Main {
         preparedStmt.setString (3, currentPage.getContent());
         preparedStmt.execute();
       }
+
+      preparedStmt.close();
+      connection.close();
     } catch (SQLException e) {
       e.printStackTrace();
     }
+
 
 //    System.out.println("Сортировка коллекции стартовала");
 //    try (PrintStream printStream = new PrintStream(new File(recordedFile))) {
