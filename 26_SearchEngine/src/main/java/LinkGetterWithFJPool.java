@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -24,6 +26,7 @@ import org.jsoup.nodes.Element;
     static Set<String> visitedLinks = new ConcurrentSkipListSet<>();
     List<String> finalList = new ArrayList<>();
     String url;
+    static Map<String, Object> htmlStore = new HashMap<>();
 
     public LinkGetterWithFJPool(String url) {
       this.url = url;
@@ -62,8 +65,9 @@ import org.jsoup.nodes.Element;
         System.out.println("io - " + e);
       }
 
-      
-      Page page = new Page(url, statusCode, )
+      String htmlPage = docNeed.html();
+      Page page = new Page(url, statusCode, htmlPage);
+      htmlStore.put(url, page);
 
       try {
         Thread.sleep(150);
