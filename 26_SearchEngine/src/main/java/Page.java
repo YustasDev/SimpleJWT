@@ -12,6 +12,17 @@ public class Page {
     this.content = content;
   }
 
+  public String getContent() {
+    return content;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public Integer getCode() {
+    return code;
+  }
 
   @Override
   public boolean equals(Object o) {
