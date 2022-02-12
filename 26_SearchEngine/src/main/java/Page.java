@@ -5,7 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "page")
@@ -17,7 +19,8 @@ public class Page {
   @NotNull
   private Integer id;
 
-  @Column(name = "path")
+  @Column(name = "path", columnDefinition = "TEXT")
+  @Type( type = "org.hibernate.type.TextType")
   @NotNull
   String path;
 
@@ -25,7 +28,8 @@ public class Page {
   @NotNull
   Integer code;
 
-  @Column(name = "content")
+  @Column(name = "content", columnDefinition = "MEDIUMTEXT")
+  @Type( type = "org.hibernate.type.TextType")
   @NotNull
   String content;
 
