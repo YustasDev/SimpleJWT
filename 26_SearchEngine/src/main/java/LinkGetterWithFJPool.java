@@ -52,7 +52,7 @@ import org.jsoup.nodes.Element;
 
 
       Connection.Response response = null;
-      int statusCode = 0;
+      int code = 0;
       try {
         response = Jsoup.connect(url)
             .userAgent(
@@ -60,13 +60,13 @@ import org.jsoup.nodes.Element;
             .timeout(10000)
             .execute();
         docNeed = response.parse();
-        statusCode = response.statusCode();
+        code = response.statusCode();
       } catch (IOException e) {
         System.out.println("io - " + e);
       }
 
-      String htmlPage = docNeed.html();
-      Page page = new Page(url, statusCode, htmlPage);
+      String content = docNeed.html();
+      Page page = new Page(url, code, content);
       htmlStore.put(url, page);
 
       try {

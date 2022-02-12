@@ -10,6 +10,14 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 public class Main {
 
@@ -17,6 +25,14 @@ public class Main {
   private static String recordedFile = "output.txt";
 
   public static void main(String[] args) {
+
+    StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+        .configure("hibernate.cfg.xml").build();
+    Metadata metadata = new MetadataSources(registry).getMetadataBuilder().build();
+    SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
+    Session session = sessionFactory.openSession();
+    Transaction transaction = session.beginTransaction();
+
 
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
@@ -27,25 +43,44 @@ public class Main {
       System.out.println(e);
     });
 
-
-    try {
-      Connection connection = getConnection();
-      String query = " insert into page (path, code, content)"  + " values (?, ?, ?)";
-      PreparedStatement preparedStmt = connection.prepareStatement(query);
-
-      for (String url : nonDuplicates) {
-        Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
-        preparedStmt.setString (1, currentPage.getPath());
-        preparedStmt.setInt(2, currentPage.getCode());
-        preparedStmt.setString (3, currentPage.getContent());
-        preparedStmt.execute();
-      }
-
-      preparedStmt.close();
-      connection.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
+    for (String url : nonDuplicates) {
+      Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
+      SQLQuery insertQuery = session.createSQLQuery("" +
+          "INSERT INTO page(path, code, content)VALUES(?,?,?)");
+      insertQuery.setParameter(1, currentPage.getPath());
+      insertQuery.setParameter(2, currentPage.getCode());
+      insertQuery.setParameter(3, currentPage.getContent());
+      insertQuery.executeUpdate();
+      session.getTransaction().commit();
     }
+
+    session.close();
+    sessionFactory.close();
+
+
+
+
+
+
+
+//    try {
+//      Connection connection = getConnection();
+//      String query = " insert into page (path, code, content)"  + " values (?, ?, ?)";
+//      PreparedStatement preparedStmt = connection.prepareStatement(query);
+//
+//      for (String url : nonDuplicates) {
+//        Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
+//        preparedStmt.setString (1, currentPage.getPath());
+//        preparedStmt.setInt(2, currentPage.getCode());
+//        preparedStmt.setString (3, currentPage.getContent());
+//        preparedStmt.execute();
+//      }
+//
+//      preparedStmt.close();
+//      connection.close();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
 
 
 //    System.out.println("Сортировка коллекции стартовала");
