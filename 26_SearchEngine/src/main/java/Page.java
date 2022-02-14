@@ -5,30 +5,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "page")
+@Table(name = "page", indexes = {@Index(columnList = "path", name = "path_indx")})
 public class Page {
 
   @Id
   @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @NotNull
   private Integer id;
 
-  @Column(name = "path", columnDefinition = "TEXT")
+  @Column(name = "path", columnDefinition = "TEXT", nullable = false)
   @Type( type = "org.hibernate.type.TextType")
   @NotNull
   String path;
 
-  @Column(name = "code")
+  @Column(name = "code", nullable = false)
   @NotNull
   Integer code;
 
-  @Column(name = "content", columnDefinition = "MEDIUMTEXT")
+  @Column(name = "content", columnDefinition = "MEDIUMTEXT", nullable = false)
   @Type( type = "org.hibernate.type.TextType")
   @NotNull
   String content;

@@ -45,20 +45,18 @@ public class Main {
 
     for (String url : nonDuplicates) {
       Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
-      SQLQuery insertQuery = session.createSQLQuery("" +
-          "INSERT INTO page(path, code, content)VALUES(?,?,?)");
-      insertQuery.setParameter(1, currentPage.getPath());
-      insertQuery.setParameter(2, currentPage.getCode());
-      insertQuery.setParameter(3, currentPage.getContent());
-      insertQuery.executeUpdate();
-      session.getTransaction().commit();
+      session.save(currentPage);
+//      SQLQuery insertQuery = session.createSQLQuery("" +
+//          "INSERT INTO page(path, code, content)VALUES(?,?,?)");
+//      insertQuery.setParameter(1, currentPage.getPath());
+//      insertQuery.setParameter(2, currentPage.getCode());
+//      insertQuery.setParameter(3, currentPage.getContent());
+//      session.save(insertQuery);
     }
-
+    session.getTransaction().commit();
+    transaction.commit();
     session.close();
     sessionFactory.close();
-
-
-
 
 
 
