@@ -6,8 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.Lob;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -65,6 +66,7 @@ public class Page {
     this.content = content;
   }
 
+  @IndexColumn(name="path_index")
   public String getPath() {
     return path;
   }
