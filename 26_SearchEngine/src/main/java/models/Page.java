@@ -1,3 +1,5 @@
+package models;
+
 import com.sun.istack.NotNull;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -103,7 +105,7 @@ public class Page {
 
   @Override
   public String toString() {
-    return "Page is {" +
+    return "models.Page is {" +
         "content='" + content + '\'' +
         ", path='" + path + '\'' +
         ", code=" + code +

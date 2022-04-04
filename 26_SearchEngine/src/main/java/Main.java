@@ -1,16 +1,10 @@
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import org.hibernate.SQLQuery;
+
+import models.Page;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,6 +12,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import services.LinkGetterWithFJPool;
 
 public class Main {
 
@@ -62,7 +57,7 @@ public class Main {
 //      PreparedStatement preparedStmt = connection.prepareStatement(query);
 //
 //      for (String url : nonDuplicates) {
-//        Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
+//        models.Page currentPage = (models.Page) services.LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
 //        preparedStmt.setString (1, currentPage.getPath());
 //        preparedStmt.setInt(2, currentPage.getCode());
 //        preparedStmt.setString (3, currentPage.getContent());
@@ -92,7 +87,7 @@ public class Main {
 //      System.out.println(ex.getMessage());
 //    }
 //    System.out.println("Запись в файл произведена");
-    //System.out.println(LinkGetterWithFJPool.htmlStore);
+    //System.out.println(services.LinkGetterWithFJPool.htmlStore);
   }
 
 
@@ -117,4 +112,5 @@ public class Main {
     }
     return elements;
   }
+
 }
