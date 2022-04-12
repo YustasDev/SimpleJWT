@@ -12,9 +12,9 @@ public class Morphology {
 
     public static void main(String[] args) throws IOException {
 
-
-        //getSetLemmas("Вася или Петя пошел в лес, а также в поле; лишь Саша не пошел - но он почти герой");
-        Map<List<String>, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
+        Map<List<String>, Integer> lemTextMap = getSetLemmas("Мама мыла раму, а в ванной не было мыла.");
+        //Map<List<String>, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
+        //Map<List<String>, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
         System.out.println(lemTextMap);
     }
 
@@ -27,6 +27,7 @@ public class Morphology {
             String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]]", "");
             if (!(s == null || s.isEmpty() || s.trim().isEmpty())){
                 List<String> wordBaseForms = luceneMorph.getMorphInfo(s);
+                System.out.println(wordBaseForms);
                 for (String word : wordBaseForms){
                 if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("ЧАСТ"))) {
                     List<String> lemmaForms = luceneMorph.getNormalForms(s);
