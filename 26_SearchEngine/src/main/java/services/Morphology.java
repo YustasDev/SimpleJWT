@@ -9,12 +9,17 @@ import java.util.*;
 public class Morphology {
 
     private static Map<List<String>, Integer> lemmMap = new LinkedHashMap<>();
+    private static Map<String, Integer> normalizedLemmMap = new LinkedHashMap<>();
 
     public static void main(String[] args) throws IOException {
 
-        Map<List<String>, Integer> lemTextMap = getSetLemmas("Мама мыла раму, а в ванной не было мыла.");
-        //Map<List<String>, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
+        //Map<List<String>, Integer> lemTextMap = getSetLemmas("Мама мыла раму, а в ванной не было мыла.");
+        Map<List<String>, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
         //Map<List<String>, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
+
+
+
+
         System.out.println(lemTextMap);
     }
 
@@ -38,11 +43,65 @@ public class Morphology {
                     }
                     else {countlemm++;
                     lemmMap.replace(lemmaForms, countlemm);}
+
+
+
+
+
                 }
               }
             }
         }
         return lemmMap;
+    }
+
+    private static Map<String, Integer> wordChoice (String original, Map<List<String>, Integer> map){
+
+        for (List<String> key : map.keySet()) {
+            Integer numberOfUses = map.get(key);
+            int lengthKey = key.size();
+            String minimalWord = key.get(0);
+            int minimum = 100;
+            for (int i = 0; i < lengthKey; i++){
+                String word = key.get(i);
+                int distance = levenstain(original, word);
+                if (distance < minimum) {
+                    minimum = distance;
+                    minimalWord = word;
+                }
+            }
+            normalizedLemmMap.put(minimalWord, numberOfUses);
+        }
+        return normalizedLemmMap;
+    }
+
+    public static int levenstain(String str1, String str2) {
+        // see the Levenshtein distance algorithm
+        int[] Di_1 = new int[str2.length() + 1];
+        int[] Di = new int[str2.length() + 1];
+
+        for (int j = 0; j <= str2.length(); j++) {
+            Di[j] = j; // (i == 0)
+        }
+
+        for (int i = 1; i <= str1.length(); i++) {
+            System.arraycopy(Di, 0, Di_1, 0, Di_1.length);
+
+            Di[0] = i; // (j == 0)
+            for (int j = 1; j <= str2.length(); j++) {
+                int cost = (str1.charAt(i - 1) != str2.charAt(j - 1)) ? 1 : 0;
+                Di[j] = min(
+                        Di_1[j] + 1,
+                        Di[j - 1] + 1,
+                        Di_1[j - 1] + cost
+                );
+            }
+        }
+        return Di[Di.length - 1];
+    }
+
+    private static int min(int n1, int n2, int n3) {
+        return Math.min(Math.min(n1, n2), n3);
     }
 
 }
