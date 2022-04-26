@@ -13,17 +13,14 @@ public class Morphology {
 
     public static void main(String[] args) throws IOException {
 
-        //Map<List<String>, Integer> lemTextMap = getSetLemmas("Мама мыла раму, а в ванной не было мыла.");
-        Map<List<String>, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
-        //Map<List<String>, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
-
-
-
+        Map<String, Integer> lemTextMap = getSetLemmas("Пока мама мыла раму, Петя помыл ванну с мылом.");
+        //Map<String, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
+        //Map<String, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
 
         System.out.println(lemTextMap);
     }
 
-    private static Map<List<String>, Integer> getSetLemmas(String text) throws IOException {
+    private static Map<String, Integer> getSetLemmas(String text) throws IOException {
         //RussianAnalyzer analyzer = new RussianAnalyzer();
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
         String[] disassembledText = text.trim().split("\\s+");
@@ -33,47 +30,38 @@ public class Morphology {
             if (!(s == null || s.isEmpty() || s.trim().isEmpty())){
                 List<String> wordBaseForms = luceneMorph.getMorphInfo(s);
                 System.out.println(wordBaseForms);
-                for (String word : wordBaseForms){
+                //for (String word : wordBaseForms){
+                String word = wordBaseForms.get(0);
                 if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("ЧАСТ"))) {
                     List<String> lemmaForms = luceneMorph.getNormalForms(s);
-                    Integer countlemm = lemmMap.get(lemmaForms);
-                    if (countlemm == null){
-                        lemmMap.put(lemmaForms, 1);
-                        continue;
-                    }
-                    else {countlemm++;
-                    lemmMap.replace(lemmaForms, countlemm);}
-
-
-
-
-
+                    String needWord = wordChoice(s, lemmaForms);
+                    Integer countlemm = normalizedLemmMap.get(needWord);
+                if (countlemm == null){
+                    normalizedLemmMap.put(needWord, 1);
+                    continue;
+                }
+                else {countlemm++;
+                    normalizedLemmMap.replace(needWord, countlemm);}
                 }
               }
             }
-        }
-        return lemmMap;
+        return normalizedLemmMap;
     }
 
-    private static Map<String, Integer> wordChoice (String original, Map<List<String>, Integer> map){
 
-        for (List<String> key : map.keySet()) {
-            Integer numberOfUses = map.get(key);
-            int lengthKey = key.size();
-            String minimalWord = key.get(0);
-            int minimum = 100;
-            for (int i = 0; i < lengthKey; i++){
-                String word = key.get(i);
-                int distance = levenstain(original, word);
-                if (distance < minimum) {
+    private static String wordChoice (String original, List<String> lemmsList){
+        String minimalWord = lemmsList.get(0);
+        int minimum = 100; // a knowingly large size of distance
+        for (String word : lemmsList) {
+            int distance = levenstain(original, word);
+            if (distance < minimum) {
                     minimum = distance;
                     minimalWord = word;
                 }
             }
-            normalizedLemmMap.put(minimalWord, numberOfUses);
+        return minimalWord;
         }
-        return normalizedLemmMap;
-    }
+
 
     public static int levenstain(String str1, String str2) {
         // see the Levenshtein distance algorithm
