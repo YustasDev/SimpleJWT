@@ -25,16 +25,16 @@ public class Page {
   @Column(name = "path", columnDefinition = "TEXT", nullable = false)
   @Type( type = "org.hibernate.type.TextType")
   @NotNull
-  String path;
+  private String path;
 
   @Column(name = "code", nullable = false)
   @NotNull
-  Integer code;
+  private Integer code;
 
   @Column(name = "content", columnDefinition = "MEDIUMTEXT", nullable = false)
   @Type( type = "org.hibernate.type.TextType")
   @NotNull
-  String content;
+  private String content;
 
   public Page(){}
 
@@ -106,9 +106,9 @@ public class Page {
   @Override
   public String toString() {
     return "models.Page is {" +
-        "content='" + content + '\'' +
-        ", path='" + path + '\'' +
-        ", code=" + code +
+        "content=' " + content + '\'' +
+        ", path=' " + path + '\'' +
+        ", code= " + code +
         '}';
   }
 
