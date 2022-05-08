@@ -65,7 +65,6 @@ public class Page {
     this.content = content;
   }
 
-  @IndexColumn(name="path_index")
   public String getPath() {
     return path;
   }
