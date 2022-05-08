@@ -20,7 +20,7 @@
     <property name="hbm2ddl.auto">create</property>
 
 
-    <mapping class="Page"></mapping>
+    <mapping class="models.Page"></mapping>
 
 
   </session-factory>

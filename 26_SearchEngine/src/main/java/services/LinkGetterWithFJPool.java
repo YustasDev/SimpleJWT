@@ -1,13 +1,15 @@
+package services;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.RecursiveTask;
+
+import models.Page;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -26,11 +28,13 @@ import org.jsoup.nodes.Element;
     static Set<String> visitedLinks = new ConcurrentSkipListSet<>();
     List<String> finalList = new ArrayList<>();
     String url;
-    static Map<String, Object> htmlStore = new HashMap<>();
+    public static Map<String, Object> htmlStore = new HashMap<>();
+
 
     public LinkGetterWithFJPool(String url) {
       this.url = url;
     }
+
 
     @Override
     protected List<String> compute() {
@@ -46,7 +50,7 @@ import org.jsoup.nodes.Element;
 //      } catch (IOException e) {
 //        e.printStackTrace();
 //        LOGGER.error("Parsing failed {} ", e);
-//        throw new DuringParseException("Ошибка при парсинге страницы  ", e, url);
+//        throw new exception.DuringParseException("Ошибка при парсинге страницы  ", e, url);
 //      }
 
 
@@ -91,7 +95,7 @@ import org.jsoup.nodes.Element;
     Осуществляем фильтрацию полученных ссылок, в т.ч. исключаем ранее пройденные
      */
       for (String select : listURLtext) {
-        if (select.startsWith(Main.URL_NEED) && !select.endsWith("pdf") && !select.endsWith("jpg") && !visitedLinks
+        if (select.startsWith(url) && !select.endsWith("pdf") && !select.endsWith("jpg") && !visitedLinks
             .contains(select)) {
           listURLSelect.add(select);
           LOGGER.info(HISTORY_PARSING, " listURLSelect is {} ", listURLSelect);

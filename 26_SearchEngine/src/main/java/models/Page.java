@@ -1,3 +1,5 @@
+package models;
+
 import com.sun.istack.NotNull;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -23,16 +25,16 @@ public class Page {
   @Column(name = "path", columnDefinition = "TEXT", nullable = false)
   @Type( type = "org.hibernate.type.TextType")
   @NotNull
-  String path;
+  private String path;
 
   @Column(name = "code", nullable = false)
   @NotNull
-  Integer code;
+  private Integer code;
 
   @Column(name = "content", columnDefinition = "MEDIUMTEXT", nullable = false)
   @Type( type = "org.hibernate.type.TextType")
   @NotNull
-  String content;
+  private String content;
 
   public Page(){}
 
@@ -102,10 +104,10 @@ public class Page {
 
   @Override
   public String toString() {
-    return "Page is {" +
-        "content='" + content + '\'' +
-        ", path='" + path + '\'' +
-        ", code=" + code +
+    return "models.Page is {" +
+        "content=' " + content + '\'' +
+        ", path=' " + path + '\'' +
+        ", code= " + code +
         '}';
   }
 
