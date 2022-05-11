@@ -1,13 +1,19 @@
 package models;
 
 import com.sun.istack.NotNull;
-
-import javax.persistence.*;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
 
 @Entity
-@Table(name = "index")
-public class Index {
+@Table(name = "itsindex")
+public class ItsIndex {
 
     @Id
     @Column(name = "id")
@@ -28,9 +34,9 @@ public class Index {
     @NotNull
     private Float rank;
 
-    public Index(){}
+    public ItsIndex(){}
 
-    public Index(Integer id, Integer page_id, Integer lemma_id, Float rank) {
+    public ItsIndex(Integer id, Integer page_id, Integer lemma_id, Float rank) {
         this.id = id;
         this.page_id = page_id;
         this.lemma_id = lemma_id;
@@ -74,7 +80,7 @@ public class Index {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Index index = (Index) o;
+        ItsIndex index = (ItsIndex) o;
         return id.equals(index.id) && page_id.equals(index.page_id) && lemma_id.equals(index.lemma_id) && rank.equals(index.rank);
     }
 

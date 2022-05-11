@@ -22,7 +22,7 @@
 
 
     <mapping class="models.Page"></mapping>
-    <mapping class="models.Index"></mapping>
+    <mapping class="models.ItsIndex"></mapping>
     <mapping class="models.Lemma"></mapping>
     <mapping class="models.Field"></mapping>
 
