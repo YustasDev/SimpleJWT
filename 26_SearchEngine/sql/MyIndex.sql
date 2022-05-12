@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS search_engine.itsindex (
+CREATE TABLE IF NOT EXISTS search_engine.MyIndex (
     id INT PRIMARY KEY AUTO_INCREMENT,
     page_id INT NOT NULL,
     lemma_id INT NOT NULL,
