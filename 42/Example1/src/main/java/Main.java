@@ -1,9 +1,12 @@
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
@@ -14,7 +17,7 @@ public class Main {
         public static void main(String[] args) {
             List<Object> people = new ArrayList<>();
             List<String> modifyPeople = new ArrayList<>();
-            List<String> withoutNull = new ArrayList<>();
+            List<Object> withoutNull = new ArrayList<>();
             people.add("Hel,lo");
             people.add(null);
             people.add("Abraham, Fish");
@@ -35,11 +38,33 @@ public class Main {
             withoutNull.remove(4);
             System.out.println(withoutNull);
 
+            List<List<Object>> rows = new ArrayList<>();
+            rows.add(people);
+            List<Object> modP = new ArrayList<Object>(modifyPeople);
+            rows.add(modP);
+            rows.add(withoutNull);
+
+
             try (CSVPrinter printer = new CSVPrinter(new FileWriter("csv.txt"), CSVFormat.EXCEL)) {
                 printer.printRecord(modifyPeople);
                 printer.printRecord(withoutNull);
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+
+            String path = "/home/progforce/java_basics/42/Example1/example.csv";
+
+            try (
+                    BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), Charset.forName("UTF-8"));
+                    CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter('|'));
+            ) {
+
+                for (List<Object> row : rows) {
+                    csv.printRecord(row);
+                }
+                csv.flush();
+            } catch (IOException e) {
+                System.out.println("Ooooooooooooooooops!");
             }
         }
 }
