@@ -1,31 +1,15 @@
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Base64;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
-
-
-
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 public class Main {
@@ -35,74 +19,136 @@ public class Main {
 
         public static void main(String[] args) throws GeneralSecurityException, IOException {
 
-            //String password = System.getProperty("password");
-            String password = "ProgForce13";
-            if (password == null) {
-                throw new IllegalArgumentException("Run with -Dpassword=<password>");
-            }
 
-            // The salt (probably) can be stored along with the encrypted data
-            byte[] salt = new String("It is just salt13").getBytes();
 
-            // Decreasing this speeds down startup time and can be useful during testing, but it also makes it easier for brute force attackers
-            int iterationCount = 40000;
-            // Other values give me java.security.InvalidKeyException: Illegal key size or default parameters
-            int keyLength = 128;
-            SecretKeySpec key = createSecretKey(password.toCharArray(),
-                    salt, iterationCount, keyLength);
 
-            boolean inputFlag = true;
-            while (inputFlag) {
-                System.out.println("Enter the original password: ");
-                Scanner scanner = new Scanner(System.in);
-                String originalPassword = scanner.nextLine().trim();
-                if (originalPassword != null && !originalPassword.isEmpty()) {
-                    //String originalPassword = "NewPasswordForSkiforma13";
-                    System.out.println("Original password: " + originalPassword);
-                    String encryptedPassword = encrypt(originalPassword, key);
-                    System.out.println("Encrypted password: " + encryptedPassword);
-                    String decryptedPassword = decrypt(encryptedPassword, key);
-                    System.out.println("Decrypted password: " + decryptedPassword);
-                    inputFlag = false;
-                } else {
-                    System.out.println("The entered password is incorrect, enter the password again carefully");
-                }
-            }
+
+
+
+//           LocalDate someDate = LocalDate.of(1985, 3, 29);
+//           LocalDate z = LocalDate.now();
+//
+//           System.out.println(someDate.toString() + " " + someDate);
+//           System.out.println(z.toString() + " " + z);
+//
+//           Date currentDate = new Date();
+//           System.out.println(currentDate.toString() + " " + currentDate);
+//
+//           SimpleDateFormat needDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+//           String formatedData = needDateFormat.format(currentDate);
+//            System.out.println(formatedData.toString() + " " + formatedData);
+//
+//
+//
+//            int df = 13;
+//            Double dg = 13.26;
+//
+//            try (CSVPrinter printer = new CSVPrinter(new FileWriter("csvOne.cvs"), CSVFormat.EXCEL)) {
+//                printer.printRecord(dg, formatedData, "Mary", df, LocalDate.of(1985, 3, 29));
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+
+
+
+
+
+
+        }
+    /*
+            MyInterface ob1 = new Other("other", 18);
+            MyInterface ob2 = new Another(13, "ok");
+
+            method1(ob1);
+            method1(ob2);
+            method2(ob2);
+
+
         }
 
+        public static String method1(MyInterface myinterface){
 
-    private static SecretKeySpec createSecretKey(char[] password, byte[] salt, int iterationCount, int keyLength) throws NoSuchAlgorithmException, InvalidKeySpecException {
-    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-    PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterationCount, keyLength);
-    SecretKey keyTmp = keyFactory.generateSecret(keySpec);
-    return new SecretKeySpec(keyTmp.getEncoded(), "AES");
+            System.out.println(myinterface.toString());
+            return myinterface.toString();
+        }
+
+    public static MyInterface method2(MyInterface myinterface){
+
+        System.out.println(myinterface.toString());
+        //Integer myinterface1 = myinterface.     ;
+        return myinterface;
     }
 
-    private static String encrypt(String property, SecretKeySpec key) throws GeneralSecurityException, UnsupportedEncodingException {
-        Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        pbeCipher.init(Cipher.ENCRYPT_MODE, key);
-        AlgorithmParameters parameters = pbeCipher.getParameters();
-        IvParameterSpec ivParameterSpec = parameters.getParameterSpec(IvParameterSpec.class);
-        byte[] cryptoText = pbeCipher.doFinal(property.getBytes("UTF-8"));
-        byte[] iv = ivParameterSpec.getIV();
-        return base64Encode(iv) + ":" + base64Encode(cryptoText);
-    }
+  */
 
-    private static String base64Encode(byte[] bytes) {
-        return Base64.getEncoder().encodeToString(bytes);
-    }
 
-    private static String decrypt(String string, SecretKeySpec key) throws GeneralSecurityException, IOException {
-        String iv = string.split(":")[0];
-        String property = string.split(":")[1];
-        Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        pbeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(base64Decode(iv)));
-        return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
-    }
-
-    private static byte[] base64Decode(String property) throws IOException {
-        return Base64.getDecoder().decode(property);
-    }
+            //String password = System.getProperty("password");
+//            String password = "ProgForce13";
+//            if (password == null) {
+//                throw new IllegalArgumentException("Run with -Dpassword=<password>");
+//            }
+//
+//            // The salt (probably) can be stored along with the encrypted data
+//            byte[] salt = new String("It is just salt13").getBytes();
+//
+//            // Decreasing this speeds down startup time and can be useful during testing, but it also makes it easier for brute force attackers
+//            int iterationCount = 40000;
+//            // Other values give me java.security.InvalidKeyException: Illegal key size or default parameters
+//            int keyLength = 128;
+//            SecretKeySpec key = createSecretKey(password.toCharArray(),
+//                    salt, iterationCount, keyLength);
+//
+//            boolean inputFlag = true;
+//            while (inputFlag) {
+//                System.out.println("Enter the original password: ");
+//                Scanner scanner = new Scanner(System.in);
+//                String originalPassword = scanner.nextLine().trim();
+//                if (originalPassword != null && !originalPassword.isEmpty()) {
+//                    //String originalPassword = "NewPasswordForSkiforma13";
+//                    System.out.println("Original password: " + originalPassword);
+//                    String encryptedPassword = encrypt(originalPassword, key);
+//                    System.out.println("Encrypted password: " + encryptedPassword);
+//                    String decryptedPassword = decrypt(encryptedPassword, key);
+//                    System.out.println("Decrypted password: " + decryptedPassword);
+//                    inputFlag = false;
+//                } else {
+//                    System.out.println("The entered password is incorrect, enter the password again carefully");
+//                }
+//            }
+//        }
+//
+//
+//    private static SecretKeySpec createSecretKey(char[] password, byte[] salt, int iterationCount, int keyLength) throws NoSuchAlgorithmException, InvalidKeySpecException {
+//    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+//    PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterationCount, keyLength);
+//    SecretKey keyTmp = keyFactory.generateSecret(keySpec);
+//    return new SecretKeySpec(keyTmp.getEncoded(), "AES");
+//    }
+//
+//    private static String encrypt(String property, SecretKeySpec key) throws GeneralSecurityException, UnsupportedEncodingException {
+//        Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+//        pbeCipher.init(Cipher.ENCRYPT_MODE, key);
+//        AlgorithmParameters parameters = pbeCipher.getParameters();
+//        IvParameterSpec ivParameterSpec = parameters.getParameterSpec(IvParameterSpec.class);
+//        byte[] cryptoText = pbeCipher.doFinal(property.getBytes("UTF-8"));
+//        byte[] iv = ivParameterSpec.getIV();
+//        return base64Encode(iv) + ":" + base64Encode(cryptoText);
+//    }
+//
+//    private static String base64Encode(byte[] bytes) {
+//        return Base64.getEncoder().encodeToString(bytes);
+//    }
+//
+//    private static String decrypt(String string, SecretKeySpec key) throws GeneralSecurityException, IOException {
+//        String iv = string.split(":")[0];
+//        String property = string.split(":")[1];
+//        Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+//        pbeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(base64Decode(iv)));
+//        return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
+//    }
+//
+//    private static byte[] base64Decode(String property) throws IOException {
+//        return Base64.getDecoder().decode(property);
 }
 
 
