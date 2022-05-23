@@ -1,25 +1,87 @@
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.security.GeneralSecurityException;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main {
 
-    //column_cord = {"R1": ((87, 10), (157, 539)), "R2": ((161, 10), (232, 539)),
-      //  "R3": ((235, 10), (313, 539)), "R4": ((315, 10), (382, 539)),
+        //column_cord = {"R1": ((87, 10), (157, 539)), "R2": ((161, 10), (232, 539)),
+        //  "R3": ((235, 10), (313, 539)), "R4": ((315, 10), (382, 539)),
 
         public static void main(String[] args) throws GeneralSecurityException, IOException {
 
 
+                List<Object> people = new ArrayList<>();
+                List<String> modifyPeople = new ArrayList<>();
+                List<Object> withoutNull = new ArrayList<>();
+                people.add("Hel,lo");
+                people.add(null);
+                people.add("Abraham, Fish");
+                people.add("Luis, Viton");
+                people.add("שנת הערכה");
+                people.add(null);
+                System.out.println(people);
+                for (Object person : people) {
+                        String newPerson = (String) person;
+                        if (newPerson != null) {
+                                newPerson = newPerson.replace(",", "");
+                        }
+                        modifyPeople.add(newPerson);
+                }
+                System.out.println(modifyPeople);
+                String result = String.join(",", modifyPeople);
+                System.out.println(result);
+                withoutNull.addAll(0, modifyPeople);
+                System.out.println(withoutNull);
+                withoutNull.remove(5);
+                System.out.println(withoutNull);
+
+                List<List<Object>> rows = new ArrayList<>();
+                rows.add(people);
+                List<Object> modP = new ArrayList<Object>(modifyPeople);
+                rows.add(modP);
+                rows.add(withoutNull);
+
+
+//                try (CSVPrinter printer = new CSVPrinter(new FileWriter("csv.txt"), CSVFormat.DEFAULT.withDelimiter('|'))) {
+//                        printer.printRecord(modifyPeople);
+//                        printer.printRecord(withoutNull);
+//                } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                }
+
+                String fileCSV = "/home/progforce/java_basics/42/Example1/output/onlydir/example.csv";
+                String path = "/home/progforce/java_basics/42/Example1/output/onlydir";
+                File pathToCSV = new File(path);
+                boolean created = pathToCSV.mkdirs();
+
+                if (created) {
+                        try (
+                                BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileCSV), Charset.forName("UTF-8"));
+                                CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter('|'));
+                        ) {
+
+                                for (List<Object> row : rows) {
+                                        csv.printRecord(row);
+                                }
+                                csv.flush();
+                        } catch (IOException e) {
+                                System.out.println("Ooooooooooooooooops!");
+                        }
+                }
+        }
+}
 
 
 
@@ -52,9 +114,6 @@ public class Main {
 
 
 
-
-
-        }
     /*
             MyInterface ob1 = new Other("other", 18);
             MyInterface ob2 = new Another(13, "ok");
@@ -149,7 +208,7 @@ public class Main {
 //
 //    private static byte[] base64Decode(String property) throws IOException {
 //        return Base64.getDecoder().decode(property);
-}
+
 
 
 
@@ -172,61 +231,6 @@ public class Main {
 
 
 
-
-
-//            List<Object> people = new ArrayList<>();
-//            List<String> modifyPeople = new ArrayList<>();
-//            List<Object> withoutNull = new ArrayList<>();
-//            people.add("Hel,lo");
-//            people.add(null);
-//            people.add("Abraham, Fish");
-//            people.add("Luis, Viton");
-//            people.add("שנת הערכה");
-//            people.add(null);
-//            System.out.println(people);
-//            for (Object person : people){
-//                String newPerson = (String) person;
-//                if (newPerson!=null){
-//                newPerson = newPerson.replace(",", "");}
-//                modifyPeople.add(newPerson);
-//            }
-//            System.out.println(modifyPeople);
-//            String result = String.join(",", modifyPeople);
-//            System.out.println(result);
-//            withoutNull.addAll(0, modifyPeople);
-//            System.out.println(withoutNull);
-//            withoutNull.remove(5);
-//            System.out.println(withoutNull);
-//
-//            List<List<Object>> rows = new ArrayList<>();
-//            rows.add(people);
-//            List<Object> modP = new ArrayList<Object>(modifyPeople);
-//            rows.add(modP);
-//            rows.add(withoutNull);
-//
-//
-//            try (CSVPrinter printer = new CSVPrinter(new FileWriter("csv.txt"), CSVFormat.DEFAULT.withDelimiter('|'))) {
-//                printer.printRecord(modifyPeople);
-//                printer.printRecord(withoutNull);
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//
-//            String path = "/home/progforce/java_basics/42/Example1/example.csv";
-//
-//            try (
-//                    BufferedWriter writer = Files.newBufferedWriter(Paths.get(path), Charset.forName("UTF-8"));
-//                    CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter('|'));
-//            ) {
-//
-//                for (List<Object> row : rows) {
-//                    csv.printRecord(row);
-//                }
-//                csv.flush();
-//            } catch (IOException e) {
-//                System.out.println("Ooooooooooooooooops!");
-//            }
-//        }
 
 
 
