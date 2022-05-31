@@ -1,6 +1,8 @@
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +12,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static jdk.internal.dynalink.support.NameCodec.decode;
 
 
 public class Main {
@@ -21,7 +25,89 @@ public class Main {
 
         public static void main(String[] args) throws GeneralSecurityException, IOException {
 
+                String inputString = "Some String";
+                byte[] bytes = inputString.getBytes("UTF-8");
+                String encoded = Base64.getEncoder().encodeToString(bytes);
 
+                byte[] decoded = Base64.getDecoder().decode(encoded);
+                String decodedString = new String(decoded);
+
+                byte[] result = DatatypeConverter.parseBase64Binary(encoded);
+                String decodedString1 = new String(result);
+
+
+                System.out.println(encoded);
+                System.out.println(decoded);
+                System.out.println(decodedString);
+                System.out.println(decodedString1);
+
+
+
+
+
+//                String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
+//                System.out.println(timeStamp);
+
+//                List<Object> objectList1 = new ArrayList<>();
+//                List<Object> objectList2 = new ArrayList<>();
+//                List<Object> objectList3 = new ArrayList<>();
+//                String itsA = "a";
+//                String itsB = "b";
+//                objectList1.add(itsA);
+//                objectList2.add(itsB);
+//                objectList3.add(itsB);
+//                objectList3.add(itsA);
+//
+//
+//                Map<String, List<Object>> someMap = new TreeMap<>();
+//
+//                someMap.put("2020", objectList3);
+//                someMap.put("1998", objectList2);
+//                someMap.put("2018", objectList1);
+//
+//
+//                for (Map.Entry<String, List<Object>> item : someMap.entrySet()) {
+//                        System.out.printf("Key: %s  ", item.getKey());
+//                }
+//
+//                Map<String, List<Object>> someMap1 = new HashMap<>();
+//
+//                checkMap(someMap);
+//                checkMap(someMap1);
+
+
+
+        }
+
+        public static void checkMap(Map<String, List<Object>> map){
+                if (!map.isEmpty()){
+                        System.out.printf("Not empty\n");
+                }
+                else {System.out.printf("Empty\n");}
+        }
+}
+
+
+
+
+
+
+
+
+
+//                List<Object> resultList = someMap.get("1/1/2017");
+//                if(resultList != null){
+//                        System.out.println("Wrong");
+//                }
+//                else {
+//                        System.out.println("Right");
+//                }
+
+//        }
+//}
+
+
+/*
                 List<Object> people = new ArrayList<>();
                 List<String> modifyPeople = new ArrayList<>();
                 List<Object> withoutNull = new ArrayList<>();
@@ -53,7 +139,7 @@ public class Main {
                 rows.add(modP);
                 rows.add(withoutNull);
 
-
+*/
 //                try (CSVPrinter printer = new CSVPrinter(new FileWriter("csv.txt"), CSVFormat.DEFAULT.withDelimiter('|'))) {
 //                        printer.printRecord(modifyPeople);
 //                        printer.printRecord(withoutNull);
@@ -61,27 +147,27 @@ public class Main {
 //                        ex.printStackTrace();
 //                }
 
-                String fileCSV = "/home/progforce/java_basics/42/Example1/output/onlydir/example.csv";
-                String path = "/home/progforce/java_basics/42/Example1/output/onlydir";
-                File pathToCSV = new File(path);
-                boolean created = pathToCSV.mkdirs();
-
-                if (created) {
-                        try (
-                                BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileCSV), Charset.forName("UTF-8"));
-                                CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter('|'));
-                        ) {
-
-                                for (List<Object> row : rows) {
-                                        csv.printRecord(row);
-                                }
-                                csv.flush();
-                        } catch (IOException e) {
-                                System.out.println("Ooooooooooooooooops!");
-                        }
-                }
-        }
-}
+//                String fileCSV = "/home/progforce/java_basics/42/Example1/output/onlydir/example.csv";
+//                String path = "/home/progforce/java_basics/42/Example1/output/onlydir";
+//                File pathToCSV = new File(path);
+//                boolean created = pathToCSV.mkdirs();
+//
+//                if (created) {
+//                        try (
+//                                BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileCSV), Charset.forName("UTF-8"));
+//                                CSVPrinter csv = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter('|'));
+//                        ) {
+//
+//                                for (List<Object> row : rows) {
+//                                        csv.printRecord(row);
+//                                }
+//                                csv.flush();
+//                        } catch (IOException e) {
+//                                System.out.println("Ooooooooooooooooops!");
+//                        }
+//                }
+//        }
+//}
 
 
 
