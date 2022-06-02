@@ -25,46 +25,74 @@ public class Main {
 
         public static void main(String[] args) throws GeneralSecurityException, IOException {
 
-                String inputString = "Some String";
-                byte[] bytes = inputString.getBytes("UTF-8");
-                String encoded = Base64.getEncoder().encodeToString(bytes);
+//                String inputString = "Some String";
+//                byte[] bytes = inputString.getBytes("UTF-8");
+//                String encoded = Base64.getEncoder().encodeToString(bytes);
+//
+//                byte[] decoded = Base64.getDecoder().decode(encoded);
+//                String decodedString = new String(decoded);
+//
+//                byte[] result = DatatypeConverter.parseBase64Binary(encoded);
+//                String decodedString1 = new String(result);
+//
+//
+//                System.out.println(encoded);
+//                System.out.println(decoded);
+//                System.out.println(decodedString);
+//                System.out.println(decodedString1);
 
-                byte[] decoded = Base64.getDecoder().decode(encoded);
-                String decodedString = new String(decoded);
-
-                byte[] result = DatatypeConverter.parseBase64Binary(encoded);
-                String decodedString1 = new String(result);
-
-
-                System.out.println(encoded);
-                System.out.println(decoded);
-                System.out.println(decodedString);
-                System.out.println(decodedString1);
-
-
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
 //                String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
 //                System.out.println(timeStamp);
 
-//                List<Object> objectList1 = new ArrayList<>();
-//                List<Object> objectList2 = new ArrayList<>();
-//                List<Object> objectList3 = new ArrayList<>();
-//                String itsA = "a";
-//                String itsB = "b";
-//                objectList1.add(itsA);
-//                objectList2.add(itsB);
-//                objectList3.add(itsB);
-//                objectList3.add(itsA);
-//
-//
-//                Map<String, List<Object>> someMap = new TreeMap<>();
-//
-//                someMap.put("2020", objectList3);
-//                someMap.put("1998", objectList2);
-//                someMap.put("2018", objectList1);
-//
+                List<Object> objectList1 = new ArrayList<>();
+                List<Object> objectList2 = new ArrayList<>();
+                List<Object> objectList3 = new ArrayList<>();
+                String itsA = "a";
+                String itsB = "b";
+                String itsC = "c";
+                String itsD = "d";
+                objectList1.add(itsA);
+                objectList1.add(itsC);
+                objectList2.add(itsB);
+                objectList2.add(itsD);
+                objectList3.add(itsB);
+                objectList3.add(itsA);
+
+
+                Map<String, List<Object>> someMap = new TreeMap<>();
+
+                someMap.put("2020", objectList3);
+                someMap.put("1998", objectList2);
+                someMap.put("2018", objectList1);
+
+                someMap.forEach((key, value) -> System.out.println("[Key] : " + key + " [Value] : " + value));
+                someMap.forEach((key, value) ->{
+                        String field = key;
+                        System.out.println(key);
+                        List<Object> valueList = value;
+                        String type = (String) valueList.get(0);
+                        String kind = (String) valueList.get(1);
+                        if (type.equalsIgnoreCase("A")){
+                                System.out.println("Its objectList1");
+                                System.out.println("type ==> " + type);
+                        }
+                        else if (kind.equalsIgnoreCase("D") || kind.equalsIgnoreCase("A")){
+                                System.out.println("Its objectList2 or objectList3");
+                                System.out.println("kind ==> " + kind);
+                        }
+                        else {System.out.println("...");}
+
+                        });
+        }
+
+
+
+
+
 //
 //                for (Map.Entry<String, List<Object>> item : someMap.entrySet()) {
 //                        System.out.printf("Key: %s  ", item.getKey());
@@ -77,7 +105,6 @@ public class Main {
 
 
 
-        }
 
         public static void checkMap(Map<String, List<Object>> map){
                 if (!map.isEmpty()){
