@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,7 +24,7 @@ public class Main {
         //column_cord = {"R1": ((87, 10), (157, 539)), "R2": ((161, 10), (232, 539)),
         //  "R3": ((235, 10), (313, 539)), "R4": ((315, 10), (382, 539)),
 
-        public static void main(String[] args) throws GeneralSecurityException, IOException {
+        public static void main(String[] args) throws GeneralSecurityException, IOException, ParseException {
 
                 String inputString = "Some String";
                 byte[] bytes = inputString.getBytes("UTF-8");
@@ -51,7 +52,22 @@ public class Main {
                 System.out.println(decodedString2);
                 System.out.println(decodedString22);
 
+            System.out.println("=========================");
+            String login = "UZRuuPxyrAKLOwmJXnDicx5bgcKLWkcOk2lUqwD1FYg=";
+            byte[] decodedZ = Base64.getDecoder().decode(login);
+            String decodedStringZ = new String(decodedZ);
+            System.out.println(decodedStringZ);
 
+            String pass = "bzBnTkEzUFhoQXA0eC9OTVh1MU4xUT09";
+            byte[] decodedZZ = Base64.getDecoder().decode(pass);
+            String decodedStringZZ = new String(decodedZZ);
+            System.out.println(decodedStringZZ);
+
+
+
+
+//            Example exc = new Example();
+//            System.out.println(exc);
 
 
         }
