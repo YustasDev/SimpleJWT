@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,7 +13,12 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import services.LinkGetterWithFJPool;
+import services.Morphology;
+
+import javax.persistence.Query;
 
 public class Main {
 
@@ -45,49 +51,33 @@ public class Main {
     }
 
     transaction.commit();
-    session.close();
-    sessionFactory.close();
+   // session.close();
+   // sessionFactory.close();
+
+    //=========================>
+
+    List<Page> pageList = session.createQuery("from Page").getResultList();
+    for(Page page : pageList){
+      StringBuilder sbContent = new StringBuilder();
+      List<String> contentList = new ArrayList<>();
+      String originalContent = page.getContent();
+      String cleanContent = Jsoup.clean(originalContent, Whitelist.none());
+
+      cleanContent = cleanContent.replaceAll("[^A-Za-zА-Яа-я, .]", "");
+      try {
+        Map<String, Integer> lemmsMap =  Morphology.getSetLemmas(cleanContent);
+        System.out.println(lemmsMap);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
 
 
 
 
-//    try {
-//      Connection connection = getConnection();
-//      String query = " insert into page (path, code, content)"  + " values (?, ?, ?)";
-//      PreparedStatement preparedStmt = connection.prepareStatement(query);
-//
-//      for (String url : nonDuplicates) {
-//        models.Page currentPage = (models.Page) services.LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
-//        preparedStmt.setString (1, currentPage.getPath());
-//        preparedStmt.setInt(2, currentPage.getCode());
-//        preparedStmt.setString (3, currentPage.getContent());
-//        preparedStmt.execute();
-//      }
-//
-//      preparedStmt.close();
-//      connection.close();
-//    } catch (SQLException e) {
-//      e.printStackTrace();
-//    }
+      //String[] arrOfContent = cleanContent.split("[, ?.]+");
 
 
-//    System.out.println("Сортировка коллекции стартовала");
-//    try (PrintStream printStream = new PrintStream(new File(recordedFile))) {
-//      nonDuplicates.stream().sorted(Comparator.naturalOrder())
-//          .forEach(url ->
-//              {
-//                String[] data = url.split("\\/");
-//                int count = data.length;
-//
-//                printStream.println(IntStream.range(0, count).boxed().map((i) -> "\t")
-//                    .collect(Collectors.joining()) + url);
-//              }
-//          );
-//    } catch (IOException ex) {
-//      System.out.println(ex.getMessage());
-//    }
-//    System.out.println("Запись в файл произведена");
-    //System.out.println(services.LinkGetterWithFJPool.htmlStore);
+    }
   }
 
 

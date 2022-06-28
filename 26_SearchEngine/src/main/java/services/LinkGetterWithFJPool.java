@@ -40,20 +40,6 @@ import org.jsoup.nodes.Element;
     protected List<String> compute() {
       visitedLinks.add(url);
       Document docNeed = null;
-//      try {
-//        docNeed = Jsoup
-//            .connect(url)
-//            .userAgent("Mozilla/5.0")
-//            .referrer("http://www.google.com")
-//            .timeout(10 * 1000)
-//            .get();
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//        LOGGER.error("Parsing failed {} ", e);
-//        throw new exception.DuringParseException("Ошибка при парсинге страницы  ", e, url);
-//      }
-
-
 
       Connection.Response response = null;
       int code = 0;
