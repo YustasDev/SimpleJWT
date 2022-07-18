@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
+import models.Lemma;
 import models.Page;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,14 +70,44 @@ public class Main {
       String cleanContent = Jsoup.clean(originalContent, Whitelist.none());
 
       cleanContent = cleanContent.replaceAll("[^А-Яа-я, .]", "");
+      Map<String, Integer> lemmsMapFromPage = null;
       try {
-        Map<String, Integer> lemmsMapFromPage =  Morphology.getSetLemmas(cleanContent);
+        lemmsMapFromPage =  Morphology.getSetLemmas(cleanContent);
         System.out.println(lemmsMapFromPage);
-        LOGGER.info("Parsing of the page:  " + page.getPath() + " was performed successfully");
+        LOGGER.info(HISTORY_PARSING, "Parsing of the page:  " + page.getPath() + " was performed successfully");
       } catch (IOException e) {
         LOGGER.error("Error when parsing ==> " + page.getPath() + "into lemmas");
         e.printStackTrace();
       }
+
+      List<String> lemmasThatAreInDB = new ArrayList<>();
+      List<String> lemmasThatNOTinDB = new ArrayList<>();
+      List<String> lemmasThatNeedUpdateInDB = new ArrayList<>();
+      List<Lemma> lemmaList = session.createQuery("from Lemma").getResultList();  // we get lemmas from DB
+      for(Lemma lemmaObj : lemmaList){
+        String lemmaStringFromDB = lemmaObj.getLemma();
+        lemmasThatAreInDB.add(lemmaStringFromDB);
+        }
+
+      lemmsMapFromPage.forEach((key, value) -> {                                    // we get lemmas from current Page
+        String lemmaStringFromPage = key;
+        if(lemmasThatAreInDB.contains(lemmaStringFromPage)){
+          lemmasThatNeedUpdateInDB.add(lemmaStringFromPage);
+        }
+        else {
+          lemmasThatNOTinDB.add(lemmaStringFromPage);
+        }
+      });
+
+
+
+
+
+
+
+
+      }
+
 
 
 
