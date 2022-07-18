@@ -31,6 +31,11 @@ public class Lemma implements Serializable {
 
     public Lemma() {}
 
+    public Lemma(String lemma, Integer frequency) {
+    this.lemma = lemma;
+    this.frequency = frequency;
+    }
+
     public Lemma(Integer id, String lemma, Integer frequency) {
     this.id = id;
     this.lemma = lemma;

@@ -67,20 +67,20 @@ import org.jsoup.nodes.Element;
         e.printStackTrace();
       }
 
-      for (Element docs : docNeed  // в коде страницы
-          .select("a[href]"))  // осуществляем поиск элементов соответствующих требованию
+      for (Element docs : docNeed  // in the page code, we search for elements that meet the requirement
+          .select("a[href]"))
       {
         String element = docs
-            .attr("abs:href"); // можно и не вводить эту переменную, но с ней нагляднее
-        if (element.contains("#")) {  // избавляемся от "#" в ссылках
+            .attr("abs:href"); // you may not use this variable, but it is clearer with it
+        if (element.contains("#")) {  // getting rid of the "#" in the links
           int indexOfNeedless = element.indexOf("#");
           element = element.substring(0, indexOfNeedless);
         }
-        listURLtext.add(element); // прибавляем найденные элементы в список
+        listURLtext.add(element);
       }
 
     /*
-    Осуществляем фильтрацию полученных ссылок, в т.ч. исключаем ранее пройденные
+    We filter the received links, including excluding previously passed ones
      */
       for (String select : listURLtext) {
         if (select.startsWith(url) && !select.endsWith("pdf") && !select.endsWith("jpg") && !visitedLinks

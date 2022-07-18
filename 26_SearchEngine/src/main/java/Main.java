@@ -24,6 +24,7 @@ import services.LinkGetterWithFJPool;
 import services.Morphology;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 public class Main {
 
@@ -79,10 +80,8 @@ public class Main {
         LOGGER.error("Error when parsing ==> " + page.getPath() + "into lemmas");
         e.printStackTrace();
       }
-
+      // TODO we add up separately, the lemmas that need to be updated and which need to be written down
       List<String> lemmasThatAreInDB = new ArrayList<>();
-      List<String> lemmasThatNOTinDB = new ArrayList<>();
-      List<String> lemmasThatNeedUpdateInDB = new ArrayList<>();
       List<Lemma> lemmaList = session.createQuery("from Lemma").getResultList();  // we get lemmas from DB
       for(Lemma lemmaObj : lemmaList){
         String lemmaStringFromDB = lemmaObj.getLemma();
@@ -92,12 +91,21 @@ public class Main {
       lemmsMapFromPage.forEach((key, value) -> {                                    // we get lemmas from current Page
         String lemmaStringFromPage = key;
         if(lemmasThatAreInDB.contains(lemmaStringFromPage)){
-          lemmasThatNeedUpdateInDB.add(lemmaStringFromPage);
+
+          Query query = session.createNativeQuery("select * from lemma where lemma =?", Lemma.class);
+          query.setParameter(1, lemmaStringFromPage);
+          Lemma receivedLemma = (Lemma) query.getSingleResult();
+          receivedLemma.setFrequency(receivedLemma.getFrequency() + 1);
+          session.save(receivedLemma);
         }
         else {
-          lemmasThatNOTinDB.add(lemmaStringFromPage);
+          Lemma createNewlemma = new Lemma(lemmaStringFromPage, 1);
+          session.save(createNewlemma);
         }
       });
+
+      transaction.commit();
+
 
 
 
@@ -116,7 +124,6 @@ public class Main {
 
 
     }
-  }
 
 
 
