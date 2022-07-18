@@ -6,6 +6,10 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 import models.Page;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -24,6 +28,8 @@ public class Main {
 
   public static final String URL_NEED = "http://www.playback.ru/";
   private static String recordedFile = "output.txt";
+  private static final Logger LOGGER = LogManager.getLogger(Main.class);
+  private static final Marker HISTORY_PARSING = MarkerManager.getMarker("HISTORY_PARSING");
 
   public static void main(String[] args) {
 
@@ -47,7 +53,6 @@ public class Main {
     for (String url : nonDuplicates) {
       Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
       session.save(currentPage);
-
     }
 
     transaction.commit();
@@ -63,11 +68,13 @@ public class Main {
       String originalContent = page.getContent();
       String cleanContent = Jsoup.clean(originalContent, Whitelist.none());
 
-      cleanContent = cleanContent.replaceAll("[^A-Za-zА-Яа-я, .]", "");
+      cleanContent = cleanContent.replaceAll("[^А-Яа-я, .]", "");
       try {
-        Map<String, Integer> lemmsMap =  Morphology.getSetLemmas(cleanContent);
-        System.out.println(lemmsMap);
+        Map<String, Integer> lemmsMapFromPage =  Morphology.getSetLemmas(cleanContent);
+        System.out.println(lemmsMapFromPage);
+        LOGGER.info("Parsing of the page:  " + page.getPath() + " was performed successfully");
       } catch (IOException e) {
+        LOGGER.error("Error when parsing ==> " + page.getPath() + "into lemmas");
         e.printStackTrace();
       }
 

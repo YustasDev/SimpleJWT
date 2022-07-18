@@ -1,6 +1,8 @@
 package models;
 
 import com.sun.istack.NotNull;
+
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "field")
-public class Field {
+public class Field implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -44,7 +46,7 @@ public class Field {
         return id;
     }
 
-    public void setId(Integer id) {
+    private void setId(Integer id) {
         this.id = id;
     }
 

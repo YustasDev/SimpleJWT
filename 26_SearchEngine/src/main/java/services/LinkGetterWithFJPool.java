@@ -53,6 +53,7 @@ import org.jsoup.nodes.Element;
         code = response.statusCode();
       } catch (IOException e) {
         System.out.println("io - " + e);
+        LOGGER.error("Error when reading url: " + url + "with exception: " + e);
       }
 
       String content = docNeed.html();
@@ -62,6 +63,7 @@ import org.jsoup.nodes.Element;
       try {
         Thread.sleep(150);
       } catch (InterruptedException e) {
+        LOGGER.error("Error when ==> Thread.sleep " + e);
         e.printStackTrace();
       }
 
@@ -100,6 +102,7 @@ import org.jsoup.nodes.Element;
           finalList.addAll(task.join());
         } catch (Exception e) {
           System.out.println(" Error into -> " + task.url);
+          LOGGER.debug(HISTORY_PARSING, " Error into -> " + task.url);
         }
       }
       finalList.add(url);

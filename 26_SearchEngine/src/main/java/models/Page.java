@@ -1,6 +1,8 @@
 package models;
 
 import com.sun.istack.NotNull;
+
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +16,7 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "page", indexes = {@Index(columnList = "path", name = "path_indx")})
-public class Page {
+public class Page implements Serializable {
 
   @Id
   @Column(name = "id")
@@ -55,7 +57,7 @@ public class Page {
     return id;
   }
 
-  public void setId(Integer id) {
+  private void setId(Integer id) {
     this.id = id;
   }
 
