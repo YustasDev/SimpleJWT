@@ -18,7 +18,11 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.safety.Whitelist;
 import services.LinkGetterWithFJPool;
 import services.Morphology;
@@ -70,7 +74,7 @@ public class Main {
       String originalContent = page.getContent();
       String cleanContent = Jsoup.clean(originalContent, Whitelist.none());
 
-      cleanContent = cleanContent.replaceAll("[^А-Яа-я, .]", "");
+      cleanContent = cleanContent.replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", "").replaceAll("\\sГБ\\s", "");
       Map<String, Integer> lemmsMapFromPage = null;
       try {
         lemmsMapFromPage =  Morphology.getSetLemmas(cleanContent);
@@ -90,21 +94,77 @@ public class Main {
 
       lemmsMapFromPage.forEach((key, value) -> {                                    // we get lemmas from current Page
         String lemmaStringFromPage = key;
-        if(lemmasThatAreInDB.contains(lemmaStringFromPage)){
-
-          Query query = session.createNativeQuery("select * from lemma where lemma =?", Lemma.class);
-          query.setParameter(1, lemmaStringFromPage);
+        if(lemmasThatAreInDB.contains(lemmaStringFromPage)) {
+          // Query query = session.createNativeQuery("select * from lemma where lemma =?", Lemma.class);
+          // query.setParameter(1, lemmaStringFromPage);
+          Query query = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", lemmaStringFromPage);
           Lemma receivedLemma = (Lemma) query.getSingleResult();
           receivedLemma.setFrequency(receivedLemma.getFrequency() + 1);
-          session.save(receivedLemma);
-        }
-        else {
-          Lemma createNewlemma = new Lemma(lemmaStringFromPage, 1);
-          session.save(createNewlemma);
-        }
+          session.beginTransaction();
+          session.saveOrUpdate(receivedLemma);
+          if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
+            transaction.commit();
+          }
+          }
+        else{
+            Lemma createNewlemma = new Lemma(lemmaStringFromPage, 1);
+            session.save(createNewlemma);
+          }
       });
+      if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
+        transaction.commit();
+      }
 
-      transaction.commit();
+//      String strInTitle = Jsoup.clean(originalContent, Whitelist.none().addTags("title"))
+//              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", "").replaceAll("\\sГБ\\s", "");
+//      String strInBody = Jsoup.clean(originalContent, Whitelist.none().addTags("body"))
+//              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", "").replaceAll("\\sГБ\\s", "");
+
+      Document docTitle = Jsoup.parse(originalContent);
+
+      String textTitle = docTitle.select("title").text();
+
+      for (Element result : docTitle.select("title")) {
+        String text = ((TextNode) result.childNode(0)).getWholeText();
+        System.out.println(text);
+      }
+
+      for (Element result : docTitle.select("body")) {
+        String text = result.text();
+        System.out.println(text);
+      }
+
+
+
+
+
+
+      Map<String, Integer> lemmsInTitle = null;
+      Map<String, Integer> lemmsInBody = null;
+//      try {
+//        lemmsInTitle =  Morphology.getSetLemmas(strInTitle);
+//        System.out.println(lemmsMapFromPage);
+//        LOGGER.info(HISTORY_PARSING, "Parsing of the tags <title> the page:  " + page.getPath() + " was performed successfully");
+//      } catch (IOException e) {
+//        LOGGER.error("Error when parsing of the tags <title> the page: " + page.getPath() + "for getting lemmas");
+//        e.printStackTrace();
+//      }
+//
+//      try {
+//        lemmsInBody =  Morphology.getSetLemmas(strInBody);
+//        System.out.println(lemmsMapFromPage);
+//        LOGGER.info(HISTORY_PARSING, "Parsing of the tags <body> the page:  " + page.getPath() + " was performed successfully");
+//      } catch (IOException e) {
+//        LOGGER.error("Error when parsing of the tags <body> the page: " + page.getPath() + "for getting lemmas");
+//        e.printStackTrace();
+//      }
+
+      int x = 13;
+
+
+
+
+
 
 
 
@@ -115,12 +175,6 @@ public class Main {
 
 
       }
-
-
-
-
-
-      //String[] arrOfContent = cleanContent.split("[, ?.]+");
 
 
     }

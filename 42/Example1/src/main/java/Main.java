@@ -26,6 +26,18 @@ public class Main {
 
         public static void main(String[] args) throws GeneralSecurityException, IOException, ParseException {
 
+            StringBuffer str = new StringBuffer();
+            str.append("Vidvan"); // appends a string in the previously defined string.
+            System.out.println(str);
+            str.append("0"); // appends a number in the previously defined string.
+            System.out.println(str);
+
+            String s = "onlyStr";
+            String result = str + s + "\n" + s + str;
+            System.out.println(result);
+
+
+/*
                 String inputString = "Some String";
                 byte[] bytes = inputString.getBytes("UTF-8");
                 String encoded = Base64.getEncoder().encodeToString(bytes);
@@ -63,7 +75,7 @@ public class Main {
             String decodedStringZZ = new String(decodedZZ);
             System.out.println(decodedStringZZ);
 
-
+*/
 
 
 //            Example exc = new Example();
