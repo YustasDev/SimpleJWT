@@ -115,51 +115,47 @@ public class Main {
         transaction.commit();
       }
 
-//      String strInTitle = Jsoup.clean(originalContent, Whitelist.none().addTags("title"))
-//              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", "").replaceAll("\\sГБ\\s", "");
-//      String strInBody = Jsoup.clean(originalContent, Whitelist.none().addTags("body"))
-//              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", "").replaceAll("\\sГБ\\s", "");
-
       Document docTitle = Jsoup.parse(originalContent);
+      String textInTitle = docTitle.select("title").text();
 
-      String textTitle = docTitle.select("title").text();
-
-      for (Element result : docTitle.select("title")) {
-        String text = ((TextNode) result.childNode(0)).getWholeText();
-        System.out.println(text);
-      }
-
+      StringBuffer textBody = new StringBuffer();
       for (Element result : docTitle.select("body")) {
         String text = result.text();
-        System.out.println(text);
+        textBody.append(text);
       }
 
+      String textInBody = String.valueOf(textBody);
 
-
-
+      String strInTitle = Jsoup.clean(textInTitle, Whitelist.none())
+              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", " ").replaceAll("\\sГБ\\s", " ");
+      String strInBody = Jsoup.clean(textInBody, Whitelist.none())
+              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", " ").replaceAll("\\sГБ\\s", " ");
 
 
       Map<String, Integer> lemmsInTitle = null;
       Map<String, Integer> lemmsInBody = null;
-//      try {
-//        lemmsInTitle =  Morphology.getSetLemmas(strInTitle);
-//        System.out.println(lemmsMapFromPage);
-//        LOGGER.info(HISTORY_PARSING, "Parsing of the tags <title> the page:  " + page.getPath() + " was performed successfully");
-//      } catch (IOException e) {
-//        LOGGER.error("Error when parsing of the tags <title> the page: " + page.getPath() + "for getting lemmas");
-//        e.printStackTrace();
-//      }
-//
-//      try {
-//        lemmsInBody =  Morphology.getSetLemmas(strInBody);
-//        System.out.println(lemmsMapFromPage);
-//        LOGGER.info(HISTORY_PARSING, "Parsing of the tags <body> the page:  " + page.getPath() + " was performed successfully");
-//      } catch (IOException e) {
-//        LOGGER.error("Error when parsing of the tags <body> the page: " + page.getPath() + "for getting lemmas");
-//        e.printStackTrace();
-//      }
+      try {
+        lemmsInTitle =  Morphology.getSetLemmas(strInTitle);
+        System.out.println("lemmsInTitle = " + lemmsMapFromPage);
+        LOGGER.info(HISTORY_PARSING, "Parsing of the tags <title> the page:  " + page.getPath() + " was performed successfully");
+      } catch (IOException e) {
+        LOGGER.error("Error when parsing of the tags <title> the page: " + page.getPath() + "for getting lemmas");
+        e.printStackTrace();
+      }
 
-      int x = 13;
+      try {
+        lemmsInBody =  Morphology.getSetLemmas(strInBody);
+        System.out.println("lemmsInBody = " + lemmsMapFromPage);
+        LOGGER.info(HISTORY_PARSING, "Parsing of the tags <body> the page:  " + page.getPath() + " was performed successfully");
+      } catch (IOException e) {
+        LOGGER.error("Error when parsing of the tags <body> the page: " + page.getPath() + "for getting lemmas");
+        e.printStackTrace();
+      }
+
+      float rank = 0;
+
+
+
 
 
 

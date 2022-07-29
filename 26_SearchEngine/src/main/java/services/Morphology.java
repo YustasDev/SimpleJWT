@@ -9,7 +9,7 @@ import java.util.*;
 public class Morphology {
 
     //private static Map<List<String>, Integer> lemmMap = new LinkedHashMap<>();
-    private static Map<String, Integer> normalizedLemmMap = new LinkedHashMap<>();
+    private static Map<String, Integer> normalizedLemmMap;
 
     public static void main(String[] args) throws IOException {
 
@@ -20,30 +20,37 @@ public class Morphology {
     }
 
     public static Map<String, Integer> getSetLemmas(String text) throws IOException {
+        normalizedLemmMap = new LinkedHashMap<>();
         //RussianAnalyzer analyzer = new RussianAnalyzer();
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
         String[] disassembledText = text.trim().split("\\s+");
 
         for (String str : disassembledText) {
-            String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]]", "");
-            if (!(s == null || s.isEmpty() || s.trim().isEmpty())){
+            String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]&&[^-]]", "");
+            if (!(s == null || s.isEmpty() || s.trim().isEmpty())) {
                 List<String> wordBaseForms = luceneMorph.getMorphInfo(s);
-                System.out.println(wordBaseForms);
-                //for (String word : wordBaseForms){
-                String word = wordBaseForms.get(0);
-                if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("ЧАСТ"))) {
-                    List<String> lemmaForms = luceneMorph.getNormalForms(s);
-                    String needWord = wordChoice(s, lemmaForms);
-                    Integer countlemm = normalizedLemmMap.get(needWord);
-                if (countlemm == null){
-                    normalizedLemmMap.put(needWord, 1);
-                    continue;
+                String selectedWord = wordChoice(s, wordBaseForms);
+                List<String> wordBaseFormsOneMore = luceneMorph.getMorphInfo(selectedWord);
+                String word = wordBaseFormsOneMore.get(0);
+
+                //System.out.println(wordBaseForms);
+                //for (String word : wordBaseForms) {
+                //String word = wordBaseForms.get(0);
+                    if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("ЧАСТ") || selectedWord.length()<2)) {
+                        List<String> lemmaForms = luceneMorph.getNormalForms(s);
+                        String needWord = wordChoice(selectedWord, lemmaForms);
+                        Integer countlemm = normalizedLemmMap.get(needWord);
+                        if (countlemm == null) {
+                            normalizedLemmMap.put(needWord, 1);
+                            continue;
+                        } else {
+                            countlemm++;
+                            normalizedLemmMap.replace(needWord, countlemm);
+                        }
+                    }
                 }
-                else {countlemm++;
-                    normalizedLemmMap.replace(needWord, countlemm);}
-                }
-              }
             }
+
         return normalizedLemmMap;
     }
 
@@ -52,8 +59,12 @@ public class Morphology {
         String minimalWord = lemmsList.get(0);
         int minimum = 100; // a knowingly large size of distance
         for (String word : lemmsList) {
+
+            String[] wordArray = word.split("\\|");
+            word = wordArray[0];
+
             int distance = levenstain(original, word);
-            if (distance < minimum) {
+            if (distance <= minimum) {
                     minimum = distance;
                     minimalWord = word;
                 }

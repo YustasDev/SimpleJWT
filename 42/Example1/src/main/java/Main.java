@@ -16,7 +16,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static jdk.internal.dynalink.support.NameCodec.decode;
+import static jdk.internal.dynalink.support.NameCodec.decode;;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 
 public class Main {
@@ -26,15 +30,87 @@ public class Main {
 
         public static void main(String[] args) throws GeneralSecurityException, IOException, ParseException {
 
-            StringBuffer str = new StringBuffer();
-            str.append("Vidvan"); // appends a string in the previously defined string.
-            System.out.println(str);
-            str.append("0"); // appends a number in the previously defined string.
-            System.out.println(str);
+                List<Integer> list = new ArrayList<Integer>();
+                list.add(1);
+                list.add(2);
+                list.add(3);
+                for (int i = 4; i < 20; i++) {
+                        list.add(i);
+                }
 
-            String s = "onlyStr";
-            String result = str + s + "\n" + s + str;
-            System.out.println(result);
+                assertThat(list.get(18), is(new Integer(19)));
+                assertThat(list.get(18), is(19));
+
+                int z = list.set(4, 0);
+                System.out.println(list.size());
+                list.set(5, null);
+                System.out.println(list.size());
+                System.out.println(list);
+                list.add(null);
+                System.out.println(list.size());
+                System.out.println(list);
+                assertThat(list.contains(null), equalTo(true));
+                assertThat(list.size()>20, equalTo(false));
+
+                try {
+                     //   list.set(-1, 0);
+                        fail("Do you catch me?");
+                } catch (IndexOutOfBoundsException e) {
+                        System.out.println(list);
+                }
+                catch (IllegalArgumentException e) {
+                        System.out.println("yeah1");
+                }
+                catch (final RuntimeException e) {
+                        System.out.println("yeah2");
+                }
+                catch (Exception ex) {
+                        System.out.println("yeah3");
+                }
+                catch (Throwable e) {
+                        System.out.println("It's ok");
+                }
+
+                System.out.println(list);
+
+
+//            Map<String, String> map1 = new HashMap<>();
+//            Map<String, String> map2 = Collections.EMPTY_MAP;
+//            Map<String, String> map3 = new HashMap<>();
+//            String s = map1.get("Conv");
+//            if(s != null){
+//                System.out.println("Oooops!");
+//            }
+//
+//            //map1.put("Conv", "");
+//            String z = map1.get("Conv");
+//            if(z != null && z.length()>0){
+//                System.out.println("OooopsZ!");
+//            }
+//            else { System.out.println(z);}
+//
+//
+//
+//            map3.put("Conv", "");
+//            String y = map3.get("Conv");
+//            if(y.length()>0){
+//                System.out.println("OooopsY!");
+//            }
+//
+//
+//            System.out.println(s);
+//            System.out.println(z);
+//            System.out.println(y);
+
+//            StringBuffer str = new StringBuffer();
+//            str.append("Vidvan"); // appends a string in the previously defined string.
+//            System.out.println(str);
+//            str.append("0"); // appends a number in the previously defined string.
+//            System.out.println(str);
+//
+//            String s = "onlyStr";
+//            String result = str + s + "\n" + s + str;
+//            System.out.println(result);
 
 
 /*
