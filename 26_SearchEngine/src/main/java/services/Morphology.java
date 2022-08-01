@@ -36,7 +36,7 @@ public class Morphology {
                 //System.out.println(wordBaseForms);
                 //for (String word : wordBaseForms) {
                 //String word = wordBaseForms.get(0);
-                    if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("ЧАСТ") || selectedWord.length()<2)) {
+                    if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("ЧАСТ") || selectedWord.length()<=2)) {
                         List<String> lemmaForms = luceneMorph.getNormalForms(s);
                         String needWord = wordChoice(selectedWord, lemmaForms);
                         Integer countlemm = normalizedLemmMap.get(needWord);

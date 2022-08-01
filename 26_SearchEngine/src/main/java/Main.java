@@ -151,8 +151,25 @@ public class Main {
         LOGGER.error("Error when parsing of the tags <body> the page: " + page.getPath() + "for getting lemmas");
         e.printStackTrace();
       }
+//================== TODO
+      float rankOfLemma = 0;
+      int idPage = page.getId();
+      lemmsInTitle.forEach((key, value) -> {
+      String lemmaInTitle = key;
+      Integer lemmaInTitleCount = value;
 
-      float rank = 0;
+      Query query = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", lemmaInTitle);
+      Lemma lemmaFromTitle = (Lemma) query.getSingleResult();
+      Integer iDlemma = lemmaFromTitle.getId();
+//================= TODO
+
+
+
+
+
+
+      });
+
 
 
 
