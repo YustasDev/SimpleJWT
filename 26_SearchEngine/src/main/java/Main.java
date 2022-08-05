@@ -133,10 +133,12 @@ public class Main {
       String textInBody = String.valueOf(textBody);
 
       String strInTitle = Jsoup.clean(textInTitle, Whitelist.none())
-              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", " ").replaceAll("\\sГБ\\s", " ");
-      String strInBody = Jsoup.clean(textInBody, Whitelist.none())
-              .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", " ").replaceAll("\\sГБ\\s", " ");
+              .replaceAll("[^А-Яа-я \\pP-]", "").replaceAll("\\sр\\s", "")
+              .replaceAll("\\sГБ\\s", "").replaceAll("[\\p{P}&&[^\\-]]", " ");
 
+      String strInBody = Jsoup.clean(textInBody, Whitelist.none())
+              .replaceAll("[^А-Яа-я \\pP-]", "").replaceAll("\\sр\\s", "")
+              .replaceAll("\\sГБ\\s", "").replaceAll("[\\p{P}&&[^\\-]]", " ");
 
       Map<String, Integer> lemmsInTitle = new HashMap<>();
       Map<String, Integer> lemmsInBody = new HashMap<>();
