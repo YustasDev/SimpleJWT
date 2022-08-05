@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS search_engine.field(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     selector VARCHAR(255) NOT NULL,
-    weight FLOAT NOT NULL
+    weight DOUBLE NOT NULL
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4

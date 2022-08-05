@@ -6,15 +6,22 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.security.GeneralSecurityException;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
+import java.util.Date;
 
 import static jdk.internal.dynalink.support.NameCodec.decode;;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,6 +37,108 @@ public class Main {
 
         public static void main(String[] args) throws GeneralSecurityException, IOException, ParseException {
 
+                String source = "Ослепительный черно-фиолетового кольца камерыОкружая музыка будет!«вечной» Превосходное антибликовое стекло с матированным покрытиемМатовое покрытие сводит к минимуму количество отпечатков пальцев на телефоне ";
+                String[] disassembledText = source.trim().split("(\\s+)|(?=[А-Я]{1,})");
+
+
+                for (String str : disassembledText) {
+
+                        String s = str.replaceAll("[^А-Яа-я \\pP-]", "").replaceAll("\\sр\\s", "")
+                                .replaceAll("\\sГБ\\s", "").replaceAll("[\\p{P}&&[^\\-]]", " ");
+
+
+
+
+//                        String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]&&[^-]]", "");
+//                        if (!(s == null || s.isEmpty() || s.trim().isEmpty())) {
+
+                                System.out.println(s);
+
+                      //  }
+                }
+
+
+
+
+
+
+/*
+                String url = "jdbc:mysql://localhost:3306/search_engine?useSSL=false&serverTimezone=Europe/Moscow&useUnicode=true&characterEncoding=utf8";
+                String user = "root";
+                String password = "password";
+
+                try {
+                        Connection conn = DriverManager.getConnection(url, user, password);
+                        Statement statement = conn.createStatement();
+
+                        LocalDate today = LocalDate.now();
+                        LocalDate today1 = LocalDate.of(2022, Month.AUGUST, 5);
+                        LocalDateTime ldt = LocalDateTime.now();
+
+                        String data = "08/05/2022";
+                        Date dataNow = null;
+                        try {
+                              dataNow = new SimpleDateFormat("MM/dd/yyyy").parse(data);
+                        }
+                        catch (ParseException e) {
+                              e.printStackTrace();
+                              }
+
+
+                       // String sql = "INSERT INTO timeshift(timevar)" + "VALUES (?);";
+                        String sql1 = "INSERT INTO timeshift(absoluttime)" + "VALUES (?);";
+
+                        PreparedStatement preparedStatement = conn.prepareStatement (sql1);
+                        preparedStatement.setObject ( 1, dataNow);
+                        preparedStatement.executeUpdate();
+//
+//                        preparedStatement.setObject ( 1, today1);
+//                        preparedStatement.executeUpdate ();
+//
+//                        preparedStatement.setObject ( 1, ldt);
+//                        preparedStatement.executeUpdate ();
+
+                        statement.close();
+                        conn.close();
+
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                }
+
+
+
+
+*/
+
+
+
+
+/*
+                String s = "Прошлое,теперь;в!прошлом?думаю«нет»";
+
+                String[] disassembledText = s.trim().split("\\pP");
+                String[] disassembledText1 = s.trim().split("\\pP");
+                String ds = s.replaceAll("\\pP", " ");
+
+                for (String d : disassembledText) {
+                        System.out.println(d);
+                }
+                System.out.println("==============================================");
+                for (String d1 : disassembledText1) {
+                        System.out.println(d1);
+                }
+                System.out.println(ds);
+
+*/
+
+//                Double d = 3.74891;
+//                BigDecimal bd = new BigDecimal(d).setScale(1, RoundingMode.HALF_UP);
+//                Double d1 = bd.doubleValue();
+//
+//                System.out.println("bd = " + bd + "\n" + "d1 = " + d1);
+
+
+/*
                 List<Integer> list = new ArrayList<Integer>();
                 list.add(1);
                 list.add(2);
@@ -73,7 +182,7 @@ public class Main {
 
                 System.out.println(list);
 
-
+*/
 //            Map<String, String> map1 = new HashMap<>();
 //            Map<String, String> map2 = Collections.EMPTY_MAP;
 //            Map<String, String> map3 = new HashMap<>();

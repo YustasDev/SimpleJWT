@@ -23,9 +23,10 @@ public class Morphology {
         normalizedLemmMap = new LinkedHashMap<>();
         //RussianAnalyzer analyzer = new RussianAnalyzer();
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
-        String[] disassembledText = text.trim().split("\\s+");
 
+        String[] disassembledText = text.trim().split("(\\s+)|(?=[А-Я]{1,})");
         for (String str : disassembledText) {
+            //String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]&&[^-]]", "");
             String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]&&[^-]]", "");
             if (!(s == null || s.isEmpty() || s.trim().isEmpty())) {
                 List<String> wordBaseForms = luceneMorph.getMorphInfo(s);

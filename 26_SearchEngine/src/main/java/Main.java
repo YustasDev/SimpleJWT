@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -6,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 import models.Lemma;
+import models.MyIndex;
 import models.Page;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +30,7 @@ import org.jsoup.safety.Whitelist;
 import services.LinkGetterWithFJPool;
 import services.Morphology;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -36,6 +40,7 @@ public class Main {
   private static String recordedFile = "output.txt";
   private static final Logger LOGGER = LogManager.getLogger(Main.class);
   private static final Marker HISTORY_PARSING = MarkerManager.getMarker("HISTORY_PARSING");
+
 
   public static void main(String[] args) {
 
@@ -69,12 +74,15 @@ public class Main {
 
     List<Page> pageList = session.createQuery("from Page").getResultList();
     for(Page page : pageList){
+      int idPage = page.getId();
       StringBuilder sbContent = new StringBuilder();
       List<String> contentList = new ArrayList<>();
       String originalContent = page.getContent();
       String cleanContent = Jsoup.clean(originalContent, Whitelist.none());
 
-      cleanContent = cleanContent.replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", "").replaceAll("\\sГБ\\s", "");
+      cleanContent = cleanContent.replaceAll("[^А-Яа-я \\pP-]", "").replaceAll("\\sр\\s", "")
+              .replaceAll("\\sГБ\\s", "").replaceAll("[\\p{P}&&[^\\-]]", " ");
+
       Map<String, Integer> lemmsMapFromPage = null;
       try {
         lemmsMapFromPage =  Morphology.getSetLemmas(cleanContent);
@@ -94,9 +102,8 @@ public class Main {
 
       lemmsMapFromPage.forEach((key, value) -> {                                    // we get lemmas from current Page
         String lemmaStringFromPage = key;
+
         if(lemmasThatAreInDB.contains(lemmaStringFromPage)) {
-          // Query query = session.createNativeQuery("select * from lemma where lemma =?", Lemma.class);
-          // query.setParameter(1, lemmaStringFromPage);
           Query query = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", lemmaStringFromPage);
           Lemma receivedLemma = (Lemma) query.getSingleResult();
           receivedLemma.setFrequency(receivedLemma.getFrequency() + 1);
@@ -123,7 +130,6 @@ public class Main {
         String text = result.text();
         textBody.append(text);
       }
-
       String textInBody = String.valueOf(textBody);
 
       String strInTitle = Jsoup.clean(textInTitle, Whitelist.none())
@@ -132,8 +138,9 @@ public class Main {
               .replaceAll("[^А-Яа-я -]", "").replaceAll("\\sр\\s", " ").replaceAll("\\sГБ\\s", " ");
 
 
-      Map<String, Integer> lemmsInTitle = null;
-      Map<String, Integer> lemmsInBody = null;
+      Map<String, Integer> lemmsInTitle = new HashMap<>();
+      Map<String, Integer> lemmsInBody = new HashMap<>();
+      Map<String, Double> rankOflemms = new HashMap<>();
       try {
         lemmsInTitle =  Morphology.getSetLemmas(strInTitle);
         System.out.println("lemmsInTitle = " + lemmsMapFromPage);
@@ -151,31 +158,66 @@ public class Main {
         LOGGER.error("Error when parsing of the tags <body> the page: " + page.getPath() + "for getting lemmas");
         e.printStackTrace();
       }
-//================== TODO
-      float rankOfLemma = 0;
-      int idPage = page.getId();
+//================== TODO  fill in table myIndex
+      final Double rankOfLemmaInTitle = 1.0;  // coefficient for the field "title"
+      final Double rankOfLemmaInBody = 0.8;   // coefficient for the field "body"
       lemmsInTitle.forEach((key, value) -> {
       String lemmaInTitle = key;
-      Integer lemmaInTitleCount = value;
-
-      Query query = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", lemmaInTitle);
-      Lemma lemmaFromTitle = (Lemma) query.getSingleResult();
-      Integer iDlemma = lemmaFromTitle.getId();
-//================= TODO
-
-
-
-
-
-
+      Double rankInTitle = Double.valueOf(value);
+  //    if(rankOflemms.containsKey(lemmaInTitle)) {
+        rankOflemms.put(lemmaInTitle, rankInTitle);
+//      }
+//      else {
+//        rankOflemms.put(lemmaInTitle, rankOfLemmaInTitle);
+//      }
       });
 
+      lemmsInBody.forEach((key, value) -> {
+        String lemmaInBody = key;
+        Double rankInBody = Double.valueOf(value);
 
+        if(rankOflemms.containsKey(lemmaInBody)) {
+          rankOflemms.put(lemmaInBody, rankOflemms.get(lemmaInBody) + (rankInBody * rankOfLemmaInBody));
+        }
+        else {
+          rankOflemms.put(lemmaInBody, rankInBody * rankOfLemmaInBody);
+        }
+      });
 
+      rankOflemms.forEach((key, value) -> {
+        String current_string_lemma = key;
+        Double rankOfLemma = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
 
+        try {
+          Query query = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", current_string_lemma);
+          Lemma current_lemma = (Lemma) query.getSingleResult();
+          Integer iDlemma = current_lemma.getId();
 
+          MyIndex myIndex = new MyIndex();
+          myIndex.setPage_id(idPage);
+          myIndex.setLemma_id(iDlemma);
+          myIndex.setRankOflemma(rankOfLemma);
+          session.save(myIndex);
+        }
+        catch (NoResultException enre) {
+          LOGGER.error("Error when writing to myIndex table occurred" + enre);
+          LOGGER.error("current_string_lemma = " + current_string_lemma + "\n" +
+                  "rankOfLemma: " + value);
+          enre.printStackTrace();
+          return;
+        }
+        catch (Exception e) {
+          LOGGER.error("Error when writing to myIndex table occurred" + e);
+          LOGGER.error("current_string_lemma = " + current_string_lemma + "\n" +
+                  "rankOfLemma" + value);
+          e.printStackTrace();
+          return;
+        }
+      });
 
+//================= TODO
 
+                  int x =13;
 
 
 

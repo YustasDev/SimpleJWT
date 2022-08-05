@@ -31,11 +31,11 @@ public class Field implements Serializable {
 
     @Column(name = "weight", nullable = false)
     @NotNull
-    private Float weight;
+    private Double weight;
 
     public Field(){}
 
-    public Field(Integer id, String name, String selector, Float weight) {
+    public Field(Integer id, String name, String selector, Double weight) {
         this.id = id;
         this.name = name;
         this.selector = selector;
@@ -66,11 +66,11 @@ public class Field implements Serializable {
         this.selector = selector;
     }
 
-    public Float getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Float weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 

@@ -31,11 +31,11 @@ import javax.persistence.Table;
 
         @Column(name = "rankOflemma", nullable = false)
         @NotNull
-        private Float rankOflemma;
+        private Double rankOflemma;
 
         public MyIndex(){}
 
-        public MyIndex(Integer id, Integer page_id, Integer lemma_id, Float rankOflemma) {
+        public MyIndex(Integer id, Integer page_id, Integer lemma_id, Double rankOflemma) {
             this.id = id;
             this.page_id = page_id;
             this.lemma_id = lemma_id;
@@ -66,11 +66,11 @@ import javax.persistence.Table;
             this.lemma_id = lemma_id;
         }
 
-        public Float getRankOflemma() {
+        public Double getRankOflemma() {
             return rankOflemma;
         }
 
-        public void setRankOflemma(Float rankOflemma) {
+        public void setRankOflemma(Double rankOflemma) {
             this.rankOflemma = rankOflemma;
         }
 
