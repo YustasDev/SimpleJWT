@@ -45,12 +45,12 @@ public class Main {
   public static void main(String[] args) {
 
     StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-        .configure("hibernate.cfg.xml").build();
+            .configure("hibernate.cfg.xml").build();
     Metadata metadata = new MetadataSources(registry).getMetadataBuilder().build();
     SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
     Session session = sessionFactory.openSession();
     Transaction transaction = session.beginTransaction();
-
+/*
 
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
@@ -217,25 +217,79 @@ public class Main {
         }
       });
 
-//================= TODO
-
-
-
-
-
-
-
-
-
-
 
 
 
       }
 
+*/
+
+    //================= TODO  Stage 5 ====================================>
+
+    String searchQuery = "Купить смартфон недорого онлайн через интернет на случай отсутствия хранилища";
+
+    Map<String, Integer> lemmasInQuery = new HashMap<>();
+
+    try {
+      lemmasInQuery = Morphology.getSetLemmas(searchQuery);
+    } catch (Exception e) {
+      LOGGER.error("Error when parsing of the searchQuery: " + searchQuery);
+      e.printStackTrace();
+    }
+
+    Map<Lemma, Integer> lemmasQueryByFrequency = new HashMap<>();
+    List<Lemma> listLemmasInQuery = new ArrayList<>();
+    List<Integer> listOfPageNumbers = new ArrayList<>();
+
+    lemmasInQuery.forEach((key, value) -> {
+      Query queryLemma = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", key);
+      Lemma lemmaFromQuery = (Lemma) getSingleResultOrNull(queryLemma);
+      if(lemmaFromQuery != null) {
+        lemmasQueryByFrequency.put(lemmaFromQuery, lemmaFromQuery.getFrequency());
+      }
+    });
+
+    lemmasQueryByFrequency.entrySet().stream().sorted(Map.Entry.<Lemma, Integer>comparingByValue())
+            .forEach(x -> listLemmasInQuery.add(x.getKey()));
+
+    System.out.println(listLemmasInQuery); // TODO only for development
+
+    for(Lemma lem : listLemmasInQuery){
+      Query queryMyIndex = session.createQuery("select mI from MyIndex mI where mI.lemma_id = :lemma_id").setParameter("lemma_id", lem.getId());
+      List<MyIndex> list_myIndex = queryMyIndex.getResultList();
+      for(MyIndex myIndex : list_myIndex){
+        listOfPageNumbers.add(myIndex.getPage_id());
+      }
+      if(listOfPageNumbers.size()>0){
+        
+      }
 
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+  public static Object getSingleResultOrNull(Query query) {
+    try {
+      return query.getSingleResult();
+    } catch (NoResultException ex) {
+      return null;
+    }
+  }
 
 
   public static Connection getConnection() throws SQLException {
