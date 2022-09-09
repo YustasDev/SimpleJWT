@@ -1,31 +1,30 @@
-import org.apache.commons.codec.binary.StringUtils;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
+import com.google.gson.*;
 
-import javax.xml.bind.DatatypeConverter;
-import java.io.BufferedWriter;
-import java.io.File;
+import javax.management.modelmbean.InvalidTargetObjectTypeException;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.charset.Charset;
+
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import java.security.GeneralSecurityException;
-import java.sql.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
+import java.time.*;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.*;
-import java.util.Date;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.IntPredicate;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import static jdk.internal.dynalink.support.NameCodec.decode;;
+import static java.lang.System.out;
+import static java.lang.System.setErr;
+import static java.util.Collections.sort;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -35,7 +34,585 @@ public class Main {
         //column_cord = {"R1": ((87, 10), (157, 539)), "R2": ((161, 10), (232, 539)),
         //  "R3": ((235, 10), (313, 539)), "R4": ((315, 10), (382, 539)),
 
-        public static void main(String[] args) throws GeneralSecurityException, IOException, ParseException {
+        public static void main(String[] args) throws GeneralSecurityException, IOException, ParseException, InvalidTargetObjectTypeException {
+
+
+
+
+                /*
+                Gson gson = new Gson();
+                Another ar = new Another(7, "Another7");
+
+                Map <Integer, String> mymap = new HashMap<>();
+                mymap.put(1, "Один");
+
+                Collection collection = new ArrayList();
+                collection.add("string");
+                collection.add(10);
+                collection.add(mymap);
+                collection.add(ar);
+                String jsn = gson.toJson(collection);
+                out.println(jsn);
+
+                for (Object ob : collection){
+                    out.println(ob.toString() + "  " + ob.getClass());
+                    if(ob instanceof HashMap){
+                            out.println("It's OK");
+                        }
+                    if(ob.getClass() == Another.class){
+                          out.println("It's OK");
+                        }
+
+                }
+
+
+                System.out.println("ZonedDateTime.now(): " + ZonedDateTime.now());
+                ZonedDateTime zd = ZonedDateTime.now();
+                LocalDate ld = LocalDate.from(ZonedDateTime.now());
+                System.out.println("LocalDate : " + ld);
+                Date dt = Date.from(Instant.from(zd));
+                System.out.println("Date : " + dt);
+
+
+                Date dateD = new SimpleDateFormat("dd-MMM-yy").parse("15-JAN-85");
+                System.out.println("dataD = " + dateD);
+
+                Date dateD2 = new SimpleDateFormat("dd-MMM-yy").parse("15-JAN-05");
+                System.out.println("dataD2 = " + dateD2);
+
+
+
+                String strTime = "15-Jul-85";
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy");
+                LocalDate localDate = LocalDate.parse(strTime, formatter);
+                System.out.println("localDate = " + localDate);
+
+                LocalDateTime localDateTime = LocalDateTime.now();
+                System.out.println("localDateTime = " + localDateTime);
+
+                Date dtFromLD = Date.from(localDate.atStartOfDay()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant());
+
+                System.out.println(dtFromLD);
+ */
+//                Format formatterDT = new SimpleDateFormat("YYYY-MM-dd_hh-mm-ss");
+//                ZonedDateTime zd = ZonedDateTime.now();
+//                LocalDateTime ldt = LocalDateTime.from(ZonedDateTime.now());
+//                System.out.println("ldt = " + ldt);
+//
+//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+//                String ldtStr = formatter.format(ldt);
+//                System.out.println("ldtStr = " + ldtStr);
+//
+//
+//
+//                String s19 = "15-JAN-28";
+//                String s19_1 = "15-JAN-85";
+//                String s20 = "15-JAN-09";
+//                String s20_1 = "15-JAN-22";
+//                System.out.println("s19 = " + from(s19));
+//                System.out.println("s19_1 = " + from(s19_1));
+//                System.out.println("s20 =" + from(s20));
+//                System.out.println("s20_1 = " + from(s20_1));
+
+             //   String callback = "";
+             //   CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "One_one");
+
+//               // future.thenAccept(result -> System.out.println(result));
+//
+//                Date date = convertToDateViaSqlDate(from("15-JAN-82"));
+//                out.println(date);
+//
+//                int CPU = Runtime.getRuntime().availableProcessors();
+//                long memory = Runtime.getRuntime().freeMemory();
+//                out.println("CPU = " + CPU + "\n" + "freeMemory = " + memory);
+//
+////                try {
+////                       callback = future.get();
+////                } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                } catch (ExecutionException e) {
+////                        e.printStackTrace();
+////                }
+//
+//                out.println(callback + "   " + Thread.currentThread().getName());
+//
+//            //    future.thenApply(result -> {
+//             //           System.out.println(result + " all" + "  " + Thread.currentThread().getName());
+//             //           return result;
+//                });
+//
+//           //     future.thenApply(result -> {
+//           //             System.out.println(result + ", world!" + "  " + Thread.currentThread().getName());
+//          //              return result;
+//        //        });
+//
+//
+////                CompletableFuture<Integer> futInt = CompletableFuture.supplyAsync(() -> 10)
+////                        .thenCompose(result ->
+////                                CompletableFuture.supplyAsync(() -> result * 2)
+////                        ).thenCompose(result ->
+////                                CompletableFuture.supplyAsync(() -> result * 5)
+////                        );
+////                try {
+////                        System.out.println(futInt.get() + "  " + Thread.currentThread().getName());
+////                } catch (InterruptedException e) {
+////                        e.printStackTrace();
+////                } catch (ExecutionException e) {
+////                        e.printStackTrace();
+////                }
+
+//                String newResult = "";
+//                String curThread = "";
+//                CompletableFuture<String> completableFuture = new CompletableFuture<String>();
+//                CompletableFuture<String> trtr = completableFuture.supplyAsync(() -> {
+//                        out.println("Oooops!");
+//                        return Thread.currentThread().getName();
+//                });
+//                try {
+//
+//                        trtr.thenAccept(res -> System.out.println(res));
+//                        completableFuture.complete("Done!");
+//                        newResult = trtr.get();
+//                        curThread = Thread.currentThread().getName();
+//                } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                }
+//
+//                out.println(newResult + "   " + curThread);
+
+//                try {
+//                        System.out.println("Результат сложения = " + addThis(combine(3,5)).get());
+//                } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                }
+
+
+//                Nullable nullable = null;
+//                System.out.println(nullable.hello());
+//
+//                String[] names = {"Java", "Kotlin", "Java"};
+//                String name = "Java";
+//                Predicate predicate = name::equals;
+//                Stream.of(names).filter(predicate).count();
+//                name = "Kotlin";
+//                Stream.of(names).filter(predicate).count();
+
+        }
+
+
+
+        public static LocalDate from(String s) {
+                return LocalDate.parse(s, new DateTimeFormatterBuilder()
+                        .parseCaseInsensitive()
+                        .appendPattern("dd-MMM-")
+                        .appendValueReduced(ChronoField.YEAR, 2, 2, Year.now().getValue() - 80)
+                        .toFormatter()
+                );
+        }
+
+        public static Date convertToDateViaSqlDate(LocalDate dateToConvert) {
+                return java.sql.Date.valueOf(dateToConvert);
+        }
+
+
+        public static String combine(int x, int y) {
+                String result = "";
+                CompletableFuture<Integer> completableFuture =
+                        CompletableFuture.supplyAsync(() -> x)
+                                .thenCombine(CompletableFuture.supplyAsync(() -> y),
+                                        (n1, n2) -> n1 + n2).handle((val, exc) -> val != null ? val : null);
+                if(completableFuture != null){
+                        try {
+                                result = String.valueOf(completableFuture.get());
+                        } catch (InterruptedException e) {
+                                e.printStackTrace();
+                        } catch (ExecutionException e) {
+                                e.printStackTrace();
+                        }
+                        return result;
+                }
+                else {
+                        result = "Chief, it's all gone!";
+                        return result;
+                }
+        }
+
+        public static CompletableFuture<Integer> addThis (String num){
+                return CompletableFuture.supplyAsync(() -> Integer.parseInt(num))
+                                .handle((val, exc) -> val != null ? val : null);
+        }
+
+
+
+//                String pathToArchive = "/home/progforce/Downloads/Archive";
+//                Path path = Paths.get(pathToArchive);
+//
+//                String stringToListCSVFiles = "/home/progforce/Downloads/ListCSVFiles";
+//                Path pathToListCSVFiles = Paths.get(stringToListCSVFiles);
+//
+//                List<Path> pathsCSVFiles = findByFileExtension(pathToListCSVFiles, ".csv");
+//                List<File> listfilesCSV = new ArrayList<>();
+//                for (Path pathThis : pathsCSVFiles) {
+//                        File f = pathThis.toFile();
+//                        if (f.isFile())
+//                                listfilesCSV.add(f);
+//                }
+//
+//
+//                for (File f : listfilesCSV) {
+//                        Path pathFromFile = f.toPath();
+//                        String csvFile = pathFromFile.toString();
+//                        System.out.println("pathString =  " + csvFile);  // TODO only for development
+//                        System.out.println(f.getName() + " time = " + f.lastModified());   // TODO only for development}
+//
+//                String pathResult = pathToArchive + File.separator + f.getName();
+//                System.out.println("pathResult to Arhive ==> " + pathResult);
+//        }
+
+//                Optional<String> op2 = Optional.ofNullable(null);
+//
+//                if(op2.equals(Optional.empty())) {
+//                        System.out.println("Optional 2: " + op2);
+//                }
+//                else {
+//                        System.out.println("something's wrong");
+//                }
+
+/*
+                Integer value = 3;
+                Optional<Integer> z = Optional.ofNullable(value);
+                out.println(z.get());
+
+                value = null;
+                z = Optional.ofNullable(value);
+                out.println(z.orElse(-1));
+                out.println(z.orElseGet(getElseRet()));
+
+                out.println(fibon(3));
+
+*/
+/*
+        double erD3 = 3;
+        long erlD3 = doubleToLongBits(erD3);
+        String ss3 = toBinaryString(erlD3);
+
+        int er3 = 3;
+        String erl3 = Integer.toBinaryString(er3);
+
+        Long restoreERL = Long.parseLong(ss3, 2);
+        Double erRestored = Double.longBitsToDouble(restoreERL);
+
+
+                Double y = 9.0;
+                Double u = 3.0;
+                double zafter = Math.sqrt(y);
+                Double yd = y/u;
+                boolean z = yd % 1 == 0;
+            out.println(z);
+
+
+                boolean z1;
+                BigDecimal y1 = new BigDecimal("9");
+                BigDecimal u1 = BigDecimal.valueOf(3L);
+                BigDecimal w = y1.divide(u1);
+                BigDecimal[] bd = w.divideAndRemainder(BigDecimal.ONE);
+                BigDecimal remains = bd[1];
+                BigDecimal check0 = BigDecimal.valueOf(0L);
+                int ch = remains.compareTo(check0);
+                if(remains.compareTo(check0) == 0) {
+                       z1 = true;
+                }
+                else {
+                        z1 = false;
+                }
+                out.println(z1);
+*/
+
+//            Map<Long, BigDecimal> cache = new HashMap<>();
+//            cache.put(7l, new BigDecimal("7"));
+//            BigDecimal big = cache.getOrDefault(3L, new BigDecimal("0.013"));
+//            out.println(big);
+//            out.println(fib(3L, cache));
+//            out.println(fib(3L, cache));
+//            out.println(fib(4L, cache));
+
+
+/*
+            //    sumDoublesDivisibleBy3(1, 100);
+             List <Integer> intList = new ArrayList<>();
+            // IntStream.rangeClosed(0, 5).forEach(x -> intList.add(x));
+             intList = IntStream.rangeClosed(0, 5)
+                        .boxed()
+                        .collect(Collectors.toList());
+             System.out.println(intList);
+
+                IntStream stream = IntStream.range(1, 100);
+
+                List<Integer> primes = stream.filter(Main::isPrime)
+                        .boxed()
+                        .collect(Collectors.toList());
+                System.out.println(primes);
+                */
+  //      }
+
+
+        private static List<Path> findByFileExtension(Path path, String fileExtension) {
+
+                if (!Files.isDirectory(path)) {
+                        throw new IllegalArgumentException("Path must be a directory!");
+                }
+
+                List<Path> result = null;
+                try (Stream<Path> walk = Files.walk(path)) {
+                        result = walk
+                                .filter(Files::isRegularFile)   // is a file
+                                .filter(p -> p.getFileName().toString().endsWith(fileExtension))
+                                .collect(Collectors.toList());
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+                return result;
+
+        }
+        
+
+
+        static Supplier<? extends Integer> getElseRet(){
+              Supplier<Integer> intSupplier = () -> 13;
+              return  intSupplier;
+
+        }
+
+
+        static long fibon(long i) {
+                if (i == 0) return 0;
+                if (i == 1) return 1;
+                long x = fibon(i - 1);
+                long y = fibon(i - 2);
+                long zx;
+                return zx = x + y;
+        }
+
+
+        public static BigInteger fib(long i, Map<Long, BigInteger> cache) {
+                if (i == 0) return BigInteger.ZERO;
+                if (i == 1) return BigInteger.ONE;
+                return cache.computeIfAbsent(i, n -> fib(n - 2, cache).add(fib(n - 1, cache)));
+        }
+
+
+        public static boolean isPrimeMod(int num) {
+                int limit = (int) (Math.sqrt(num) + 1);
+                boolean z;
+                z = num == 2 || num > 1 && IntStream.range(2, limit)
+		                      .noneMatch(divisor -> num % divisor == 0);
+                return z;
+        }
+
+
+
+        public static boolean isPrime(int i)
+        {
+                IntPredicate isDivisible = index -> i % index == 0;
+
+                boolean x = i > 1 && IntStream.range(2, i).noneMatch(isDivisible);
+                return x;
+        }
+
+
+
+
+
+        public static void sumDoublesDivisibleBy3(int start, int end) {
+        IntStream.rangeClosed(start, end)
+                        .peek(n -> {System.out.println("исходное число = " + n);
+                        })
+                        .filter(n -> n % 3 == 0)
+                        .forEach(n -> {System.out.println("на 3 делится => " + n);
+                                });
+        }
+
+
+
+
+//
+//                List<Integer> listInt = getList(1, 2);
+//                List<String> listString = getList("2", "3");
+//
+//                System.out.println(listInt);    // [1, 2]
+//                System.out.println(listString); // [2, 3]
+//        }
+//
+//        public static <T> List<T> getList(T... arg) {
+//                return Arrays.asList(arg);
+//        }
+
+
+
+/*
+                String[] strings = "this is an array of strings".split(" ");
+                long count = Arrays.stream(strings)
+                        .map(String::length).count();
+                System.out.println("Всего существует " + count + " строк");
+
+                OptionalDouble ave = Arrays.stream(strings)
+                        .mapToInt(String::length).average();
+                System.out.println("Средняя длина равна " + ave);
+
+                Double d = ave.getAsDouble();
+                OptionalDouble od = OptionalDouble.of(d);
+
+
+
+                List<BigDecimal> nums = iterate(BigDecimal.ONE, n -> n.add(BigDecimal.ONE) )
+                                .limit(10)
+                                .collect(Collectors.toList());
+                System.out.println(nums);
+
+                BigDecimal d = BigDecimal.ONE;
+                BigDecimal d1 = d.add(BigDecimal.TEN);
+                System.out.println("d = " + d);
+                System.out.println("d1 = " + d1);
+
+                //long count =
+                Stream.generate(Math::random)
+                        .limit(10)
+                        .forEach(System.out::println);
+
+                List<Double> countList = Stream.generate(Math::random)
+                        .limit(10).collect(Collectors.toList());
+
+                System.out.println("Math_random List ==> " + countList);
+
+*/
+
+
+
+//                List<String> lst = Arrays.asList("dsg, sasa", "klklj,sasiw", "rere erer", "ewe opo");
+//                //  String modlst = lst.stream().filter(s -> s.contains(",")).map(m->m.replaceAll(",", "")).collect(Collectors.joining(", "));
+//                String modlst = lst.stream().map(m -> m.replaceAll(",\\w", " ")).map(m -> m.replaceAll(",\\s+", " ")).collect(Collectors.joining(", "));
+//
+//                out.println(modlst);
+//
+//                List<String> names = Arrays.asList("dsg, sasa", "klklj,sasiw", "rere erer", "ewe opo", "eyuy pojh");
+//                String mn = names.stream().filter(s -> s.startsWith("e")).collect(Collectors.joining(", "));
+//                out.println(mn);
+//
+//                String[] smas = {"Коля", "Петя", "Вася", "Маша", "марина"};
+//                String needName1 = "М";
+//                String needName2 = "м";
+//                Predicate<String> condition = (x) -> x.startsWith(needName1) || x.startsWith(needName2);
+//                String fd = getNamesSatisfyingCondition(condition, smas);
+//                out.println(fd);
+//
+//        }
+//
+//        public static String getNamesSatisfyingCondition(Predicate<String> condition, String... names) {
+//                        return Arrays.stream(names).filter((Predicate<? super String>) condition).collect(Collectors.joining(", "));
+//                }
+
+
+//
+//            ExecutorService executorService = Executors.newFixedThreadPool(1);
+//            Future<Object> future = executorService.submit(() ->
+//            {
+//                System.out.println("so far everything is fine");
+//                double result = 10 / 0;
+//                System.out.println("everything is still fine");
+//                throw new IllegalStateException("I dont want to work");
+//            });
+//
+//            try
+//            {
+//                future.get();
+//            }
+//            catch (InterruptedException e)
+//            {
+//                System.err.println("Execution was interrupted.");
+//                Thread.currentThread().interrupt();
+//            }
+//            catch (ExecutionException e)
+//            {
+//                System.err.println("An error occured during execution. Handling it.");
+//                // handle exception
+//            }
+//            executorService.shutdown();
+//
+//            try {
+//                executorService.awaitTermination(1,
+//                        TimeUnit.MINUTES); // см. https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+
+//            ExecutorService executorService = Executors.newFixedThreadPool(1);
+//            executorService.submit(()->{
+//                try {
+//                    System.out.println("so far everything is fine");
+//                    double result = 10 / 0;
+//                    System.out.println("everything is still fine");
+//                }
+//                catch (Throwable e){
+//                    System.out.println("something went wrong");
+//                }
+//            });
+//            executorService.shutdown();
+//            try {
+//                executorService.awaitTermination(1, TimeUnit.MINUTES);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+
+
+/*
+
+
+                new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                                out.println("Thread: " + Thread.currentThread().getName());
+                                        }
+                                }).start();
+
+                new Thread(() -> out.println("Thread: " + Thread.currentThread().toString())).start();
+
+                Runnable r = () -> out.println("Thread: " + Thread.currentThread().getName());
+                new Thread(r).start();
+
+                out.println("Current Thread is: " + Thread.currentThread().getName());
+
+                List <Integer> intList = new ArrayList<>();
+                String s = "someWord";
+                int sz = s.length();
+                s.chars().forEach(x -> intList.add(x));
+                System.out.println(intList);
+
+                List <Integer> strLength = new ArrayList<>();
+                String[] strMas = {"hiklm", "abc", "defg"};
+                List<String> strMasList = Arrays.asList(strMas);
+
+                List<String> stList = Arrays.asList("zx", "zxy", "zxyu");
+
+                Stream.of(strMas).forEach(x-> strLength.add(x.length()));
+
+                Stream.of(strMas).map(String::length).forEach(System.out::println);
+
+                Stream.of(strMas).forEach(x-> System.out.println(x.length()));
+
+
+            List<String> sorted = strMasList.stream().sorted(String::compareTo).collect(Collectors.toList());
+
+            System.out.println(strMasList);
+            System.out.println(sorted);
+
 
                 String source = "Ослепительный черно-фиолетового кольца камерыОкружая музыка будет!«вечной» Превосходное антибликовое стекло с матированным покрытиемМатовое покрытие сводит к минимуму количество отпечатков пальцев на телефоне ";
                 String[] disassembledText = source.trim().split("(\\s+)|(?=[А-Я]{1,})");
@@ -57,7 +634,7 @@ public class Main {
                       //  }
                 }
 
-
+*/
 
 
 
@@ -267,7 +844,7 @@ public class Main {
 //            System.out.println(exc);
 
 
-        }
+//        }
 
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -337,9 +914,10 @@ public class Main {
 
         public static void checkMap(Map<String, List<Object>> map){
                 if (!map.isEmpty()){
-                        System.out.printf("Not empty\n");
+                        out.printf("Not empty\n");
                 }
-                else {System.out.printf("Empty\n");}
+                else {
+                    out.printf("Empty\n");}
         }
 }
 

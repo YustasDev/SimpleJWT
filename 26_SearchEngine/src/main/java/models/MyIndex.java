@@ -89,10 +89,10 @@ import javax.persistence.Table;
 
         @Override
         public String toString() {
-            return "Field{" +
+            return "MyIndex: {" +
                     "id= " + id +
                     ", page_id= '" + page_id + '\'' +
-                    ", selector=' " + lemma_id + '\'' +
+                    ", lemma_id=' " + lemma_id + '\'' +
                     ", rankOflemma= " + rankOflemma +
                     '}';
         }

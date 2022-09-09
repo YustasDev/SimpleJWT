@@ -89,7 +89,7 @@ public class Field implements Serializable {
 
     @Override
     public String toString() {
-        return "Field{" +
+        return "Relevance{" +
                 "id= " + id +
                 ", name= '" + name + '\'' +
                 ", selector=' " + selector + '\'' +

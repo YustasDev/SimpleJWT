@@ -10,6 +10,7 @@ import java.util.concurrent.ForkJoinPool;
 import models.Lemma;
 import models.MyIndex;
 import models.Page;
+import models.Relevance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -22,6 +23,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
+import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -226,7 +228,7 @@ public class Main {
 
     //================= TODO  Stage 5 ====================================>
 
-    String searchQuery = "Купить смартфон недорого онлайн через интернет на случай отсутствия хранилища";
+    String searchQuery = "Куплю смартфон недорого онлайн через интернет на случай отсутствия хранилища";
 
     Map<String, Integer> lemmasInQuery = new HashMap<>();
 
@@ -254,15 +256,54 @@ public class Main {
 
     System.out.println(listLemmasInQuery); // TODO only for development
 
-    for(Lemma lem : listLemmasInQuery){
+    for(Lemma lem : listLemmasInQuery) {
       Query queryMyIndex = session.createQuery("select mI from MyIndex mI where mI.lemma_id = :lemma_id").setParameter("lemma_id", lem.getId());
       List<MyIndex> list_myIndex = queryMyIndex.getResultList();
-      for(MyIndex myIndex : list_myIndex){
-        listOfPageNumbers.add(myIndex.getPage_id());
+      if (list_myIndex.size() < 101) {                   //  remove frequently occurring lemmas (over 100 pages)
+      for (MyIndex myIndex : list_myIndex) {
+          listOfPageNumbers.add(myIndex.getPage_id());
+        }
       }
-      if(listOfPageNumbers.size()>0){
-        
-      }
+    }
+
+    HashMap<Integer, Pair> mapRelevance = new HashMap<>();
+    HashMap<Integer, Double> pre_MapRelevance = new HashMap<>();
+    Double abs_relevance = 0.0;
+    if(listOfPageNumbers.size()>0){
+         for(Integer numberPage : listOfPageNumbers ){
+           Query queryRelevance = session.createQuery("select sum(mi.rankOflemma) from MyIndex mi where mi.page_id = :itempage").setParameter("itempage", numberPage);
+           Double sumRanks_unnecessaryLength = (double) getSingleResultOrNull(queryRelevance);
+           Double sumRanks = new BigDecimal(sumRanks_unnecessaryLength).setScale(2, RoundingMode.HALF_UP).doubleValue();
+           pre_MapRelevance.put(numberPage, sumRanks);
+           if(sumRanks > abs_relevance){
+             abs_relevance = sumRanks;
+           }
+         }
+
+      double finalAbs_relevance = abs_relevance;
+      pre_MapRelevance.forEach((key, value) -> {
+           Double relative_relevance = new BigDecimal( value/ finalAbs_relevance).setScale(2, 1).doubleValue();
+           Pair <Double, Double> tuple = new Pair<Double, Double>(value, relative_relevance);
+           mapRelevance.put(key, tuple);
+         });
+
+      mapRelevance.forEach((key, value) -> {
+        Relevance rev = new Relevance();
+        rev.setPage(key);
+        rev.setAbsolute_relevance((Double) value.getValue0());
+        rev.setRelative_relevance((Double) value.getValue1());
+        session.saveOrUpdate(rev);
+      });
+
+      transaction.commit();
+
+
+
+
+
+
+
+
 
     }
 

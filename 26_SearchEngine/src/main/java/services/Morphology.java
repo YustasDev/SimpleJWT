@@ -13,10 +13,13 @@ public class Morphology {
 
     public static void main(String[] args) throws IOException {
 
-        //Map<String, Integer> lemTextMap = getSetLemmas("Пока мама мыла раму, Петя помыл ванну с мылом.");
+        Map<String, Integer> lemTextMap = getSetLemmas("Пока мама мыла раму, Петя помыл ванну с мылом.");
         //Map<String, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
-        //Map<String, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
-        //System.out.println(lemTextMap);
+//        Map<String, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
+        System.out.println(lemTextMap);
+//        Map<String, Integer> lemTextMap2 = getSetLemmas("Все знания добываются потом и кровью");
+//        System.out.println(lemTextMap2);
+
     }
 
     public static Map<String, Integer> getSetLemmas(String text) throws IOException {

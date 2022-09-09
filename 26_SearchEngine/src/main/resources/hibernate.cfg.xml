@@ -25,6 +25,7 @@
     <mapping class="models.Lemma"></mapping>
     <mapping class="models.Field"></mapping>
     <mapping class="models.MyIndex"></mapping>
+    <mapping class="models.Relevance"></mapping>
 
   </session-factory>
 </hibernate-configuration>
