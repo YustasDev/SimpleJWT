@@ -1,3 +1,4 @@
+
 public class A<T> {
 
     private static Object object;

@@ -1,12 +1,17 @@
-import com.google.gson.*;
-
 import javax.management.modelmbean.InvalidTargetObjectTypeException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.time.*;
 import java.time.format.DateTimeFormatterBuilder;
@@ -14,15 +19,16 @@ import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.IntPredicate;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static java.lang.System.out;
-import static java.lang.System.setErr;
 import static java.util.Collections.sort;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -34,7 +40,220 @@ public class Main {
         //column_cord = {"R1": ((87, 10), (157, 539)), "R2": ((161, 10), (232, 539)),
         //  "R3": ((235, 10), (313, 539)), "R4": ((315, 10), (382, 539)),
 
-        public static void main(String[] args) throws GeneralSecurityException, IOException, ParseException, InvalidTargetObjectTypeException {
+        //        private Path namesPath = Paths.get("/home/progforce/11/passFor Email.txt");
+        public Logger logger = Logger.getLogger(this.getClass().getName());
+        static FileHandler fhLog = null;
+
+
+        public static void main(String[] args) {
+
+               // Logger logger = Logger.getLogger("MyLog");
+/*
+                try {
+                        fhLog = new FileHandler("/home/progforce/2/myLogFile1.log");
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+                Main maind = new Main();
+                Logger log = maind.getLogger();
+                log.addHandler(fhLog);
+                SimpleFormatter formatter = new SimpleFormatter();
+                fhLog.setFormatter(formatter);
+
+                // the following statement is used to log any messages
+                log.info("It's static log");
+
+                Another.doSome(log);
+
+*/
+
+
+//=============================================================================================>
+//                        InetAddress currentIp;
+//                        InetAddress nameIp;
+//                        try {
+//                                currentIp = InetAddress.getLocalHost();
+//                                // output IP address of local computer
+//                                System.out.println("current IP -> " + currentIp.getHostAddress());
+//                                nameIp = InetAddress.getByName("mail.ru");
+//                                System.out.println("NAME IP address -> " + nameIp.getHostAddress());
+//                        } catch (UnknownHostException e) {
+//                                e.printStackTrace();
+//                        }
+
+//================================================================================================>
+  /*
+                long result;
+                long startTime = System.currentTimeMillis();
+
+                result = LongStream.range(0, 1_000)
+                        .boxed()
+                        .parallel()
+                        .map(x -> x / 7)
+                        .reduce((x,y)-> x + (int) (3 * Math.sin(y)))
+                        .get();
+                long endTime = System.currentTimeMillis();
+                System.out.println("Total execution time for parallel: " + (endTime-startTime) + "ms");
+                System.out.println(result);
+
+                long startTime1 = System.currentTimeMillis();
+
+                result = LongStream.range(0, 1_000)
+                        .boxed()
+                        .map(x -> x / 7)
+                        .peek(v -> System.out.println(Thread.currentThread().getName()))
+                        .reduce((x,y)-> x + (int) (3 * Math.sin(y)))
+                        .get();
+                long endTime1 = System.currentTimeMillis();
+                System.out.println("Total execution time for single: " + (endTime1-startTime1) + "ms");
+                System.out.println(result);
+
+*/
+//=================================================================================================>
+  /*              Properties props = new Properties();
+                try {
+                        props.setProperty("db.driver", "com.mysql.cj.jdbc.Driver");
+                        props.setProperty("user", "root");
+                        props.setProperty("password", "pass");
+                        props.setProperty("poolsize", "5");
+                        props.setProperty("db.url", "jdbc:mysql://127.0.0.1:3306/testphones");
+                        props.store(new FileWriter("/home/progforce/2/pro_base.properties"), "No Comment’s");
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+
+                try {
+                        props.load(new FileReader("/home/progforce/2/pro_base.properties"));
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+                String dbUrl = props.getProperty("db.url");
+                String password = props.getProperty("password");
+                // following two names are missing in the file
+                String maxIdle = props.getProperty("maxIdle"); // maxIdle = null
+                // value "20" will be assigned to the key if it is not found in the file
+                String maxActive = props.getProperty("maxActive", "20");
+                System.out.println("dbUrl: " + dbUrl);
+                System.out.println("password: " + password);
+                System.out.println("maxIdle: " + maxIdle );
+                System.out.println("maxActive: " + maxActive);
+*/
+//=======================================================================>
+//                String encrypted = "MyPassword";
+//                MessageDigest messageDigest = null;
+//                byte[] bytesEncoded = null;
+//                try {
+//                        messageDigest = MessageDigest.getInstance("SHA-1"); // only once !
+//                        messageDigest.update(encrypted.getBytes("utf8"));
+//                        bytesEncoded = messageDigest.digest();
+//                } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+//                        e.printStackTrace();
+//                }
+//                BigInteger bigInt = new BigInteger(1, bytesEncoded); //1(sign+) or -1(sign-)
+//                String resHex = bigInt.toString(16);
+//                System.out.println(resHex);
+   //=================================================================================<
+
+
+//                String xssString = "<script>alert('hello')</script>";
+//                xssString = xssString.replaceAll("</?script>","");
+//                out.println(xssString);
+//
+//                String xssString1 = "<script>alert('hello')</script>";
+//                xssString1 = xssString1.replaceAll("</?/script>","");
+//                out.println(xssString1);
+//
+//                String abc = "tef_abc_bcd_def_abc";
+//                abc = abc.replaceAll("/?_abc", "");
+//                out.println(abc);
+
+
+                Function<String, Integer> ir = build("3");
+                Integer itr = ir.apply("5");
+                System.out.println(itr);
+
+        }
+
+        public static Function<String, Integer> build(String strNum) {
+                int[] count = {1};
+                ++count[0];
+                return t -> Integer.valueOf(strNum + t)+ ++count[0];
+        }
+
+
+        public Logger getLogger() {
+                return logger;
+        }
+
+
+
+        // Gson gson = new Gson();
+//                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//
+//                List<List<Object>> llo = new ArrayList<>();
+//                List<Object> lo = new ArrayList<>();
+//                List<Object> lo1 = new ArrayList<>();
+//                List<Object> lo2 = new ArrayList<>();
+//                Another a1 = new Another(1, "One");
+//                Another a2 = new Another(2, "Two");
+//                Another a3 = new Another(3, "Three");
+//                lo.add(a1);
+//                lo1.add(a2);
+//                lo2.add(a3);
+//                llo.add(lo);
+//                llo.add(lo1);
+//                llo.add(lo2);
+//
+//                try (FileWriter writer = new FileWriter("/home/progforce/2/tempList.json")) {
+//                        gson.toJson(llo, writer);
+//                } catch (IOException e) {
+//                        e.printStackTrace();
+//                }
+//
+//
+//                try (Reader reader = new FileReader("/home/progforce/2/tempList.json")) {
+//                        // Convert JSON File to Java Object
+//                        List<List<Object>> lloFromJson = gson.fromJson(reader, List.class);
+//                        System.out.println(lloFromJson);
+//                } catch (IOException e) {
+//                        e.printStackTrace();
+//                }
+
+//        }
+
+
+//
+//                String str42 = "42";
+//                Integer val = Integer.decode(str42);
+//                System.out.println(val);
+//
+//                BigDecimal big1 = new BigDecimal("5.0");
+//                BigDecimal big2 = new BigDecimal("2.4");
+//                BigDecimal bigRes = big1.subtract(big2, MathContext.DECIMAL32);
+//                System.out.println(bigRes);
+
+//                Main mn = new Main();
+//                List<String> ls = mn.get().collect(Collectors.toList());
+//                System.out.println(ls);
+
+
+
+
+
+
+//        public Stream<String> get() {
+//                logger.info("Time:  " + Instant.now());
+//                try {
+//                        return Files.lines(namesPath);
+//                } catch (IOException e) {
+//                        e.printStackTrace();
+//                        return null;
+//                }
+//        }
+
+
+
+
 
 
 
@@ -203,7 +422,6 @@ public class Main {
 //                name = "Kotlin";
 //                Stream.of(names).filter(predicate).count();
 
-        }
 
 
 
