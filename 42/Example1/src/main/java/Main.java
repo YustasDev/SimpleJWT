@@ -1,3 +1,5 @@
+import org.apache.commons.collections4.ListUtils;
+
 import javax.management.modelmbean.InvalidTargetObjectTypeException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -168,9 +170,45 @@ public class Main {
 //                out.println(abc);
 
 
-                Function<String, Integer> ir = build("3");
-                Integer itr = ir.apply("5");
-                System.out.println(itr);
+//                Function<String, Integer> ir = build("3");
+//                Integer itr = ir.apply("5");
+//                System.out.println(itr);
+
+
+                List<Integer> lint = new LinkedList<>();
+                List<String> sss = new LinkedList<>();
+                for(int i = 0; i < 11; i++){
+                        Integer ir = (Integer) i;
+                        String s = ir.toString();
+                        lint.add(i);
+                        sss.add(s);
+                }
+
+                out.println(lint);
+                Map<Integer, Integer> mapForduplicate = new HashMap<>();
+                //========================================================>
+
+                Set setFromList = new HashSet<>(lint);
+                Set setFromListStr = new HashSet<>(sss);
+                out.println(lint);
+                out.println(setFromList);
+                List<Integer> lint1 = new LinkedList<>();
+                List<String> sss1 = new LinkedList<>();
+                sss1.addAll(setFromListStr);
+                lint1.addAll(setFromList);
+                lint.add(3);
+                out.println(lint1);
+
+                sss.add("3");
+//                sss.removeAll(sss1);
+//                lint.retainAll(lint1);
+//                out.println(lint);
+
+                List resultList = ListUtils.subtract(lint, lint1);
+                out.println(resultList);
+
+
+
 
         }
 
