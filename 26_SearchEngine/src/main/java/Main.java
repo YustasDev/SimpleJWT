@@ -259,7 +259,7 @@ public class Main {
     for(Lemma lem : listLemmasInQuery) {
       Query queryMyIndex = session.createQuery("select mI from MyIndex mI where mI.lemma_id = :lemma_id").setParameter("lemma_id", lem.getId());
       List<MyIndex> list_myIndex = queryMyIndex.getResultList();
-      if (list_myIndex.size() < 101) {                   //  remove frequently occurring lemmas (over 100 pages)
+      if (list_myIndex.size() < ) {                   //  remove frequently occurring lemmas
       for (MyIndex myIndex : list_myIndex) {
           listOfPageNumbers.add(myIndex.getPage_id());
         }
