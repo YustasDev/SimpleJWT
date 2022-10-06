@@ -34,6 +34,13 @@ public class Test_Mockito {
     @Mock
     List<String> mockList;
 
+
+
+
+
+
+
+
     // @Test(expected = NullPointerException.class)
     @Test
     public void whenMockitoAnnotationsUninitialized_thenNPEThrown() {
@@ -41,8 +48,6 @@ public class Test_Mockito {
     assertEquals(13, mockList.size());
     System.err.println("Error ==>");
     }
-
-
 
 
     @Test

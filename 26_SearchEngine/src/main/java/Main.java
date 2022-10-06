@@ -241,7 +241,7 @@ public class Main {
 
     Map<Lemma, Integer> lemmasQueryByFrequency = new HashMap<>();
     List<Lemma> listLemmasInQuery = new ArrayList<>();
-    List<Integer> listOfPageNumbers = new ArrayList<>();
+    Set <Integer> setOfPageNumbers = new HashSet<>();
 
     lemmasInQuery.forEach((key, value) -> {
       Query queryLemma = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", key);
@@ -256,21 +256,21 @@ public class Main {
 
     System.out.println(listLemmasInQuery); // TODO only for development
 
+    // ================= Item 5.6 ======================>
+
     for(Lemma lem : listLemmasInQuery) {
       Query queryMyIndex = session.createQuery("select mI from MyIndex mI where mI.lemma_id = :lemma_id").setParameter("lemma_id", lem.getId());
       List<MyIndex> list_myIndex = queryMyIndex.getResultList();
-      if (list_myIndex.size() < ) {                   //  remove frequently occurring lemmas
       for (MyIndex myIndex : list_myIndex) {
-          listOfPageNumbers.add(myIndex.getPage_id());
+          setOfPageNumbers.add(myIndex.getPage_id());
         }
-      }
     }
 
     HashMap<Integer, Pair> mapRelevance = new HashMap<>();
     HashMap<Integer, Double> pre_MapRelevance = new HashMap<>();
     Double abs_relevance = 0.0;
-    if(listOfPageNumbers.size()>0){
-         for(Integer numberPage : listOfPageNumbers ){
+    if(setOfPageNumbers.size()>0){
+         for(Integer numberPage : setOfPageNumbers){
            Query queryRelevance = session.createQuery("select sum(mi.rankOflemma) from MyIndex mi where mi.page_id = :itempage").setParameter("itempage", numberPage);
            Double sumRanks_unnecessaryLength = (double) getSingleResultOrNull(queryRelevance);
            Double sumRanks = new BigDecimal(sumRanks_unnecessaryLength).setScale(2, RoundingMode.HALF_UP).doubleValue();
@@ -283,10 +283,12 @@ public class Main {
       double finalAbs_relevance = abs_relevance;
       pre_MapRelevance.forEach((key, value) -> {
            Double relative_relevance = new BigDecimal( value/ finalAbs_relevance).setScale(2, 1).doubleValue();
-           Pair <Double, Double> tuple = new Pair<Double, Double>(value, relative_relevance);
+           Pair <Double, Double> tuple = new Pair<Double, Double>(value, relative_relevance);  // value --> is absolut_relevance this page
            mapRelevance.put(key, tuple);
          });
 
+      Query truncate = session.createNativeQuery("truncate relevance");
+      truncate.executeUpdate();
       mapRelevance.forEach((key, value) -> {
         Relevance rev = new Relevance();
         rev.setPage(key);
@@ -294,8 +296,9 @@ public class Main {
         rev.setRelative_relevance((Double) value.getValue1());
         session.saveOrUpdate(rev);
       });
-
       transaction.commit();
+
+// =================== item 5.7 ====================================>
 
 
 
