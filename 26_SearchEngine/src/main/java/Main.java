@@ -7,14 +7,12 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
-import models.Lemma;
-import models.MyIndex;
-import models.Page;
-import models.Relevance;
+import models.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.apache.lucene.morphology.russian.RussianAnalyzer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -29,6 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 import services.LinkGetterWithFJPool;
 import services.Morphology;
 
@@ -228,7 +227,7 @@ public class Main {
 
     //================= TODO  Stage 5 ====================================>
 
-    String searchQuery = "Куплю смартфон недорого онлайн через интернет на случай отсутствия хранилища";
+    String searchQuery = "Куплю смартфон недорого с защитным экраном";
 
     Map<String, Integer> lemmasInQuery = new HashMap<>();
 
@@ -241,12 +240,12 @@ public class Main {
 
     Map<Lemma, Integer> lemmasQueryByFrequency = new HashMap<>();
     List<Lemma> listLemmasInQuery = new ArrayList<>();
-    Set <Integer> setOfPageNumbers = new HashSet<>();
+    Set<Integer> setOfPageNumbers = new HashSet<>();
 
     lemmasInQuery.forEach((key, value) -> {
       Query queryLemma = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", key);
       Lemma lemmaFromQuery = (Lemma) getSingleResultOrNull(queryLemma);
-      if(lemmaFromQuery != null) {
+      if (lemmaFromQuery != null) {
         lemmasQueryByFrequency.put(lemmaFromQuery, lemmaFromQuery.getFrequency());
       }
     });
@@ -258,34 +257,34 @@ public class Main {
 
     // ================= Item 5.6 ======================>
 
-    for(Lemma lem : listLemmasInQuery) {
+    for (Lemma lem : listLemmasInQuery) {
       Query queryMyIndex = session.createQuery("select mI from MyIndex mI where mI.lemma_id = :lemma_id").setParameter("lemma_id", lem.getId());
       List<MyIndex> list_myIndex = queryMyIndex.getResultList();
       for (MyIndex myIndex : list_myIndex) {
-          setOfPageNumbers.add(myIndex.getPage_id());
-        }
+        setOfPageNumbers.add(myIndex.getPage_id());
+      }
     }
 
     HashMap<Integer, Pair> mapRelevance = new HashMap<>();
     HashMap<Integer, Double> pre_MapRelevance = new HashMap<>();
     Double abs_relevance = 0.0;
-    if(setOfPageNumbers.size()>0){
-         for(Integer numberPage : setOfPageNumbers){
-           Query queryRelevance = session.createQuery("select sum(mi.rankOflemma) from MyIndex mi where mi.page_id = :itempage").setParameter("itempage", numberPage);
-           Double sumRanks_unnecessaryLength = (double) getSingleResultOrNull(queryRelevance);
-           Double sumRanks = new BigDecimal(sumRanks_unnecessaryLength).setScale(2, RoundingMode.HALF_UP).doubleValue();
-           pre_MapRelevance.put(numberPage, sumRanks);
-           if(sumRanks > abs_relevance){
-             abs_relevance = sumRanks;
-           }
-         }
+    if (setOfPageNumbers.size() > 0) {
+      for (Integer numberPage : setOfPageNumbers) {
+        Query queryRelevance = session.createQuery("select sum(mi.rankOflemma) from MyIndex mi where mi.page_id = :itempage").setParameter("itempage", numberPage);
+        Double sumRanks_unnecessaryLength = (double) getSingleResultOrNull(queryRelevance);
+        Double sumRanks = new BigDecimal(sumRanks_unnecessaryLength).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        pre_MapRelevance.put(numberPage, sumRanks);
+        if (sumRanks > abs_relevance) {
+          abs_relevance = sumRanks;
+        }
+      }
 
       double finalAbs_relevance = abs_relevance;
       pre_MapRelevance.forEach((key, value) -> {
-           Double relative_relevance = new BigDecimal( value/ finalAbs_relevance).setScale(2, 1).doubleValue();
-           Pair <Double, Double> tuple = new Pair<Double, Double>(value, relative_relevance);  // value --> is absolut_relevance this page
-           mapRelevance.put(key, tuple);
-         });
+        Double relative_relevance = new BigDecimal(value / finalAbs_relevance).setScale(2, 1).doubleValue();
+        Pair<Double, Double> tuple = new Pair<Double, Double>(value, relative_relevance);  // value --> is absolut_relevance this page
+        mapRelevance.put(key, tuple);
+      });
 
       Query truncate = session.createNativeQuery("truncate relevance");
       truncate.executeUpdate();
@@ -300,6 +299,33 @@ public class Main {
 
 // =================== item 5.7 ====================================>
 
+      List<CustomOutput> customOutputList = new LinkedList<>();
+      List<Relevance> relevances = session.createQuery("from Relevance").getResultList();
+      Collections.sort(relevances);
+      for (Relevance rev : relevances) {
+        Integer pageId = rev.getPage();
+        Query query = session.createQuery("select p from Page p where p.id = :itemId").setParameter("itemId", pageId);
+        Page current_Page = (Page) query.getSingleResult();
+        String uri = current_Page.getPath();
+        String content = current_Page.getContent();
+        Document doc = Jsoup.parse(content);
+        String title = doc.select("title").text();
+        Double relevanceItem = rev.getAbsolute_relevance();
+
+        for (Lemma lemma_toSearch : listLemmasInQuery) {
+          String matchingWord = lemma_toSearch.getLemma();
+          Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
+          StringBuffer pre_snippet = new StringBuffer();
+          for (Element element : elements) {
+            String swap = "<b>" + matchingWord + "<b>";
+            String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
+            pre_snippet.append(editedExpression + "\n");
+          }
+          String snippet = pre_snippet.toString();
+          if (elements.isEmpty()) {
+            try {
+              RussianAnalyzer analyzer = new RussianAnalyzer();
+              analyzer.
 
 
 
@@ -307,23 +333,35 @@ public class Main {
 
 
 
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
 
+
+//            String cleanContent = Jsoup.clean(content, Whitelist.none());
+//            cleanContent = cleanContent.replaceAll("[^А-Яа-я \\pP-]", "").replaceAll("\\sр\\s", "")
+//                    .replaceAll("\\sГБ\\s", "").replaceAll("[\\p{P}&&[^\\-]]", " ");
+//            String[] splitContent = cleanContent.trim().split("(\\s+)|(?=[А-Я]{1,})");
+//
+//
+//
+
+//
+//            for (String str : splitContent) {
+//
+//
+//            }
+            //     System.out.println(snippet);  // todo only for development
+          }
+
+
+          int z = 1;
+
+
+        }
+
+      }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
 
 

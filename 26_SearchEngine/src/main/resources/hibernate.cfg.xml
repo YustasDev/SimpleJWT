@@ -20,12 +20,12 @@
     <!-- Drop and re-create the database schema on startup -->
     <property name="hbm2ddl.auto">update</property>
 
-
     <mapping class="models.Page"></mapping>
     <mapping class="models.Lemma"></mapping>
     <mapping class="models.Field"></mapping>
     <mapping class="models.MyIndex"></mapping>
     <mapping class="models.Relevance"></mapping>
+    <mapping class="models.CustomOutput"></mapping>
 
   </session-factory>
 </hibernate-configuration>

@@ -49,7 +49,23 @@ public class Main {
 
         public static void main(String[] args) {
 
-               // Logger logger = Logger.getLogger("MyLog");
+                String str = "Abc abc";
+                String reg = "abc";
+
+//                String s2 = "<strong>Абв</strong>" + "  <strong>абв</strong>";
+//                String regx = "абв";
+
+                String s2 = "Абв абв";
+                String regx = "абв";
+
+               String result = str.replaceAll("(?i)"+ reg, "DEF");
+               System.out.println("After replacement:\n" + "   " + result);
+
+                String rest = s2.replaceAll("(?iu)"+ regx, "Ооопс!");
+                System.out.println("After replacement:\n" + "   " + rest);
+
+
+                // Logger logger = Logger.getLogger("MyLog");
 /*
                 try {
                         fhLog = new FileHandler("/home/progforce/2/myLogFile1.log");

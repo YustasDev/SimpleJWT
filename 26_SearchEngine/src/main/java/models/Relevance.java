@@ -9,7 +9,7 @@ import java.util.Objects;
 
         @Entity
         @Table(name = "relevance")
-        public class Relevance implements Serializable{
+        public class Relevance implements Serializable, Comparable<Relevance> {
 
         @Id
         @Column(name = "id")
@@ -93,4 +93,10 @@ import java.util.Objects;
                     ", relative_relevance=" + relative_relevance +
                     '}';
         }
+
+        @Override
+        public int compareTo(Relevance relevance) {
+        return (int) (relevance.getAbsolute_relevance() - this.getAbsolute_relevance());
+        }
+
 }
