@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 import models.*;
+import org.apache.commons.text.similarity.LongestCommonSubsequenceDistance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -312,57 +313,32 @@ public class Main {
         String title = doc.select("title").text();
         Double relevanceItem = rev.getAbsolute_relevance();
 
-        for (Lemma lemma_toSearch : listLemmasInQuery) {
-          String matchingWord = lemma_toSearch.getLemma();
-          Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
-          StringBuffer pre_snippet = new StringBuffer();
-          for (Element element : elements) {
-            String swap = "<b>" + matchingWord + "<b>";
-            String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
-            pre_snippet.append(editedExpression + "\n");
-          }
-          String snippet = pre_snippet.toString();
-          if (elements.isEmpty()) {
-            try {
-              RussianAnalyzer analyzer = new RussianAnalyzer();
-              analyzer.
 
 
-
-
-
-
-
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-
-
-//            String cleanContent = Jsoup.clean(content, Whitelist.none());
-//            cleanContent = cleanContent.replaceAll("[^А-Яа-я \\pP-]", "").replaceAll("\\sр\\s", "")
-//                    .replaceAll("\\sГБ\\s", "").replaceAll("[\\p{P}&&[^\\-]]", " ");
-//            String[] splitContent = cleanContent.trim().split("(\\s+)|(?=[А-Я]{1,})");
 //
 //
+//        for (Lemma lemma_toSearch : listLemmasInQuery) {
+//          String matchingWord = lemma_toSearch.getLemma();
+//          Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
+//          StringBuffer pre_snippet = new StringBuffer();
+//          for (Element element : elements) {
+//            String swap = "<b>" + matchingWord + "<b>";
+//            String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
+//            pre_snippet.append(editedExpression + "\n");
+//          }
+//          String snippet = pre_snippet.toString();
+//          System.out.println(snippet);
+//          if (elements.isEmpty()) {
 //
 
-//
-//            for (String str : splitContent) {
-//
-//
-//            }
-            //     System.out.println(snippet);  // todo only for development
-          }
-
-
-          int z = 1;
+ //         }
 
 
         }
 
       }
     }
-  }
+
 
 
   public static Object getSingleResultOrNull(Query query) {
