@@ -305,6 +305,12 @@ public class Main {
       List<CustomOutput> customOutputList = new LinkedList<>();
       List<Relevance> relevances = session.createQuery("from Relevance").getResultList();
       Collections.sort(relevances);
+
+      Transaction txn = session.beginTransaction();
+      Query truncateCustomOutput = session.createNativeQuery("truncate customoutput");
+      truncateCustomOutput.executeUpdate();
+      txn.commit();
+
       for (Relevance rev : relevances) {
         Integer pageId = rev.getPage();
         Query query = session.createQuery("select p from Page p where p.id = :itemId").setParameter("itemId", pageId);
@@ -314,7 +320,6 @@ public class Main {
         Document doc = Jsoup.parse(content);
         String title = doc.select("title").text();
         Double relevanceItem = rev.getAbsolute_relevance();
-
 
         for (Lemma lemma_toSearch : listLemmasInQuery) {
           String matchingWord = lemma_toSearch.getLemma();
@@ -330,7 +335,6 @@ public class Main {
             pre_snippet.append(editedExpression + "\n");
           }
           String snippet = pre_snippet.toString();
-       //   System.out.println(snippet); // todo only development
 
           CustomOutput customOutput = new CustomOutput();
           customOutput.setUri(uri);
