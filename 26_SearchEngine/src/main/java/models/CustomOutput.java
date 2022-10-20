@@ -26,7 +26,7 @@ public class CustomOutput implements Serializable {
     @NotNull
     private String title;
 
-    @Column(name = "content", columnDefinition = "MEDIUMTEXT", nullable = false)
+    @Column(name = "snippet", columnDefinition = "MEDIUMTEXT", nullable = false)
     @Type( type = "org.hibernate.type.TextType")
     @NotNull
     private String snippet;

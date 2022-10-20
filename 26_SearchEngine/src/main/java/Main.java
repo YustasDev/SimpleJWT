@@ -320,6 +320,7 @@ public class Main {
         Document doc = Jsoup.parse(content);
         String title = doc.select("title").text();
         Double relevanceItem = rev.getAbsolute_relevance();
+        StringBuffer pre_snippet = new StringBuffer();
 
         for (Lemma lemma_toSearch : listLemmasInQuery) {
           String matchingWord = lemma_toSearch.getLemma();
@@ -328,12 +329,13 @@ public class Main {
             matchingWord = StemmerPorterRU.stem(matchingWord);
             elements = doc.select("*:containsOwn(" + matchingWord + ")");
           }
-          StringBuffer pre_snippet = new StringBuffer();
+
           for (Element element : elements) {
             String swap = "<b>" + matchingWord + "<b>";
             String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
             pre_snippet.append(editedExpression + "\n");
           }
+        }
           String snippet = pre_snippet.toString();
 
           CustomOutput customOutput = new CustomOutput();
@@ -342,7 +344,6 @@ public class Main {
           customOutput.setSnippet(snippet);
           customOutput.setRelevance(relevanceItem);
           session.saveOrUpdate(customOutput);
-          }
         }
       if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
         transaction.commit();
