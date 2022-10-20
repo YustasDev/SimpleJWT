@@ -231,7 +231,7 @@ public class Main {
 
     //================= TODO  Stage 5 ====================================>
 
-    String searchQuery = "Чебурашка ест мандарины";
+    String searchQuery = "Куплю смартфон с защитным экраном";
 
     Map<String, Integer> lemmasInQuery = new HashMap<>();
 
@@ -330,13 +330,20 @@ public class Main {
             pre_snippet.append(editedExpression + "\n");
           }
           String snippet = pre_snippet.toString();
-          System.out.println(snippet);
+       //   System.out.println(snippet); // todo only development
 
-
-
+          CustomOutput customOutput = new CustomOutput();
+          customOutput.setUri(uri);
+          customOutput.setTitle(title);
+          customOutput.setSnippet(snippet);
+          customOutput.setRelevance(relevanceItem);
+          session.saveOrUpdate(customOutput);
           }
         }
+      if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
+        transaction.commit();
       }
+     }
     }
 
 

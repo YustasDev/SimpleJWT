@@ -1,6 +1,7 @@
 package models;
 
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,7 +26,8 @@ public class CustomOutput implements Serializable {
     @NotNull
     private String title;
 
-    @Column(name = "snippet", nullable = false)
+    @Column(name = "content", columnDefinition = "MEDIUMTEXT", nullable = false)
+    @Type( type = "org.hibernate.type.TextType")
     @NotNull
     private String snippet;
 
