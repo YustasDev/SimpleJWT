@@ -13,7 +13,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianAnalyzer;
+import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -31,6 +33,7 @@ import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import services.LinkGetterWithFJPool;
 import services.Morphology;
+import services.StemmerPorterRU;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -228,7 +231,7 @@ public class Main {
 
     //================= TODO  Stage 5 ====================================>
 
-    String searchQuery = "Куплю смартфон недорого с защитным экраном";
+    String searchQuery = "Чебурашка ест мандарины";
 
     Map<String, Integer> lemmasInQuery = new HashMap<>();
 
@@ -254,7 +257,7 @@ public class Main {
     lemmasQueryByFrequency.entrySet().stream().sorted(Map.Entry.<Lemma, Integer>comparingByValue())
             .forEach(x -> listLemmasInQuery.add(x.getKey()));
 
-    System.out.println(listLemmasInQuery); // TODO only for development
+  //  System.out.println(listLemmasInQuery.get(0) + "  " + listLemmasInQuery.get(1) ); // TODO only for development
 
     // ================= Item 5.6 ======================>
 
@@ -299,7 +302,6 @@ public class Main {
       transaction.commit();
 
 // =================== item 5.7 ====================================>
-
       List<CustomOutput> customOutputList = new LinkedList<>();
       List<Relevance> relevances = session.createQuery("from Relevance").getResultList();
       Collections.sort(relevances);
@@ -314,30 +316,29 @@ public class Main {
         Double relevanceItem = rev.getAbsolute_relevance();
 
 
-
-//
-//
-//        for (Lemma lemma_toSearch : listLemmasInQuery) {
-//          String matchingWord = lemma_toSearch.getLemma();
-//          Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
-//          StringBuffer pre_snippet = new StringBuffer();
-//          for (Element element : elements) {
-//            String swap = "<b>" + matchingWord + "<b>";
-//            String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
-//            pre_snippet.append(editedExpression + "\n");
-//          }
-//          String snippet = pre_snippet.toString();
-//          System.out.println(snippet);
-//          if (elements.isEmpty()) {
-//
-
- //         }
+        for (Lemma lemma_toSearch : listLemmasInQuery) {
+          String matchingWord = lemma_toSearch.getLemma();
+          Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
+          if (elements.isEmpty()) {
+            matchingWord = StemmerPorterRU.stem(matchingWord);
+            elements = doc.select("*:containsOwn(" + matchingWord + ")");
+          }
+          StringBuffer pre_snippet = new StringBuffer();
+          for (Element element : elements) {
+            String swap = "<b>" + matchingWord + "<b>";
+            String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
+            pre_snippet.append(editedExpression + "\n");
+          }
+          String snippet = pre_snippet.toString();
+          System.out.println(snippet);
 
 
+
+          }
         }
-
       }
     }
+
 
 
 
@@ -359,10 +360,6 @@ public class Main {
     return DriverManager.getConnection(url, user, pass);
   }
 
-  /*
-  Можно было избавиться от дубликатов с помощью Java Stream distinct()
-  но так нагляднее
-   */
   public static Set<String> cleanDuplicates(Collection<String> collection) {
     Set<String> elements = new TreeSet<>();
     for (String element : collection) {

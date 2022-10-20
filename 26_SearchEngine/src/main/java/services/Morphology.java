@@ -106,4 +106,7 @@ public class Morphology {
         return Math.min(Math.min(n1, n2), n3);
     }
 
+//    public static List<String> getAllWordForms (String word){
+//
+//    }
 }
