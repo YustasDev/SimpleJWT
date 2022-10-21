@@ -49,6 +49,13 @@ public class Main {
 
         public static void main(String[] args) {
 
+                List<String> list = Stream.of("foo", "bar", "care").collect(Collectors.toList());
+                int count = 0;
+                count = list.indexOf("care");
+                System.out.println(list + "  " + count);
+
+
+/*
                 String str = "Abc abc";
                 String reg = "abc";
 
@@ -66,6 +73,8 @@ public class Main {
 
 
                 // Logger logger = Logger.getLogger("MyLog");
+
+ */
 /*
                 try {
                         fhLog = new FileHandler("/home/progforce/2/myLogFile1.log");
