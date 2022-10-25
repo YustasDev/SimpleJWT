@@ -1,4 +1,4 @@
-package models;
+package com.restweb.merestfullweb.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,7 +21,6 @@ public class Coffee {
     }
 
     public Coffee() {
-
     }
 
     public void setId(String id) {
