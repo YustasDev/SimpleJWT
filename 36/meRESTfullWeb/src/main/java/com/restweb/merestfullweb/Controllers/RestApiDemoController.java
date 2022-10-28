@@ -45,6 +45,8 @@ import java.util.stream.Stream;
 
     @PostMapping
     Coffee postCoffee(@RequestBody Coffee coffee) {
+        Coffee recievCoffee = coffee;
+        String nameC = recievCoffee.getName();
 //        coffees.add(coffee);
 //        return coffee;
         return coffeeRepository.save(coffee);
