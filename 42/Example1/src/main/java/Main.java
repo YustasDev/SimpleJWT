@@ -49,10 +49,25 @@ public class Main {
 
         public static void main(String[] args) {
 
-                List<String> list = Stream.of("foo", "bar", "care").collect(Collectors.toList());
-                int count = 0;
-                count = list.indexOf("care");
-                System.out.println(list + "  " + count);
+                List<String> ls = new ArrayList<>();
+                String a = "";
+               // String b = null;
+                String c = " ";
+                String d = ".";
+                String e = " good  ";
+                ls.addAll(Stream.of(a,c,d,e).collect(Collectors.toList()));
+                for(String s : ls){
+                        String st = s.trim();
+                        out.println(s.trim().isEmpty());
+                }
+
+
+
+
+//                List<String> list = Stream.of("foo", "bar", "care").collect(Collectors.toList());
+//                int count = 0;
+//                count = list.indexOf("care");
+//                System.out.println(list + "  " + count);
 
 
 /*

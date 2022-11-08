@@ -19,11 +19,6 @@ import java.util.stream.Stream;
 
     RestApiDemoController(CoffeeRepository coffeeRepository) {
             this.coffeeRepository = coffeeRepository;
-            this.coffeeRepository.saveAll(Stream.of(
-                new Coffee("Café Cereza"),
-                new Coffee("Café Ganador"),
-                new Coffee("Café Lareño"),
-                new Coffee("Café Três Pontas")).collect(Collectors.toList()));
         }
 
     @GetMapping
@@ -65,8 +60,13 @@ import java.util.stream.Stream;
 //                new ResponseEntity<>(postCoffee(coffee), HttpStatus.CREATED) :
 //                new ResponseEntity<>(coffee, HttpStatus.OK);
 
-        return (!coffeeRepository.existsById(id)) ? new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED)
-                : new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.OK);
+//        return (!coffeeRepository.existsById(id)) ? new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED)
+//                : new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.OK);
+        return (coffeeRepository.existsById(id))
+                ? new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.OK)
+                : new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED);
+
+
     }
 
     @DeleteMapping("/{id}")
