@@ -1,39 +1,42 @@
 package com.example.taco_cloud.dto;
 
-    public class Ingredient {
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Table;
 
-        private final String id;
-        private final String name;
-        private final Type type;
 
-        public Ingredient(String id, String name, Type type) {
-            this.id = id;
-            this.name = name;
-            this.type = type;
-        }
+    @Data
+    @Table
+    @AllArgsConstructor
+    @NoArgsConstructor(access=AccessLevel.PRIVATE, force=true)
+    public class Ingredient implements Persistable<String> {
 
-        public String getId() {
-            return id;
-        }
 
-        public String getName() {
-            return name;
-        }
+    @Id
+    private String id;
+    private final String nameingredient;
+    private final Type typeingredient;
 
-        public Type getType() {
-            return type;
-        }
 
-        @Override
-        public String toString() {
-            return "Ingredient{" +
-                    " id= '" + id + '\'' +
-                    ", name= '" + name + '\'' +
-                    ", type= " + type +
-                    '}';
-        }
 
-        public enum Type {
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id='" + id + '\'' +
+                ", nameingredient='" + nameingredient + '\'' +
+                ", typeingredient=" + typeingredient +
+                '}';
+    }
+
+    @Override
+    public boolean isNew() {
+        return false;
+    }
+
+
+    public enum Type {
             WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE
         }
     }

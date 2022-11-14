@@ -1,14 +1,26 @@
 package com.example.taco_cloud.dto;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class TacoOrder {
+@Table
+public class TacoOrder implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    private Long id;
+    private Date placedAt;
+
     @NotBlank(message="Street is required")
     private String deliveryStreet;
 
@@ -33,6 +45,7 @@ public class TacoOrder {
 
     @Digits(integer=3, fraction=0, message="Invalid CVV")
     private String ccCVV;
+
     private List<Taco> tacos = new ArrayList<>();
 
     public void addTaco(Taco taco) {
@@ -42,8 +55,10 @@ public class TacoOrder {
     public TacoOrder() {
     }
 
-    public TacoOrder(String deliveryStreet, String deliveryName, String deliveryCity, String deliveryState,
+    public TacoOrder(Long id, Date placedAt, String deliveryStreet, String deliveryName, String deliveryCity, String deliveryState,
                      String deliveryZip, String ccNumber, String ccExpiration, String ccCVV, List<Taco> tacos) {
+        this.id = id;
+        this.placedAt = placedAt;
         this.deliveryStreet = deliveryStreet;
         this.deliveryName = deliveryName;
         this.deliveryCity = deliveryCity;
@@ -54,6 +69,14 @@ public class TacoOrder {
         this.ccCVV = ccCVV;
         this.tacos = tacos;
     }
+
+    public Long getId() {return id;}
+
+    public void setId(Long id) {this.id = id;}
+
+    public Date getPlacedAt() {return placedAt;}
+
+    public void setPlacedAt(Date placedAt) {this.placedAt = placedAt;}
 
     public String getDeliveryStreet() {
         return deliveryStreet;
@@ -129,16 +152,18 @@ public class TacoOrder {
 
     @Override
     public String toString() {
-        return "TacoOrder{ " +
-                "deliveryStreet= '" + deliveryStreet + '\'' +
-                ", deliveryName= '" + deliveryName + '\'' +
-                ", deliveryCity= '" + deliveryCity + '\'' +
-                ", deliveryState= '" + deliveryState + '\'' +
-                ", deliveryZip= '" + deliveryZip + '\'' +
-                ", ccNumber= '" + ccNumber + '\'' +
-                ", ccExpiration= '" + ccExpiration + '\'' +
-                ", ccCVV= '" + ccCVV + '\'' +
-                ", tacos= " + tacos +
+        return "TacoOrder{" +
+                "id=" + id +
+                ", placedAt=" + placedAt +
+                ", deliveryStreet='" + deliveryStreet + '\'' +
+                ", deliveryName='" + deliveryName + '\'' +
+                ", deliveryCity='" + deliveryCity + '\'' +
+                ", deliveryState='" + deliveryState + '\'' +
+                ", deliveryZip='" + deliveryZip + '\'' +
+                ", ccNumber='" + ccNumber + '\'' +
+                ", ccExpiration='" + ccExpiration + '\'' +
+                ", ccCVV='" + ccCVV + '\'' +
+                ", tacos=" + tacos +
                 '}';
     }
 
