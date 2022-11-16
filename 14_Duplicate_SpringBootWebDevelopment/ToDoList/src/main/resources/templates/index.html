@@ -21,6 +21,21 @@
       <p><input type="reset"> <input type="submit" value="Сохранить в БД"></p>
   </form>
 
+    <form id="logout" action="/logout" method="POST">
+        <h2>LOGOUT</h2>
+        <p><input type="reset"> <input type="submit" value="Выйти"></p>
+    </form>
+    <script>
+        $(function(){
+            $('#logoutLink').click(function(){
+                $('#logout').submit();
+            });
+        });
+    </script>
+
+
+
+
 <!--
      <form th:action="@{/}" th:object="${criminalCase}" method="post">
        <h2>Добавление дела</h2>
@@ -40,6 +55,19 @@
     <div th:each="caseVariable : ${listOfCase}">
       <a href="#" class="case-link" th:attr="data-id=${caseVariable.id}" th:text="${caseVariable.description}"></a>
     </div>
+
+   <form id="logout" action="/logout" method="POST">
+       <h2>LOGOUT</h2>
+       <p><input type="reset"> <input type="submit" value="Выйти"></p>
+   </form>
+   <script>
+       $(function(){
+           $('#logoutLink').click(function(){
+               $('#logout').submit();
+           });
+       });
+   </script>
+
    </div>
    <p th:text="${someParameter}"></p>
    </body>
