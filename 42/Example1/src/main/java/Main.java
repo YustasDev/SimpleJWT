@@ -49,17 +49,38 @@ public class Main {
 
         public static void main(String[] args) {
 
-                List<String> ls = new ArrayList<>();
-                String a = "";
-               // String b = null;
-                String c = " ";
-                String d = ".";
-                String e = " good  ";
-                ls.addAll(Stream.of(a,c,d,e).collect(Collectors.toList()));
-                for(String s : ls){
-                        String st = s.trim();
-                        out.println(s.trim().isEmpty());
-                }
+                Main mainA = new Main();
+                mainA.foo();
+
+        }
+
+
+        void foo(){
+
+                String m = "Hello";
+                out.println(m);
+                bar(m);
+                out.println(m);
+                m += "World";
+                out.println(m);
+
+        }
+
+        void bar(String m){
+                m += "World";
+        }
+
+//                List<String> ls = new ArrayList<>();
+//                String a = "";
+//               // String b = null;
+//                String c = " ";
+//                String d = ".";
+//                String e = " good  ";
+//                ls.addAll(Stream.of(a,c,d,e).collect(Collectors.toList()));
+//                for(String s : ls){
+//                        String st = s.trim();
+//                        out.println(s.trim().isEmpty());
+//                }
 
 
 
@@ -215,8 +236,8 @@ public class Main {
 //                System.out.println(itr);
 
 
-
-        }
+//
+//        }
 
         public static Function<String, Integer> build(String strNum) {
                 int[] count = {1};
