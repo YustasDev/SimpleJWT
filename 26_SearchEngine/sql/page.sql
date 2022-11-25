@@ -3,6 +3,7 @@ CREATE TABLE search_engine.page (
 	`path` TEXT NOT NULL,
 	code INT NOT NULL,
 	content MEDIUMTEXT NOT NULL,
+    lemmatized_content MEDIUMTEXT NOT NULL,
 	CONSTRAINT page_pk PRIMARY KEY (id)
 )
 ENGINE=InnoDB

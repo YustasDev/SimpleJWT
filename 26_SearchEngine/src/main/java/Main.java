@@ -55,7 +55,7 @@ public class Main {
     SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
     Session session = sessionFactory.openSession();
     Transaction transaction = session.beginTransaction();
-/*
+
 
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
@@ -89,8 +89,23 @@ public class Main {
               .replaceAll("\\sГБ\\s", "").replaceAll("[\\p{P}&&[^\\-]]", " ");
 
       Map<String, Integer> lemmsMapFromPage = null;
+
+      //===================================== insert 'lemmatized_content' field in page table ============>
       try {
-        lemmsMapFromPage =  Morphology.getSetLemmas(cleanContent);
+        String lemmatized_content = Morphology.getSetLemmas(cleanContent).getValue1();
+        page.setLemmatized_content(lemmatized_content);
+        session.beginTransaction();
+        session.saveOrUpdate(page);
+        if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
+          transaction.commit();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      //====================================== END insert 'lemmatized_content' field in page table ========<
+
+      try {
+        lemmsMapFromPage =  Morphology.getSetLemmas(cleanContent).getValue0();
         System.out.println(lemmsMapFromPage);
         LOGGER.info(HISTORY_PARSING, "Parsing of the page:  " + page.getPath() + " was performed successfully");
       } catch (IOException e) {
@@ -117,7 +132,7 @@ public class Main {
           if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
             transaction.commit();
           }
-          }
+         }
         else{
             Lemma createNewlemma = new Lemma(lemmaStringFromPage, 1);
             session.save(createNewlemma);
@@ -149,7 +164,7 @@ public class Main {
       Map<String, Integer> lemmsInBody = new HashMap<>();
       Map<String, Double> rankOflemms = new HashMap<>();
       try {
-        lemmsInTitle =  Morphology.getSetLemmas(strInTitle);
+        lemmsInTitle =  Morphology.getSetLemmas(strInTitle).getValue0();
         System.out.println("lemmsInTitle = " + lemmsMapFromPage);
         LOGGER.info(HISTORY_PARSING, "Parsing of the tags <title> the page:  " + page.getPath() + " was performed successfully");
       } catch (IOException e) {
@@ -158,7 +173,7 @@ public class Main {
       }
 
       try {
-        lemmsInBody =  Morphology.getSetLemmas(strInBody);
+        lemmsInBody =  Morphology.getSetLemmas(strInBody).getValue0();
         System.out.println("lemmsInBody = " + lemmsMapFromPage);
         LOGGER.info(HISTORY_PARSING, "Parsing of the tags <body> the page:  " + page.getPath() + " was performed successfully");
       } catch (IOException e) {
@@ -227,7 +242,7 @@ public class Main {
 
       }
 
-*/
+
 
     //================= TODO  Stage 5 ====================================>
 
@@ -236,7 +251,7 @@ public class Main {
     Map<String, Integer> lemmasInQuery = new HashMap<>();
 
     try {
-      lemmasInQuery = Morphology.getSetLemmas(searchQuery);
+      lemmasInQuery = Morphology.getSetLemmas(searchQuery).getValue0();
     } catch (Exception e) {
       LOGGER.error("Error when parsing of the searchQuery: " + searchQuery);
       e.printStackTrace();

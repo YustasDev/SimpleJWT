@@ -57,7 +57,8 @@ import org.jsoup.nodes.Element;
       }
 
       String content = docNeed.html();
-      Page page = new Page(url, code, content);
+      String lemmatized_content = ""; // todo ==> need insert this field
+      Page page = new Page(url, code, content, lemmatized_content);
       htmlStore.put(url, page);
 
       try {

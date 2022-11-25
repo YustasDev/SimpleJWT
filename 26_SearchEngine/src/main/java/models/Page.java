@@ -38,19 +38,27 @@ public class Page implements Serializable {
   @NotNull
   private String content;
 
+  @Column(name = "lemmatized_content", columnDefinition = "MEDIUMTEXT", nullable = false)
+  @Type( type = "org.hibernate.type.TextType")
+  @NotNull
+  private String lemmatized_content;
+
+
   public Page(){}
 
-  public Page(String path, int code, String content) {
+  public Page(String path, int code, String content, String lemmatized_content) {
     this.path = path;
     this.code = code;
     this.content = content;
+    this.lemmatized_content = lemmatized_content;
   }
 
-  public Page(Integer id, String path, Integer code, String content) {
+  public Page(Integer id, String path, Integer code, String content, String lemmatized_content) {
     this.id = id;
     this.path = path;
     this.code = code;
     this.content = content;
+    this.lemmatized_content = lemmatized_content;
   }
 
   public Integer getId() {
@@ -85,6 +93,10 @@ public class Page implements Serializable {
     this.code = code;
   }
 
+  public String getLemmatized_content() { return lemmatized_content;}
+
+  public void setLemmatized_content(String lemmatized_content) {this.lemmatized_content = lemmatized_content;}
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -110,6 +122,7 @@ public class Page implements Serializable {
         "content=' " + content + '\'' +
         ", path=' " + path + '\'' +
         ", code= " + code +
+        ", lemmatized_content= " + lemmatized_content +
         '}';
   }
 
