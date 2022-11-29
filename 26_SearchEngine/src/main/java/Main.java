@@ -56,7 +56,7 @@ public class Main {
     Session session = sessionFactory.openSession();
     Transaction transaction = session.beginTransaction();
 
-
+/*
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
    // System.out.println("Все найденные URL: " + resultList);
@@ -243,10 +243,10 @@ public class Main {
       }
 
 
-
+*/
     //================= TODO  Stage 5 ====================================>
 
-    String searchQuery = "Куплю смартфон с защитным экраном";
+    String searchQuery = "Куплю смартфон в красном корпусе с пониженной толщиной";
 
     Map<String, Integer> lemmasInQuery = new HashMap<>();
 
@@ -260,19 +260,36 @@ public class Main {
     Map<Lemma, Integer> lemmasQueryByFrequency = new HashMap<>();
     List<Lemma> listLemmasInQuery = new ArrayList<>();
     Set<Integer> setOfPageNumbers = new HashSet<>();
+    Set<Lemma> fullSetlemmasInQuery = new HashSet<>();
 
     lemmasInQuery.forEach((key, value) -> {
       Query queryLemma = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", key);
       Lemma lemmaFromQuery = (Lemma) getSingleResultOrNull(queryLemma);
-      if (lemmaFromQuery != null) {
-        lemmasQueryByFrequency.put(lemmaFromQuery, lemmaFromQuery.getFrequency());
+      if(lemmaFromQuery!=null) {
+        fullSetlemmasInQuery.add(lemmaFromQuery);
+      }
+      else {
+        String newKey = StemmerPorterRU.stem(key);
+        Query queryLemmaAgain = session.createQuery("select l from Lemma l where l.lemma like :newlemma").setParameter("newlemma", newKey + "%");
+        List<Lemma> lemmasFromQuerry = queryLemmaAgain.getResultList();
+        fullSetlemmasInQuery.addAll(lemmasFromQuerry);
       }
     });
 
+      //=================== Let's eliminate the most common lemmas (item 5.2) ===================================>
+    for(Lemma lemmaFromQuery: fullSetlemmasInQuery) {
+      Integer numberOfPages = session.createQuery("from Page").getResultList().size();
+      int thresholdFrequency = (int) (numberOfPages * 0.8);
+
+      if (lemmaFromQuery != null && lemmaFromQuery.getFrequency() < thresholdFrequency) {
+        lemmasQueryByFrequency.put(lemmaFromQuery, lemmaFromQuery.getFrequency());
+      }
+    }
+//=========================================================================================================<
+
+
     lemmasQueryByFrequency.entrySet().stream().sorted(Map.Entry.<Lemma, Integer>comparingByValue())
             .forEach(x -> listLemmasInQuery.add(x.getKey()));
-
-  //  System.out.println(listLemmasInQuery.get(0) + "  " + listLemmasInQuery.get(1) ); // TODO only for development
 
     // ================= Item 5.6 ======================>
 
@@ -326,6 +343,7 @@ public class Main {
       truncateCustomOutput.executeUpdate();
       txn.commit();
 
+      //============================= looking for snippet, highlighting =============================>
       for (Relevance rev : relevances) {
         Integer pageId = rev.getPage();
         Query query = session.createQuery("select p from Page p where p.id = :itemId").setParameter("itemId", pageId);
@@ -340,10 +358,17 @@ public class Main {
         for (Lemma lemma_toSearch : listLemmasInQuery) {
           String matchingWord = lemma_toSearch.getLemma();
           Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
-          if (elements.isEmpty()) {
-            matchingWord = StemmerPorterRU.stem(matchingWord);
-            elements = doc.select("*:containsOwn(" + matchingWord + ")");
-          }
+/*    todo ==> search option with stemming
+//          if (elements.isEmpty()) {
+//            matchingWord = StemmerPorterRU.stem(matchingWord);
+//            elements = doc.select("*:containsOwn(" + matchingWord + ")");
+//          }
+*/
+
+
+
+
+
 
           for (Element element : elements) {
             String swap = "<b>" + matchingWord + "<b>";

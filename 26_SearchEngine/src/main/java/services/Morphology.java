@@ -6,6 +6,8 @@ import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Morphology {
 
@@ -14,10 +16,11 @@ public class Morphology {
 
     public static void main(String[] args) throws IOException {
 
-        Pair<Map<String, Integer>, String> lemTextMap = getSetLemmas("Пока мама мыла раму, Петя помыл ванну с мылом.");
+       // Pair<Map<String, Integer>, String> lemTextMap = getSetLemmas("Пока мама мыла раму, Петя помыл ванну с мылом.");
         //Map<String, Integer> lemTextMap = getSetLemmas("ученые нашли новое месторождение полезных ископаемых, молодцы ученые, хотя и не герои");
         //Map<String, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
-//        Map<String, Integer> lemTextMap = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
+        //Pair<Map<String, Integer>, String> lemTextMap  = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
+        Pair<Map<String, Integer>, String> lemTextMap  = getSetLemmas("Мы и они пониженной толщиной электроники");
         System.out.println(lemTextMap);
 
     }
@@ -26,7 +29,7 @@ public class Morphology {
         normalizedLemmMap = new LinkedHashMap<>();
         //RussianAnalyzer analyzer = new RussianAnalyzer();
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
-        List<String> treatedWords = new ArrayList<>();  // store the processed words so you don't get ==> word/word/word ...
+        Set<String> treatedWords = new HashSet<>();  // store the processed words so you don't get ==> word/word/word ...
         String textWithLemmas = text.toLowerCase();
         String[] disassembledText = text.trim().split("(\\s+)|(?=[А-Я]{1,})");
         for (String str : disassembledText) {
@@ -41,19 +44,23 @@ public class Morphology {
                 //System.out.println(wordBaseForms);
                 //for (String word : wordBaseForms) {
                 //String word = wordBaseForms.get(0);
-                    if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("ЧАСТ") || selectedWord.length()<=2)) {
+
+                    if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("МС") || selectedWord.length()<=2)) {
                         List<String> lemmaForms = luceneMorph.getNormalForms(s);
                         String needWord = wordChoice(selectedWord, lemmaForms);
                         Integer countlemm = normalizedLemmMap.get(needWord);
-      // ====================================add a lemma to each word ==============================>
+      // ====================================add a lemma to each word (for 'lemmatized_content') ==============================>
                         if(!treatedWords.contains(s)) {
                             int startPointSplit = textWithLemmas.indexOf(s);
+                            if (startPointSplit > -1){
                             String subText1 = textWithLemmas.substring(0, startPointSplit);
                             String subText2 = textWithLemmas.substring(startPointSplit);
                             String replacementThis = s + "|" + needWord;
                             subText2 = subText2.replace(s, replacementThis);
                             textWithLemmas = subText1 + subText2;
                             treatedWords.add(s);
+                            treatedWords.add(needWord);
+                         }
                         }
       //===========================================================================================<
 
