@@ -38,6 +38,8 @@ import services.StemmerPorterRU;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+
 
 public class Main {
 
@@ -56,7 +58,7 @@ public class Main {
     Session session = sessionFactory.openSession();
     Transaction transaction = session.beginTransaction();
 
-/*
+
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
    // System.out.println("Все найденные URL: " + resultList);
@@ -71,7 +73,7 @@ public class Main {
       session.save(currentPage);
     }
 
-    transaction.commit();
+   // transaction.commit();
    // session.close();
    // sessionFactory.close();
 
@@ -94,7 +96,7 @@ public class Main {
       try {
         String lemmatized_content = Morphology.getSetLemmas(cleanContent).getValue1();
         page.setLemmatized_content(lemmatized_content);
-        session.beginTransaction();
+        //session.beginTransaction();
         session.saveOrUpdate(page);
         if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
           transaction.commit();
@@ -127,7 +129,7 @@ public class Main {
           Query query = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", lemmaStringFromPage);
           Lemma receivedLemma = (Lemma) query.getSingleResult();
           receivedLemma.setFrequency(receivedLemma.getFrequency() + 1);
-          session.beginTransaction();
+         // session.beginTransaction();
           session.saveOrUpdate(receivedLemma);
           if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
             transaction.commit();
@@ -138,9 +140,9 @@ public class Main {
             session.save(createNewlemma);
           }
       });
-      if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
-        transaction.commit();
-      }
+//      if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
+//        transaction.commit();
+//      }
 
       Document docTitle = Jsoup.parse(originalContent);
       String textInTitle = docTitle.select("title").text();
@@ -243,7 +245,7 @@ public class Main {
       }
 
 
-*/
+
     //================= TODO  Stage 5 ====================================>
 
     String searchQuery = "Куплю смартфон в красном корпусе с пониженной толщиной";
@@ -322,8 +324,14 @@ public class Main {
         mapRelevance.put(key, tuple);
       });
 
+      // https://www.baeldung.com/jpa-transaction-required-exception
+      Transaction trsn = session.beginTransaction();
       Query truncate = session.createNativeQuery("truncate relevance");
       truncate.executeUpdate();
+      trsn.commit();
+
+
+      transaction.begin();
       mapRelevance.forEach((key, value) -> {
         Relevance rev = new Relevance();
         rev.setPage(key);
@@ -343,7 +351,39 @@ public class Main {
       truncateCustomOutput.executeUpdate();
       txn.commit();
 
-      //============================= looking for snippet, highlighting =============================>
+  /*   If there are lemmas with frequency ==1, first we will find the pages with these lemmas    */
+      for(Lemma lm : listLemmasInQuery){
+        if(lm.getFrequency() == 1){
+          Query queryMyIndex = session.createQuery("select mI from MyIndex mI where mI.lemma_id = :lemma_id").setParameter("lemma_id", lm.getId());
+          MyIndex myIndex = (MyIndex) queryMyIndex.getSingleResult();
+          Integer pageId = myIndex.getPage_id();
+
+// looking for snippet, highlighting
+          Query queryPage = session.createQuery("select p from Page p where p.id = :itemId").setParameter("itemId", pageId);
+          Page current_Page = (Page) queryPage.getSingleResult();
+          String uri = current_Page.getPath();
+          String content = current_Page.getContent();
+          Document doc = Jsoup.parse(content);
+          String title = doc.select("title").text();
+          Double relevanceItem = 1.0;
+          StringBuffer pre_snippet = new StringBuffer();
+          String matchingWord = lm.getLemma();
+          Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
+          if (elements.isEmpty()) {
+
+
+          }
+
+
+
+
+        }
+      }
+  //==================================================================<
+
+
+
+      //============================= then search by relevance  =============================>
       for (Relevance rev : relevances) {
         Integer pageId = rev.getPage();
         Query query = session.createQuery("select p from Page p where p.id = :itemId").setParameter("itemId", pageId);
@@ -364,7 +404,9 @@ public class Main {
 //            elements = doc.select("*:containsOwn(" + matchingWord + ")");
 //          }
 */
+          if (elements.isEmpty()) {
 
+          }
 
 
 

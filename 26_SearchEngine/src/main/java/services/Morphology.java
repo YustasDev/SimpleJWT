@@ -30,7 +30,8 @@ public class Morphology {
         //RussianAnalyzer analyzer = new RussianAnalyzer();
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
         Set<String> treatedWords = new HashSet<>();  // store the processed words so you don't get ==> word/word/word ...
-        String textWithLemmas = text.toLowerCase();
+       // String textWithLemmas = text.toLowerCase();
+        StringBuilder stringBuilder = new StringBuilder();
         String[] disassembledText = text.trim().split("(\\s+)|(?=[А-Я]{1,})");
         for (String str : disassembledText) {
             //String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]&&[^-]]", "");
@@ -50,7 +51,10 @@ public class Morphology {
                         String needWord = wordChoice(selectedWord, lemmaForms);
                         Integer countlemm = normalizedLemmMap.get(needWord);
       // ====================================add a lemma to each word (for 'lemmatized_content') ==============================>
-                        if(!treatedWords.contains(s)) {
+                          String s_withLemma = s + "|" + needWord + " ";
+                          stringBuilder.append(s_withLemma);
+
+                        /*     if(!treatedWords.contains(s)) {
                             int startPointSplit = textWithLemmas.indexOf(s);
                             if (startPointSplit > -1){
                             String subText1 = textWithLemmas.substring(0, startPointSplit);
@@ -61,7 +65,7 @@ public class Morphology {
                             treatedWords.add(s);
                             treatedWords.add(needWord);
                          }
-                        }
+                        }   */
       //===========================================================================================<
 
                         if (countlemm == null) {
@@ -74,6 +78,7 @@ public class Morphology {
                     }
                 }
             }
+        String textWithLemmas = stringBuilder.toString();
         Pair<Map<String, Integer>, String> processedText = new Pair<Map<String, Integer>, String>(normalizedLemmMap, textWithLemmas);
         return processedText;
     }
