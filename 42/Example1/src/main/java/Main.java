@@ -45,6 +45,7 @@ public class Main {
         //        private Path namesPath = Paths.get("/home/progforce/11/passFor Email.txt");
         public Logger logger = Logger.getLogger(this.getClass().getName());
         static FileHandler fhLog = null;
+        String a, b, c =
 
 
         public static void main(String[] args) {
