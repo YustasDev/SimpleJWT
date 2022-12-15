@@ -15,7 +15,7 @@ import javax.security.auth.message.AuthException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+    @Service
     @RequiredArgsConstructor
     public class AuthService {
 

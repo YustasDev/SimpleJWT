@@ -19,7 +19,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Slf4j
+    @Slf4j
     @Component
     @RequiredArgsConstructor
     public class JwtFilter extends GenericFilterBean {
