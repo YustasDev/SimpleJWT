@@ -1,6 +1,7 @@
 import org.apache.commons.collections4.ListUtils;
 
 import javax.management.modelmbean.InvalidTargetObjectTypeException;
+import javax.xml.bind.DatatypeConverter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -45,15 +46,44 @@ public class Main {
         //        private Path namesPath = Paths.get("/home/progforce/11/passFor Email.txt");
         public Logger logger = Logger.getLogger(this.getClass().getName());
         static FileHandler fhLog = null;
-        String a, b, c =
 
 
-        public static void main(String[] args) {
+        public static void main(String[] args) throws UnsupportedEncodingException {
 
-                Main mainA = new Main();
-                mainA.foo();
+                String inputString = "Some String";
+                byte[] bytes = inputString.getBytes("UTF-8");
+                String encoded = Base64.getEncoder().encodeToString(bytes);
+
+
+                byte[] decoded = Base64.getDecoder().decode(encoded);
+                String decodedString = new String(decoded);
+//
+//                byte[] result = DatatypeConverter.parseBase64Binary(encoded);  // DatatypeConverter is deprecated ==> https://stackoverflow.com/questions/38563609/datatypeconverter-vs-base64
+//                String decodedString1 = new String(result);
+//
+//
+                System.out.println(encoded);
+                System.out.println(decoded);
+                System.out.println(decodedString);
+//                System.out.println(decodedString1);
+//========================================================================================================<
+//                String s = "TmlzMTIzNDU2IQ==";
+//                byte[] decoded2 = Base64.getDecoder().decode(s);
+//                String decodedString2 = new String(decoded2);
+//
+//                byte[] result1 = DatatypeConverter.parseBase64Binary(s);
+//                String decodedString22 = new String(result1);
+//
+//                System.out.println(decodedString2);
+//                System.out.println(decodedString22);
+//
 
         }
+
+//                Main mainA = new Main();
+//                mainA.foo();
+//
+//        }
 
 
         void foo(){

@@ -1,5 +1,7 @@
 package com.example.myjwt.controllers;
 
+import com.example.myjwt.dto.JwtAuthentication;
+import com.example.myjwt.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

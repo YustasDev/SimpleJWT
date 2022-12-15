@@ -3,6 +3,7 @@ package com.example.myjwt.dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
+
 @RequiredArgsConstructor
 public enum Role implements GrantedAuthority {
 
