@@ -27,7 +27,7 @@ public class Main {
         });
 
     long generalStart = System.currentTimeMillis();
-    final int maxThreads = 1;
+    final int maxThreads = 4;
 
     ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
     int firstNumberRegion = 1;
