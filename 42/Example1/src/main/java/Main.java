@@ -50,6 +50,7 @@ public class Main {
 
         public static void main(String[] args) throws UnsupportedEncodingException {
 
+
                 String inputString = "Some String";
                 byte[] bytes = inputString.getBytes("UTF-8");
                 String encoded = Base64.getEncoder().encodeToString(bytes);

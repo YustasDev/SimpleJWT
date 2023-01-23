@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import models.*;
 import org.apache.commons.text.similarity.LongestCommonSubsequenceDistance;
@@ -47,6 +49,7 @@ public class Main {
   private static String recordedFile = "output.txt";
   private static final Logger LOGGER = LogManager.getLogger(Main.class);
   private static final Marker HISTORY_PARSING = MarkerManager.getMarker("HISTORY_PARSING");
+  private static final Marker WORD_SEARCH_HISTORY = MarkerManager.getMarker("WORD_SEARCH_HISTORY");
 
 
   public static void main(String[] args) {
@@ -57,7 +60,7 @@ public class Main {
     SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
     Session session = sessionFactory.openSession();
     Transaction transaction = session.beginTransaction();
-
+/*
 
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
@@ -244,7 +247,7 @@ public class Main {
 
       }
 
-
+*/
 
     //================= TODO  Stage 5 ====================================>
 
@@ -267,10 +270,9 @@ public class Main {
     lemmasInQuery.forEach((key, value) -> {
       Query queryLemma = session.createQuery("select l from Lemma l where l.lemma = :itemlemma").setParameter("itemlemma", key);
       Lemma lemmaFromQuery = (Lemma) getSingleResultOrNull(queryLemma);
-      if(lemmaFromQuery!=null) {
+      if (lemmaFromQuery != null) {
         fullSetlemmasInQuery.add(lemmaFromQuery);
-      }
-      else {
+      } else {
         String newKey = StemmerPorterRU.stem(key);
         Query queryLemmaAgain = session.createQuery("select l from Lemma l where l.lemma like :newlemma").setParameter("newlemma", newKey + "%");
         List<Lemma> lemmasFromQuerry = queryLemmaAgain.getResultList();
@@ -278,8 +280,8 @@ public class Main {
       }
     });
 
-      //=================== Let's eliminate the most common lemmas (item 5.2) ===================================>
-    for(Lemma lemmaFromQuery: fullSetlemmasInQuery) {
+    //=================== Let's eliminate the most common lemmas (item 5.2) ===================================>
+    for (Lemma lemmaFromQuery : fullSetlemmasInQuery) {
       Integer numberOfPages = session.createQuery("from Page").getResultList().size();
       int thresholdFrequency = (int) (numberOfPages * 0.8);
 
@@ -324,11 +326,9 @@ public class Main {
         mapRelevance.put(key, tuple);
       });
 
-      // https://www.baeldung.com/jpa-transaction-required-exception
-      Transaction trsn = session.beginTransaction();
       Query truncate = session.createNativeQuery("truncate relevance");
       truncate.executeUpdate();
-      trsn.commit();
+      transaction.commit();
 
 
       transaction.begin();
@@ -345,13 +345,63 @@ public class Main {
       List<CustomOutput> customOutputList = new LinkedList<>();
       List<Relevance> relevances = session.createQuery("from Relevance").getResultList();
       Collections.sort(relevances);
-
+      // https://www.baeldung.com/jpa-transaction-required-exception
       Transaction txn = session.beginTransaction();
       Query truncateCustomOutput = session.createNativeQuery("truncate customoutput");
       truncateCustomOutput.executeUpdate();
       txn.commit();
 
-  /*   If there are lemmas with frequency ==1, first we will find the pages with these lemmas    */
+      for (Relevance rev : relevances) {
+        Integer pageId = rev.getPage();
+        Query query = session.createQuery("select p from Page p where p.id = :itemId").setParameter("itemId", pageId);
+        Page current_Page = (Page) query.getSingleResult();
+        String uri = current_Page.getPath();
+        String content = current_Page.getContent();
+        Document doc = Jsoup.parse(content);
+        String title = doc.select("title").text();
+        Double relevanceItem = rev.getAbsolute_relevance();
+        StringBuffer pre_snippet = new StringBuffer();
+
+        for (Lemma lemma_toSearch : listLemmasInQuery) {
+          String matchingWord = lemma_toSearch.getLemma();
+          Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
+          if (elements.isEmpty()) {
+            String lemmatized_content = current_Page.getLemmatized_content();
+            Matcher matcher = Pattern.compile(".*\\s(.*\\|" + matchingWord + ")\\s.*").matcher(lemmatized_content);
+            matcher.matches();
+            try {
+              String findWord = matcher.group(1);
+              String[] words = findWord.split("\\|");
+              matchingWord = words[0];
+            }
+            catch (IllegalStateException ise){
+              LOGGER.info(WORD_SEARCH_HISTORY, "The word: " + matchingWord + " was not found on page ", current_Page);
+            }
+            elements = doc.select("*:containsOwn(" + matchingWord + ")");
+          }
+          if (!elements.isEmpty()) {
+            for (Element element : elements) {
+              String swap = "<b>" + matchingWord + "<b>";
+              String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
+              pre_snippet.append(editedExpression + "\n");
+            }
+          }
+          String snippet = pre_snippet.toString();
+
+          CustomOutput customOutput = new CustomOutput();
+          customOutput.setUri(uri);
+          customOutput.setTitle(title);
+          customOutput.setSnippet(snippet);
+          customOutput.setRelevance(relevanceItem);
+          session.saveOrUpdate(customOutput);
+        }
+        if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
+          transaction.commit();
+        }
+
+
+
+  /*   If there are lemmas with frequency ==1, first we will find the pages with these lemmas
       for(Lemma lm : listLemmasInQuery){
         if(lm.getFrequency() == 1){
           Query queryMyIndex = session.createQuery("select mI from MyIndex mI where mI.lemma_id = :lemma_id").setParameter("lemma_id", lm.getId());
@@ -370,9 +420,19 @@ public class Main {
           String matchingWord = lm.getLemma();
           Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
           if (elements.isEmpty()) {
-
-
+            String lemmatized_content = current_Page.getLemmatized_content();
+            Matcher matcher = Pattern.compile(".*\\s(.*\\|" + matchingWord + ")\\s.*").matcher(lemmatized_content);
+            matcher.matches();
+            String findWord = matcher.group(1);
+            String[] words = findWord.split("\\|");
+            matchingWord = words[0];
           }
+          Elements elementsPlus = doc.select("*:containsOwn(" + matchingWord + ")");
+          int r = 5;
+
+
+
+
 
 
 
@@ -398,12 +458,12 @@ public class Main {
         for (Lemma lemma_toSearch : listLemmasInQuery) {
           String matchingWord = lemma_toSearch.getLemma();
           Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
-/*    todo ==> search option with stemming
+
 //          if (elements.isEmpty()) {
 //            matchingWord = StemmerPorterRU.stem(matchingWord);
 //            elements = doc.select("*:containsOwn(" + matchingWord + ")");
 //          }
-*/
+
           if (elements.isEmpty()) {
 
           }
@@ -430,8 +490,15 @@ public class Main {
       if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
         transaction.commit();
       }
-     }
+
+
+      */
+      }
     }
+  }
+
+
+
 
 
 
