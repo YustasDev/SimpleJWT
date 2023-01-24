@@ -1,23 +1,17 @@
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import models.*;
-import org.apache.commons.text.similarity.LongestCommonSubsequenceDistance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-import org.apache.lucene.morphology.LuceneMorphology;
-import org.apache.lucene.morphology.russian.RussianAnalyzer;
-import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -25,22 +19,16 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
-import services.LinkGetterWithFJPool;
 import services.Morphology;
 import services.StemmerPorterRU;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
 
 public class Main {
@@ -251,9 +239,10 @@ public class Main {
 
     //================= TODO  Stage 5 ====================================>
 
-    String searchQuery = "Куплю смартфон в красном корпусе с пониженной толщиной";
+    String searchQuery = "На дворе трава, на траве дрова";
 
     Map<String, Integer> lemmasInQuery = new HashMap<>();
+    List<CustomOutput> list_CustomOutput = new ArrayList<>();
 
     try {
       lemmasInQuery = Morphology.getSetLemmas(searchQuery).getValue0();
@@ -373,9 +362,8 @@ public class Main {
               String findWord = matcher.group(1);
               String[] words = findWord.split("\\|");
               matchingWord = words[0];
-            }
-            catch (IllegalStateException ise){
-              LOGGER.info(WORD_SEARCH_HISTORY, "The word: " + matchingWord + " was not found on page ", current_Page);
+            } catch (IllegalStateException ise) {
+              LOGGER.warn(WORD_SEARCH_HISTORY, "The word: '" + matchingWord + "' was not found on page: " + pageId);
             }
             elements = doc.select("*:containsOwn(" + matchingWord + ")");
           }
@@ -385,20 +373,27 @@ public class Main {
               String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
               pre_snippet.append(editedExpression + "\n");
             }
+            String snippet = pre_snippet.toString();
+
+            CustomOutput customOutput = new CustomOutput();
+            customOutput.setUri(uri);
+            customOutput.setTitle(title);
+            customOutput.setSnippet(snippet);
+            customOutput.setRelevance(relevanceItem);
+            session.saveOrUpdate(customOutput);
           }
-          String snippet = pre_snippet.toString();
-
-          CustomOutput customOutput = new CustomOutput();
-          customOutput.setUri(uri);
-          customOutput.setTitle(title);
-          customOutput.setSnippet(snippet);
-          customOutput.setRelevance(relevanceItem);
-          session.saveOrUpdate(customOutput);
         }
-        if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
-          transaction.commit();
-        }
+      }
 
+      list_CustomOutput = session.createQuery("select cop from CustomOutput cop where cop.id IN" +
+              " (select max(cop.id) as mid from CustomOutput cop group by cop.uri)").getResultList();
+
+
+
+
+//      if (transaction.getStatus().equals(TransactionStatus.ACTIVE)) {
+//        transaction.commit();
+//      }
 
 
   /*   If there are lemmas with frequency ==1, first we will find the pages with these lemmas
@@ -494,8 +489,8 @@ public class Main {
 
       */
       }
+              // list_CustomOutput    todo do something further
     }
-  }
 
 
 

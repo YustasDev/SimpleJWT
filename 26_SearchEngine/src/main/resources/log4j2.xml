@@ -9,6 +9,13 @@
       </Filters>
     </File>
 
+    <File name="LemmSearch" fileName="logs/lemmSearch.log">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <Filters>
+        <MarkerFilter marker="WORD_SEARCH_HISTORY" />
+      </Filters>
+    </File>
+
     <File name="ExceptionCase" fileName="logs/exceptions.log">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
@@ -18,6 +25,7 @@
   <loggers>
     <root level="info">
       <appender-ref ref="ParseResult"/>
+      <appender-ref ref="LemmSearch" level="warn"/>
       <appender-ref ref="ExceptionCase" level="error"/>
     </root>
   </loggers>
