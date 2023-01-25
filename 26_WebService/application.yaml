@@ -10,3 +10,8 @@ spring:
     url: jdbc:mysql://localhost:3306/search_engine?serverTimezone=Europe/Moscow
     username: root
     password: ENC(w7qYbKTj2l8T6ozrMwNQYpvJbVSQjUzG)
+
+
+sites:
+  url: http://www.playback.ru
+  name: Магазин playback.ru
