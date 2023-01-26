@@ -13,18 +13,16 @@ jasypt:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/search_engine?serverTimezone=Europe/Moscow
-    username: root
+    №username: root
     password: ENC(w7qYbKTj2l8T6ozrMwNQYpvJbVSQjUzG)
-
-
-jpa:
-properties:
-hibernate:
-  dialect: org.hibernate.dialect.MySQL8Dialect
-  hibernate:
-  ddl-auto: update
-  show-sql: true
+    url: jdbc:mysql://localhost:3306/web_search_engine?serverTimezone=Europe/Moscow
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 
 indexing-settings:
