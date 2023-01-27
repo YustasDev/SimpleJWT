@@ -47,6 +47,8 @@ public class Site implements Serializable{
     @NotNull
     private String site_name;
 
+
+
     public enum Status {
         INDEXING,
         INDEXED,
