@@ -50,6 +50,50 @@ public class Main {
 
         public static void main(String[] args) throws UnsupportedEncodingException {
 
+                //List<String> list = List.of("А", "С", "B", "Z", "Сc", "Bb", "Zz", "Y");
+
+                List<String> ls = new ArrayList<>();
+                ls.addAll(Stream.of("a","z","t","b","c","d","e").collect(Collectors.toList()));
+
+                List<String> alphabeticsList = new ArrayList(ls);
+                Collections.sort(alphabeticsList); //коллекция отсортированная по алфавиту
+
+                Comparator<String> lengthComparator = new Comparator<String>() {
+                        @Override
+                        public int compare(String s, String t1) {
+                                //int res = s.compareTo(t1);
+                                int res = t1.compareTo(s);
+                                return res;
+                        }
+                };
+
+                List<String> lengthList = new ArrayList(ls);
+                Collections.sort(lengthList, lengthComparator);
+
+                for (String s : ls){
+                        out.println(s);
+                }
+
+                out.println("------------------------------------------------------------");
+
+                for (String s : alphabeticsList){
+                        out.println(s);
+                }
+
+                out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+                for(int i = 0; i < alphabeticsList.size(); i++) {
+                        out.println(i + "  " + alphabeticsList.get(i));
+                }
+
+                out.println(lengthList);
+                out.println(alphabeticsList);
+
+
+
+
+
+/* todo base 64
 
                 String inputString = "Some String";
                 byte[] bytes = inputString.getBytes("UTF-8");
@@ -78,7 +122,7 @@ public class Main {
 //                System.out.println(decodedString2);
 //                System.out.println(decodedString22);
 //
-
+*/
         }
 
 //                Main mainA = new Main();
@@ -1234,6 +1278,7 @@ public class Main {
                 else {
                     out.printf("Empty\n");}
         }
+
 }
 
 
