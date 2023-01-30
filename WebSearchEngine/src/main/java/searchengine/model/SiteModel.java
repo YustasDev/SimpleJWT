@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Site implements Serializable{
+public class SiteModel implements Serializable{
 
     @Id
     @Column(name = "id")
@@ -24,7 +24,6 @@ public class Site implements Serializable{
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    //@Column(columnDefinition = "enum", nullable = false)
     @Column(columnDefinition = "ENUM('INDEXING', 'INDEXED', 'FAILED')", nullable = false)
     @NotNull
     private Status status;

@@ -40,9 +40,15 @@ public class Page implements Serializable{
         @NotNull
         private String lemmatized_content;
 
-
         @ManyToOne
         @JoinColumn(name="site_id", nullable=false)
-        private Site site;
+        private SiteModel site;
 
+        public Page(String url, int code, String content, String lemmatized_content, SiteModel site) {
+                this.path = url;
+                this.code = code;
+                this.content = content;
+                this.lemmatized_content = lemmatized_content;
+                this.site = site;
+        }
 }

@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import searchengine.model.Page;
+import searchengine.model.SiteModel;
 
 import java.io.IOException;
 import java.util.*;
@@ -24,16 +25,18 @@ import java.util.concurrent.RecursiveTask;
         static Set<String> visitedLinks = new ConcurrentSkipListSet<>();
         List<String> finalList = new ArrayList<>();
         String url;
+        SiteModel site;
         public static Map<String, Object> htmlStore = new HashMap<>();
 
 
-        public LinkGetterWithFJPool(String url) {
-            this.url = url;
+        public LinkGetterWithFJPool(SiteModel site) {
+            this.site = site;
         }
 
 
         @Override
         protected List<String> compute() {
+            url = site.getUrl();
             visitedLinks.add(url);
             Document docNeed = null;
 
@@ -52,9 +55,10 @@ import java.util.concurrent.RecursiveTask;
                 LOGGER.error("Error when reading url: " + url + "with exception: " + e);
             }
 
+
             String content = docNeed.html();
             String lemmatized_content = ""; // todo ==> need insert this field
-            Page page = new Page(url, code, content, lemmatized_content);
+            Page page = new Page(url, code, content, lemmatized_content, site);
             htmlStore.put(url, page);
 
             try {
@@ -89,7 +93,7 @@ import java.util.concurrent.RecursiveTask;
 
             List<LinkGetterWithFJPool> taskList = new ArrayList<>();
             for (String url : listURLSelect) {
-                LinkGetterWithFJPool task = new LinkGetterWithFJPool(url);
+                LinkGetterWithFJPool task = new LinkGetterWithFJPool(site);
                 task.fork();
                 taskList.add(task);
             }
