@@ -1,9 +1,11 @@
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,11 +21,14 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
+import services.LinkGetterWithFJPool;
 import services.Morphology;
 import services.StemmerPorterRU;
 
@@ -48,11 +53,11 @@ public class Main {
     SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
     Session session = sessionFactory.openSession();
     Transaction transaction = session.beginTransaction();
-/*
+
 
     List<String> resultList = new ForkJoinPool()
         .invoke(new LinkGetterWithFJPool(URL_NEED));
-   // System.out.println("Все найденные URL: " + resultList);
+    System.out.println("Все найденные URL: " + resultList);
     Set<String> nonDuplicates = cleanDuplicates(resultList);
     System.out.println("URL без дубликатов:");
     nonDuplicates.forEach((e) -> {
@@ -64,9 +69,9 @@ public class Main {
       session.save(currentPage);
     }
 
-   // transaction.commit();
-   // session.close();
-   // sessionFactory.close();
+//    transaction.commit();
+//    session.close();
+//    sessionFactory.close();
 
     //=========================>
 
@@ -235,7 +240,6 @@ public class Main {
 
       }
 
-*/
 
     //================= TODO  Stage 5 ====================================>
 

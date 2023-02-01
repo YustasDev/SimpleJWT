@@ -2,6 +2,7 @@ package searchengine.model;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "lemma")
 public class Lemma implements Serializable {
@@ -29,9 +31,8 @@ public class Lemma implements Serializable {
         @NotNull
         private Integer frequency;
 
-
-
-
-
-
+        public Lemma(String lemma, Integer frequency) {
+                this.lemma = lemma;
+                this.frequency = frequency;
+        }
 }

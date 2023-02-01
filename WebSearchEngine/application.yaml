@@ -3,18 +3,19 @@
 server:
 port: 8080
 
-
-jasypt:
-  encryptor:
-    algorithm: PBEWithMD5AndDES
-    password: ${ENCRYPTION_PASSWORD:secretKey}
-    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+#
+#jasypt:
+#  encryptor:
+#    algorithm: PBEWithMD5AndDES
+#    password: ${ENCRYPTION_PASSWORD:secretKey}
+#    iv-generator-classname: org.jasypt.iv.NoIvGenerator
 
 
 spring:
   datasource:
-    №username: root
-    password: ENC(w7qYbKTj2l8T6ozrMwNQYpvJbVSQjUzG)
+    username: root
+    #password: ENC(w7qYbKTj2l8T6ozrMwNQYpvJbVSQjUzG)
+    password: password
     url: jdbc:mysql://localhost:3306/web_search_engine?serverTimezone=Europe/Moscow
   jpa:
     properties:

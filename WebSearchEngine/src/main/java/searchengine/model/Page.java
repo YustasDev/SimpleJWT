@@ -40,7 +40,7 @@ public class Page implements Serializable{
         @NotNull
         private String lemmatized_content;
 
-        @ManyToOne
+        @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         @JoinColumn(name="site_id", nullable=false)
         private SiteModel site;
 

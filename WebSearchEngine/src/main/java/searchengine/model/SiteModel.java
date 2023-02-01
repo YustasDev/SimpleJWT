@@ -28,9 +28,8 @@ public class SiteModel implements Serializable{
     @NotNull
     private Status status;
 
-
+    @Basic
     @Column(name = "status_time", updatable = false, nullable = false)
-    //@Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private LocalDateTime status_time;
 

@@ -9,15 +9,9 @@ import java.util.*;
 
     public class Morphology {
 
-        //private static Map<List<String>, Integer> lemmMap = new LinkedHashMap<>();
         private static Map<String, Integer> normalizedLemmMap;
 
         public static void main(String[] args) throws IOException {
-
-            // Pair<Map<String, Integer>, String> lemTextMap = getSetLemmas("Пока мама мыла раму, Петя помыл ванну с мылом.");
-            //Map<String, Integer> lemTextMap = getSetLemmas("ученые нашли новое месторождение полезных ископаемых, молодцы ученые, хотя и не герои");
-            //Map<String, Integer> lemTextMap = getSetLemmas("Повторное появление леопарда в Осетии позволяет предположить, что леопард постоянно обитает в некоторых районах Северного Кавказа.");
-            //Pair<Map<String, Integer>, String> lemTextMap  = getSetLemmas("Вася и Петя пошли в лес, а потом в поле; лишь Саша не пошел - но он почти герой");
             Pair<Map<String, Integer>, String> lemTextMap  = getSetLemmas("Мы и они пониженной толщиной электроники");
             System.out.println(lemTextMap);
 
@@ -25,21 +19,16 @@ import java.util.*;
 
         public static Pair<Map<String, Integer>, String> getSetLemmas(String text) throws IOException {
             normalizedLemmMap = new LinkedHashMap<>();
-            //RussianAnalyzer analyzer = new RussianAnalyzer();
             LuceneMorphology luceneMorph = new RussianLuceneMorphology();
-            Set<String> treatedWords = new HashSet<>();  // store the processed words so you don't get ==> word/word/word ...
-            // String textWithLemmas = text.toLowerCase();
             StringBuilder stringBuilder = new StringBuilder();
             String[] disassembledText = text.trim().split("(\\s+)|(?=[А-Я]{1,})");
             for (String str : disassembledText) {
-                //String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]&&[^-]]", "");
                 String s = str.toLowerCase().replaceAll("[\\p{Punct}\\s&&[^\\h]&&[^-]]", "");
                 if (!(s == null || s.isEmpty() || s.trim().isEmpty())) {
                     List<String> wordBaseForms = luceneMorph.getMorphInfo(s);
                     String selectedWord = wordChoice(s, wordBaseForms);
                     List<String> wordBaseFormsOneMore = luceneMorph.getMorphInfo(selectedWord);
                     String word = wordBaseFormsOneMore.get(0);
-
 
                     if (!(word.contains("СОЮЗ") || word.contains("МЕЖД") || word.contains("ПРЕДЛ") || word.contains("МС") || selectedWord.length()<=2)) {
                         List<String> lemmaForms = luceneMorph.getNormalForms(s);
