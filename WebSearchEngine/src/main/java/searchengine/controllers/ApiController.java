@@ -47,22 +47,8 @@ public class ApiController {
 
         for(SiteModel siteModel : siteModelList) {
             List <Page> pageList = siteParseService.saveAllPagesSite_toDB(siteModel);
-            siteParseService.savelemmatizedContent_toPageTable(pageList);
-
-
-
-
-
-
+            siteParseService.saveIndexingData_toDB(pageList);
         }
-
-
-
-
-
-
-
-
 
 
 
