@@ -24,7 +24,6 @@ public class ApiController {
     private final StatisticsService statisticsService;
     private final SiteParseService siteParseService;
     static volatile boolean startIndexing = false;
-    static Thread indexingThread;
     static FutureTask ft;
 
     public ApiController(StatisticsService statisticsService, SiteParseService siteParseService, PageRepository pageRepository) {
@@ -45,23 +44,11 @@ public class ApiController {
             indexingResult.setError("Индексация уже запущена");
             return ResponseEntity.ok(indexingResult);
         }
-
         startIndexing = true;
-
-//        List<SiteModel> siteModelList = siteParseService.saveSites_toDB();
-//
-//        for(SiteModel siteModel : siteModelList) {
-//            List<Page> pageList = siteParseService.saveAllPagesSite_toDB(siteModel);
-//            siteParseService.saveIndexingData_toDB(pageList);
-//        }
-
         ft = new FutureTask<>(new IndexingSitesThread(siteParseService), "startIndexing");
         new Thread(ft).start();
 
-//        indexingThread = new Thread(new IndexingSitesThread(siteParseService), "startIndexing");
-//        indexingThread.start();
         try {
-          //  indexingThread.join();
             ft.get();
             if(ft.isCancelled()){
                 log.info("RUN() method is cancell");
@@ -88,7 +75,6 @@ public class ApiController {
 
     @GetMapping("/stopIndexing")
     public ResponseEntity<IndexingResult> indexingStop() {
-       // indexingThread.interrupt();
         boolean checkIt;
         try {
             checkIt = ft.cancel(true);
@@ -106,16 +92,6 @@ public class ApiController {
             log.info("the 'stopIndexing' task failed");
             return ResponseEntity.ok(new IndexingResult(false, "The 'stopIndexing' task failed"));
         }
-
-//
-//        try {
-//        //    indexingThread.join();
-//        }
-//        catch (InterruptedException e) {
-//            log.info("The 'stopIndexing' method is called, received ==> " + e);
-//            return ResponseEntity.ok(new IndexingResult(true, null));
-//        }
-//        return ResponseEntity.ok(new IndexingResult(false, "Индексация не запущена"));
     }
 
 
