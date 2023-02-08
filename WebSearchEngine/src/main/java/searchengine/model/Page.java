@@ -40,8 +40,10 @@ public class Page implements Serializable{
         @NotNull
         private String lemmatized_content;
 
-        @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-        @JoinColumn(name="site_id", nullable=false)
+        //https://stackoverflow.com/questions/13370221/persistentobjectexception-detached-entity-passed-to-persist-thrown-by-jpa-and-h
+        //@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        @ManyToOne(cascade = CascadeType.MERGE)
+        @JoinColumn(name="site_id")
         private SiteModel site;
 
         public Page(String url, int code, String content, String lemmatized_content, SiteModel site) {

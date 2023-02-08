@@ -1,33 +1,31 @@
 package searchengine.controllers;
 
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import searchengine.dto.indexing.IndexingResult;
 import searchengine.dto.statistics.StatisticsResponse;
-import searchengine.model.Page;
-import searchengine.model.SiteModel;
 import searchengine.repository.PageRepository;
-import searchengine.services.LinkGetterWithFJPool;
+import searchengine.services.IndexingSitesThread;
 import searchengine.services.SiteParseService;
 import searchengine.services.StatisticsService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 
+@Log4j2
 @RestController
 @RequestMapping("/api")
 public class ApiController {
 
     private final StatisticsService statisticsService;
     private final SiteParseService siteParseService;
+    static volatile boolean startIndexing = false;
+    static Thread indexingThread;
+    static FutureTask ft;
 
     public ApiController(StatisticsService statisticsService, SiteParseService siteParseService, PageRepository pageRepository) {
         this.statisticsService = statisticsService;
@@ -41,26 +39,100 @@ public class ApiController {
 
     @GetMapping("/startIndexing")
     public ResponseEntity<IndexingResult> indexingStart() {
-
         IndexingResult indexingResult = new IndexingResult();
-        List<SiteModel> siteModelList = siteParseService.saveSites_toDB();
-
-        for(SiteModel siteModel : siteModelList) {
-            List <Page> pageList = siteParseService.saveAllPagesSite_toDB(siteModel);
-            siteParseService.saveIndexingData_toDB(pageList);
-        }
-
-
-
-
-
-
-        if (siteModelList.size() == 0) {
+        if(startIndexing){
             indexingResult.setResult(false);
-            indexingResult.setError("Indexing has already started");
-            return ResponseEntity.status(HttpStatus.LOCKED).body(indexingResult);
+            indexingResult.setError("Индексация уже запущена");
+            return ResponseEntity.ok(indexingResult);
         }
+
+        startIndexing = true;
+
+//        List<SiteModel> siteModelList = siteParseService.saveSites_toDB();
+//
+//        for(SiteModel siteModel : siteModelList) {
+//            List<Page> pageList = siteParseService.saveAllPagesSite_toDB(siteModel);
+//            siteParseService.saveIndexingData_toDB(pageList);
+//        }
+
+        ft = new FutureTask<>(new IndexingSitesThread(siteParseService), "startIndexing");
+        new Thread(ft).start();
+
+//        indexingThread = new Thread(new IndexingSitesThread(siteParseService), "startIndexing");
+//        indexingThread.start();
+        try {
+          //  indexingThread.join();
+            ft.get();
+            if(ft.isCancelled()){
+                log.info("RUN() method is cancell");
+                startIndexing = false;
+                return ResponseEntity.ok(new IndexingResult(false, "Операция индексации прервана!"));
+            }
+        }
+        catch (CancellationException | InterruptedException t) {
+            log.info("Error when waiting for indexing thread to end:  " + t);
+            t.printStackTrace();
+            startIndexing = false;
+            return ResponseEntity.ok(new IndexingResult(false, "Операция индексации прервана!"));
+        } catch (Exception e) {
+            log.error("Error when waiting for indexing thread to end:  " + e);
+            e.printStackTrace();
+            startIndexing = false;
+            return ResponseEntity.ok(new IndexingResult(false, "The 'startIndexing' task failed"));
+        }
+
         indexingResult.setResult(true);
+        startIndexing = false;
         return ResponseEntity.ok(indexingResult);
     }
+
+    @GetMapping("/stopIndexing")
+    public ResponseEntity<IndexingResult> indexingStop() {
+       // indexingThread.interrupt();
+        boolean checkIt;
+        try {
+            checkIt = ft.cancel(true);
+        }
+        catch (NullPointerException npe){
+            log.info("When the GET controller " +
+                    "'stopIndexing' is accessed, the result of checking the flow of the site indexing is: " + npe);
+            return ResponseEntity.ok(new IndexingResult(false, "Индексация не запущена"));
+        }
+        if(checkIt){
+            log.info("The 'stopIndexing' method is called");
+            return ResponseEntity.ok(new IndexingResult(true, null));
+        }
+        else {
+            log.info("the 'stopIndexing' task failed");
+            return ResponseEntity.ok(new IndexingResult(false, "The 'stopIndexing' task failed"));
+        }
+
+//
+//        try {
+//        //    indexingThread.join();
+//        }
+//        catch (InterruptedException e) {
+//            log.info("The 'stopIndexing' method is called, received ==> " + e);
+//            return ResponseEntity.ok(new IndexingResult(true, null));
+//        }
+//        return ResponseEntity.ok(new IndexingResult(false, "Индексация не запущена"));
+    }
+
+
+
+
+    @PostMapping("/indexPage")
+    public ResponseEntity<IndexingResult> indexPage(@RequestParam String url) {
+        IndexingResult indexingResult = siteParseService.indexingOnePage(url);
+        return ResponseEntity.ok(indexingResult);
+    }
+
+
+
+
+
+
 }
+
+
+

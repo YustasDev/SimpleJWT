@@ -50,6 +50,30 @@ public class Main {
 
         public static void main(String[] args) throws UnsupportedEncodingException {
 
+                Thread4 t4 = new Thread4();
+                //вызываем showWarning() из main:
+                t4.showWarning();
+                //вызывем showWarning() через run():
+                t4.start();
+        }
+
+
+        static class Thread4 extends Thread {
+                public void showWarning(){
+                        System.out.println(Thread.currentThread().getName());
+                }
+
+                public void run(){
+                        showWarning();
+                }
+        }
+
+
+
+
+
+
+/*
                 //List<String> list = List.of("А", "С", "B", "Z", "Сc", "Bb", "Zz", "Y");
 
                 List<String> ls = new ArrayList<>();
@@ -90,7 +114,7 @@ public class Main {
                 out.println(alphabeticsList);
 
 
-
+*/
 
 
 /* todo base 64
@@ -123,7 +147,7 @@ public class Main {
 //                System.out.println(decodedString22);
 //
 */
-        }
+    //    }
 
 //                Main mainA = new Main();
 //                mainA.foo();

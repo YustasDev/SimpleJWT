@@ -13,6 +13,7 @@ import org.jsoup.safety.Whitelist;
 import org.springframework.stereotype.Service;
 import searchengine.config.Site;
 import searchengine.config.SitesList;
+import searchengine.dto.indexing.IndexingResult;
 import searchengine.model.Lemma;
 import searchengine.model.MyIndex;
 import searchengine.model.Page;
@@ -75,6 +76,31 @@ public class SiteParseService {
     }
 
 
+    public IndexingResult indexingOnePage(String url) {
+        boolean containsUrl = false;
+        List<Page> pageList = new ArrayList<>();
+        List<Site> sitesList = sites.getSites();
+        for(Site site : sitesList){
+            String urlSite = site.getUrl();
+            if(url.startsWith(urlSite)){
+                containsUrl = true;
+            }
+        }
+        if (containsUrl) {
+            List<String> resultList = new ForkJoinPool().invoke(new LinkGetterWithFJPool(url, null));
+            Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
+            pageRepository.save(currentPage);
+            pageList.add(currentPage);
+            saveIndexingData_toDB(pageList);
+            return new IndexingResult(true, null);
+        }
+        else {
+            return new IndexingResult(false, "Данная страница находится за пределами сайтов, " +
+                    "указанных в конфигурационном файле");
+        }
+    }
+
+
     public static Set<String> cleanDuplicates(Collection<String> collection) {
         Set<String> elements = new TreeSet<>();
         for (String element : collection) {
@@ -84,13 +110,18 @@ public class SiteParseService {
     }
 
 
-    public List<Page> saveAllPagesSite_toDB(SiteModel siteModel) {
+    public List<Page> saveAllPagesSite_toDB(SiteModel siteModel) throws InterruptedException {
         List<Page> pageList = new ArrayList<>();
         Set<String> allPagesSite = retrievePagesFromSite(siteModel);
         for(String url : allPagesSite){
-            Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
-            pageList.add(currentPage);
-            pageRepository.save(currentPage);
+            if (!Thread.currentThread().isInterrupted()) {
+                Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
+                pageList.add(currentPage);
+                pageRepository.save(currentPage);
+            }
+            else {
+                throw new InterruptedException ("Выполнение индексирования прервано!");
+            }
         }
         return pageList;
     }

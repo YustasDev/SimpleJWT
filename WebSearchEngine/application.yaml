@@ -29,7 +29,7 @@ spring:
 
 indexing-settings:
   sites:
-    - url: https://www.playback.ru
+    - url: http://www.playback.ru
       name: PlayBack.Ru
     - url: http://radiomv.ru/
       name: Radiomv.ru

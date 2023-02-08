@@ -56,7 +56,7 @@ public class LinkGetterWithFJPool extends RecursiveTask<List<String>> {
         }
 
         String content = docNeed.html();
-        String lemmatized_content = ""; // todo ==> need insert this field
+        String lemmatized_content = "";
         Page page = new Page(url, code, content, lemmatized_content, site);
         htmlStore.put(url, page);
 
