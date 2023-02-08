@@ -1,34 +1,21 @@
-import org.apache.commons.collections4.ListUtils;
-
-import javax.management.modelmbean.InvalidTargetObjectTypeException;
-import javax.xml.bind.DatatypeConverter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.time.*;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static java.lang.System.out;
@@ -46,29 +33,37 @@ public class Main {
         //        private Path namesPath = Paths.get("/home/progforce/11/passFor Email.txt");
         public Logger logger = Logger.getLogger(this.getClass().getName());
         static FileHandler fhLog = null;
-
+        private volatile AtomicLong value;
 
         public static void main(String[] args) throws UnsupportedEncodingException {
 
-                Thread4 t4 = new Thread4();
-                //вызываем showWarning() из main:
-                t4.showWarning();
-                //вызывем showWarning() через run():
-                t4.start();
+
         }
 
 
-        static class Thread4 extends Thread {
-                public void showWarning(){
-                        System.out.println(Thread.currentThread().getName());
-                }
-
-                public void run(){
-                        showWarning();
-                }
-        }
 
 
+
+
+//                Thread4 t4 = new Thread4();
+//                //вызываем showWarning() из main:
+//                t4.showWarning();
+//                //вызывем showWarning() через run():
+//                t4.start();
+//        }
+//
+//
+//        static class Thread4 extends Thread {
+//                public void showWarning(){
+//                        System.out.println(Thread.currentThread().getName());
+//                }
+//
+//                public void run(){
+//                        showWarning();
+//                }
+//        }
+//
+//
 
 
 

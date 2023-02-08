@@ -12,7 +12,6 @@ import searchengine.services.SiteParseService;
 import searchengine.services.StatisticsService;
 
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 
@@ -39,59 +38,56 @@ public class ApiController {
     @GetMapping("/startIndexing")
     public ResponseEntity<IndexingResult> indexingStart() {
         IndexingResult indexingResult = new IndexingResult();
-        if(startIndexing){
+        if (startIndexing) {
             indexingResult.setResult(false);
             indexingResult.setError("Индексация уже запущена");
             return ResponseEntity.ok(indexingResult);
         }
         startIndexing = true;
         ft = new FutureTask<>(new IndexingSitesThread(siteParseService), "startIndexing");
-        new Thread(ft).start();
-
-        try {
-            ft.get();
-            if(ft.isCancelled()){
-                log.info("RUN() method is cancell");
+        synchronized (ft) {
+            new Thread(ft).start();
+            try {
+                ft.get();
+                if (ft.isCancelled()) {
+                    log.info("RUN() method is cancell");
+                    startIndexing = false;
+                    return ResponseEntity.ok(new IndexingResult(false, "Операция индексации прервана!"));
+                }
+            } catch (CancellationException | InterruptedException t) {
+                log.info("Error when waiting for indexing thread to end:  " + t);
+                t.printStackTrace();
                 startIndexing = false;
                 return ResponseEntity.ok(new IndexingResult(false, "Операция индексации прервана!"));
+            } catch (Exception e) {
+                log.error("Error when waiting for indexing thread to end:  " + e);
+                e.printStackTrace();
+                startIndexing = false;
+                return ResponseEntity.ok(new IndexingResult(false, "The 'startIndexing' task failed"));
             }
-        }
-        catch (CancellationException | InterruptedException t) {
-            log.info("Error when waiting for indexing thread to end:  " + t);
-            t.printStackTrace();
+            indexingResult.setResult(true);
             startIndexing = false;
-            return ResponseEntity.ok(new IndexingResult(false, "Операция индексации прервана!"));
-        } catch (Exception e) {
-            log.error("Error when waiting for indexing thread to end:  " + e);
-            e.printStackTrace();
-            startIndexing = false;
-            return ResponseEntity.ok(new IndexingResult(false, "The 'startIndexing' task failed"));
+            return ResponseEntity.ok(indexingResult);
         }
-
-        indexingResult.setResult(true);
-        startIndexing = false;
-        return ResponseEntity.ok(indexingResult);
     }
 
     @GetMapping("/stopIndexing")
     public ResponseEntity<IndexingResult> indexingStop() {
         boolean checkIt;
-        try {
-            checkIt = ft.cancel(true);
-        }
-        catch (NullPointerException npe){
-            log.info("When the GET controller " +
-                    "'stopIndexing' is accessed, the result of checking the flow of the site indexing is: " + npe);
-            return ResponseEntity.ok(new IndexingResult(false, "Индексация не запущена"));
-        }
-        if(checkIt){
-            log.info("The 'stopIndexing' method is called");
-            return ResponseEntity.ok(new IndexingResult(true, null));
-        }
-        else {
-            log.info("the 'stopIndexing' task failed");
-            return ResponseEntity.ok(new IndexingResult(false, "The 'stopIndexing' task failed"));
-        }
+            try {
+                checkIt = ft.cancel(true);
+            } catch (NullPointerException npe) {
+                log.info("When the GET controller " +
+                        "'stopIndexing' is accessed, the result of checking the flow of the site indexing is: " + npe);
+                return ResponseEntity.ok(new IndexingResult(false, "Индексация не запущена"));
+            }
+            if (checkIt) {
+                log.info("The 'stopIndexing' method is called");
+                return ResponseEntity.ok(new IndexingResult(true, null));
+            } else {
+                log.info("the 'stopIndexing' task failed");
+                return ResponseEntity.ok(new IndexingResult(false, "The 'stopIndexing' task failed"));
+            }
     }
 
 
