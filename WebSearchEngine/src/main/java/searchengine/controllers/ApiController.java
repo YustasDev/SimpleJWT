@@ -5,12 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import searchengine.dto.indexing.IndexingResult;
+import searchengine.dto.indexing.SearchData;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.repository.PageRepository;
 import searchengine.services.IndexingSitesThread;
 import searchengine.services.SiteParseService;
 import searchengine.services.StatisticsService;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.FutureTask;
 
@@ -63,7 +66,7 @@ public class ApiController {
                 log.error("Error when waiting for indexing thread to end:  " + e);
                 e.printStackTrace();
                 startIndexing = false;
-                return ResponseEntity.ok(new IndexingResult(false, "The 'startIndexing' task failed"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new IndexingResult(false, "The 'startIndexing' task failed"));
             }
             indexingResult.setResult(true);
             startIndexing = false;
@@ -82,21 +85,30 @@ public class ApiController {
                 return ResponseEntity.ok(new IndexingResult(false, "Индексация не запущена"));
             }
             if (checkIt) {
-                log.info("The 'stopIndexing' method is called");
+                log.info("The 'stopIndexing' method is called, checkIt = " + checkIt);
                 return ResponseEntity.ok(new IndexingResult(true, null));
             } else {
                 log.info("the 'stopIndexing' task failed");
-                return ResponseEntity.ok(new IndexingResult(false, "The 'stopIndexing' task failed"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new IndexingResult(false, "The 'stopIndexing' task failed"));
             }
     }
-
-
-
 
     @PostMapping("/indexPage")
     public ResponseEntity<IndexingResult> indexPage(@RequestParam String url) {
         IndexingResult indexingResult = siteParseService.indexingOnePage(url);
         return ResponseEntity.ok(indexingResult);
+    }
+
+
+    @GetMapping(value = "/search", params = "query")
+    public ResponseEntity<?> resultOfSearch(@RequestParam String query) {
+        try {
+            List<SearchData> searchResult = siteParseService.getSearchResult(query);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 

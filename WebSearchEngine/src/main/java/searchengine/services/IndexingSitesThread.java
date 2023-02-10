@@ -14,8 +14,6 @@ public class IndexingSitesThread implements Runnable {
         this.siteParseService = siteParseService;
     }
 
-
-
     @SneakyThrows(InterruptedException.class)
     @Override
     public void run() {

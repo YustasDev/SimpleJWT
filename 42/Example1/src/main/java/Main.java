@@ -37,11 +37,56 @@ public class Main {
 
         public static void main(String[] args) throws UnsupportedEncodingException {
 
-
+                out.println(new Main().factorial(-4));
         }
+//
+//               /*
+//               Напишите программу, которая выводит на экран числа от 1 до 100. При этом вместо чисел, кратных трем,
+//                программа должна выводить слово «Fizz», а вместо чисел, кратных пяти — слово «Buzz».
+//                 Если число кратно и 3, и 5, то программа должна выводить слово «FizzBuzz»
+//               */
+//
+//                for(int i = 1; i < 101; i++){
+//                        if(i % 3 == 0 && i % 5 == 0){
+//                                out.println("Кратно 3 и 5");
+//                        }
+//                        else if(i % 3 == 0){
+//                                out.println("Кратно 3");
+//                        }
+//                        else if(i % 5 == 0){
+//                                out.println("Кратно 5");
+//                        }
+//                        else {
+//                                out.println(i);
+//                        }
+//                }
+//
 
+        private Integer factorial(int n) {
+                Integer result = 1;
 
+                if (n < 0) {
+                        System.out.println("Зачем тебе факториал отрицательного числа?");
+                        return null;
+                }
 
+                if (n == 0) {
+                        System.out.print(" = ");
+                        return result;
+                }
+                if (n == 1) {
+                        System.out.print(" * 1 = ");
+                        return result;
+                }
+
+                System.out.print(n);
+                if (n != 2) {
+                        System.out.print(" * ");
+                }
+
+                result = n * factorial(n-1);
+                return result;
+        }
 
 
 

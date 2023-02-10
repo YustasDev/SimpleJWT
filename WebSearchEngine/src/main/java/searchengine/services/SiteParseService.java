@@ -6,24 +6,22 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.hibernate.Transaction;
+import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import searchengine.config.Site;
 import searchengine.config.SitesList;
 import searchengine.dto.indexing.IndexingResult;
-import searchengine.model.Lemma;
-import searchengine.model.MyIndex;
-import searchengine.model.Page;
-import searchengine.model.SiteModel;
-import searchengine.repository.LemmaRepository;
-import searchengine.repository.MyIndexRepository;
-import searchengine.repository.PageRepository;
-import searchengine.repository.SiteModelRepository;
+import searchengine.dto.indexing.SearchData;
+import searchengine.model.*;
+import searchengine.repository.*;
 
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -31,6 +29,8 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +46,8 @@ public class SiteParseService {
     private final PageRepository pageRepository;
     private final LemmaRepository lemmaRepository;
     private final MyIndexRepository myIndexRepository;
+    private final RelevanceRepository relevanceRepository;
+    private final CustomoutputRepository customoutputRepository;
 
     public List<SiteModel> saveSites_toDB(){
         List<Site> sitesList = sites.getSites();
@@ -255,7 +257,152 @@ public class SiteParseService {
     }
 
 
+    public List<SearchData> getSearchResult(String searchQuery) throws IOException {
+        Map<String, Integer> lemmasInQuery = new HashMap<>();
+        List<CustomOutput> list_CustomOutput = new ArrayList<>();
+
+        try {
+            lemmasInQuery = Morphology.getSetLemmas(searchQuery).getValue0();
+        } catch (IOException e) {
+            LOGGER.error(WORD_SEARCH_HISTORY, "Error: " + e + "\n when parsing of the searchQuery: " + searchQuery);
+            e.printStackTrace();
+            throw new IOException("Error when parsing of the searchQuery: " + searchQuery);
+        }
+
+        Map<Lemma, Integer> lemmasQueryByFrequency = new HashMap<>();
+        List<Lemma> listLemmasInQuery = new ArrayList<>();
+        Set<Integer> setOfPageNumbers = new HashSet<>();
+        Set<Lemma> fullSetlemmasInQuery = new HashSet<>();
+
+        lemmasInQuery.forEach((key, value) -> {
+            Lemma lemmaFromQuery = lemmaRepository.findByLemma(key);
+            if (lemmaFromQuery != null) {
+                fullSetlemmasInQuery.add(lemmaFromQuery);
+            } else {
+                String newKey = StemmerPorterRU.stem(key);
+                List<Lemma> lemmasFromQuerry = lemmaRepository.findByLemmaStartsWith(newKey);
+                fullSetlemmasInQuery.addAll(lemmasFromQuerry);
+            }
+        });
+
+        //=================== Let's eliminate the most common lemmas (item 5.2) ===================================>
+        for (Lemma lemmaFromQuery : fullSetlemmasInQuery) {
+            Integer numberOfPages =  Streamable.of(pageRepository.findAll()).toList().size();
+            int thresholdFrequency = (int) (numberOfPages * 0.8);
+
+            if (lemmaFromQuery != null && lemmaFromQuery.getFrequency() < thresholdFrequency) {
+                lemmasQueryByFrequency.put(lemmaFromQuery, lemmaFromQuery.getFrequency());
+            }
+        }
+//=========================================================================================================<
+
+
+        lemmasQueryByFrequency.entrySet().stream().sorted(Map.Entry.<Lemma, Integer>comparingByValue())
+                .forEach(x -> listLemmasInQuery.add(x.getKey()));
+
+        // ================= Item 5.6 ======================>
+
+        for (Lemma lem : listLemmasInQuery) {
+            List<MyIndex> list_myIndex = myIndexRepository.findByLemma_Id(lem.getId());
+            for (MyIndex myIndex : list_myIndex) {
+                setOfPageNumbers.add(myIndex.getPage_id());
+            }
+        }
+
+        HashMap<Integer, Pair> mapRelevance = new HashMap<>();
+        HashMap<Integer, Double> pre_MapRelevance = new HashMap<>();
+        Double abs_relevance = 0.0;
+        if (setOfPageNumbers.size() > 0) {
+            for (Integer numberPage : setOfPageNumbers) {
+                Double sumRanks_unnecessaryLength = myIndexRepository.findSumRankOfLemmaByPageId(numberPage);
+                Double sumRanks = new BigDecimal(sumRanks_unnecessaryLength).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                pre_MapRelevance.put(numberPage, sumRanks);
+                if (sumRanks > abs_relevance) {
+                    abs_relevance = sumRanks;
+                }
+            }
+
+            double finalAbs_relevance = abs_relevance;
+            pre_MapRelevance.forEach((key, value) -> {
+                Double relative_relevance = new BigDecimal(value / finalAbs_relevance).setScale(2, 1).doubleValue();
+                Pair<Double, Double> tuple = new Pair<Double, Double>(value, relative_relevance);  // value --> is absolut_relevance this page
+                mapRelevance.put(key, tuple);
+            });
+
+//            Query truncate = session.createNativeQuery("truncate relevance");
+//            truncate.executeUpdate();
+//            transaction.commit();
+
+            relevanceRepository.truncateRelevanceTable();
+
+            mapRelevance.forEach((key, value) -> {
+                Relevance rev = new Relevance();
+                rev.setPage(key);
+                rev.setAbsolute_relevance((Double) value.getValue0());
+                rev.setRelative_relevance((Double) value.getValue1());
+                relevanceRepository.save(rev);
+            });
+
+
+// =================== item 5.7 ====================================>
+            List<CustomOutput> customOutputList = new LinkedList<>();
+            List<Relevance> relevances = relevanceRepository.findAll();
+            Collections.sort(relevances);
+
+            customoutputRepository.truncateCustomoutputTable();
+
+            for (Relevance rev : relevances) {
+                Integer pageId = rev.getPage();
+                Page current_Page = pageRepository.findById(pageId);
+                String uri = current_Page.getPath();
+                String content = current_Page.getContent();
+                Document doc = Jsoup.parse(content);
+                String title = doc.select("title").text();
+                Double relevanceItem = rev.getAbsolute_relevance();
+                StringBuffer pre_snippet = new StringBuffer();
+
+                for (Lemma lemma_toSearch : listLemmasInQuery) {
+                    String matchingWord = lemma_toSearch.getLemma();
+                    Elements elements = doc.select("*:containsOwn(" + matchingWord + ")");
+                    if (elements.isEmpty()) {
+                        String lemmatized_content = current_Page.getLemmatized_content();
+                        Matcher matcher = Pattern.compile(".*\\s(.*\\|" + matchingWord + ")\\s.*").matcher(lemmatized_content);
+                        matcher.matches();
+                        try {
+                            String findWord = matcher.group(1);
+                            String[] words = findWord.split("\\|");
+                            matchingWord = words[0];
+                        } catch (IllegalStateException ise) {
+                            LOGGER.warn(WORD_SEARCH_HISTORY, "The word: '" + matchingWord + "' was not found on page: " + pageId);
+                        }
+                        elements = doc.select("*:containsOwn(" + matchingWord + ")");
+                    }
+                    if (!elements.isEmpty()) {
+                        for (Element element : elements) {
+                            String swap = "<b>" + matchingWord + "<b>";
+                            String editedExpression = element.toString().replaceAll("(?iu)" + matchingWord, swap);
+                            pre_snippet.append(editedExpression + "\n");
+                        }
+                        String snippet = pre_snippet.toString();
+
+                        CustomOutput customOutput = new CustomOutput();
+                        customOutput.setUri(uri);
+                        customOutput.setTitle(title);
+                        customOutput.setSnippet(snippet);
+                        customOutput.setRelevance(relevanceItem);
+                        customoutputRepository.save(customOutput);
+                    }
+                }
+            }
+
+            list_CustomOutput = session.createQuery("select cop from CustomOutput cop where cop.id IN" +
+                    " (select max(cop.id) as mid from CustomOutput cop group by cop.uri)").getResultList();
+        }
+        // list_CustomOutput    todo do something further
 
 
 
+
+
+    }
 }
