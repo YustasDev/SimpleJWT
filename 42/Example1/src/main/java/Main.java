@@ -1,3 +1,19 @@
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.IPdfTextLocation;
+import com.itextpdf.layout.Canvas;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.properties.UnitValue;
+import com.itextpdf.pdfcleanup.PdfCleaner;
+import com.itextpdf.pdfcleanup.autosweep.CompositeCleanupStrategy;
+import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.UnsupportedEncodingException;
@@ -31,14 +47,78 @@ public class Main {
         //  "R3": ((235, 10), (313, 539)), "R4": ((315, 10), (382, 539)),
 
         //        private Path namesPath = Paths.get("/home/progforce/11/passFor Email.txt");
-        public Logger logger = Logger.getLogger(this.getClass().getName());
-        static FileHandler fhLog = null;
-        private volatile AtomicLong value;
+//        public Logger logger = Logger.getLogger(this.getClass().getName());
+//        static FileHandler fhLog = null;
+//        private volatile AtomicLong value;
 
-        public static void main(String[] args) throws UnsupportedEncodingException {
+//        private static final String SOURCE = "/home/progforce/Temp/TemplateDoc.pdf";
+//        static String DESTINATION = "/home/progforce/Temp/outputDoc.pdf";
+//        static String outputFile = "/home/progforce/Temp/outputDoc1.pdf";
+//        static String searchText = "Луговой С. Н.";
+//        static String insertText = "John Smith";
 
-                out.println(new Main().factorial(-4));
+        public static void main(String[] args) {
+
+                Integer start = Integer.MAX_VALUE -1;
+                Integer ss = Integer.MAX_VALUE +1;
+                for (int i = start; i <= start + 1; i++) {
+                        out.println(i);
+                }
         }
+//                String s = "argument";
+//                int i = s.length();
+//                char symbol = s.charAt(3);
+//                out.println("i = " + i + " symbol = " + symbol);
+
+
+//                String s = "            HJdsjkKLKajdkdj@hJKJhjh.Com             ";
+//                String st = s.trim().toLowerCase();
+//                out.println(s);
+//                out.println(st);
+
+
+
+
+
+
+
+/*
+        public static void main(String[] args) throws IOException {
+                PdfReader reader = new PdfReader(SOURCE);
+                PdfWriter writer = new PdfWriter(DESTINATION);
+                PdfDocument pdfDocument = new PdfDocument(reader, writer);
+                replaceTextContentFromDocument(pdfDocument, searchText, insertText);
+                pdfDocument.close();
+        }
+
+        private static void replaceTextContentFromDocument(PdfDocument pdfDocument, String searchText, String insertText) throws IOException {
+                CompositeCleanupStrategy strategy = new CompositeCleanupStrategy();
+                strategy.add(new RegexBasedCleanupStrategy(searchText).setRedactionColor(ColorConstants.WHITE));
+                PdfCleaner.autoSweepCleanUp(pdfDocument, strategy);
+
+                for (IPdfTextLocation location : strategy.getResultantLocations()) {
+                        PdfPage page = pdfDocument.getPage(location.getPageNumber() + 1);
+                        PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamAfter(), page.getResources(), page.getDocument());
+                        Canvas canvas = new Canvas(pdfCanvas, location.getRectangle());
+                        canvas.add(new Paragraph(insertText).setFontSize(9).setMarginTop(0f));
+                }
+        }
+*/
+
+
+
+//                PdfReader pdfReader;
+//                try {
+//                        pdfReader = new PdfReader(FILE_NAME);
+//                        String textFromDoc = PdfTextExtractor.getTextFromPage(pdfReader, 1);
+//                        String changedText = textFromDoc.replaceAll(searchText, insertText);
+//                } catch (IOException e) {
+//                        e.printStackTrace();
+//                }
+
+
+//                out.println(new Main().factorial(-4));
+
 //
 //               /*
 //               Напишите программу, которая выводит на экран числа от 1 до 100. При этом вместо чисел, кратных трем,
@@ -385,11 +465,11 @@ public class Main {
                 return t -> Integer.valueOf(strNum + t)+ ++count[0];
         }
 
-
-        public Logger getLogger() {
-                return logger;
-        }
-
+//
+//        public Logger getLogger() {
+//                return logger;
+//        }
+//
 
 
         // Gson gson = new Gson();

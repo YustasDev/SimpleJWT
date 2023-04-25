@@ -100,16 +100,16 @@ public class ApiController {
     }
 
 
-    @GetMapping(value = "/search", params = "query")
-    public ResponseEntity<?> resultOfSearch(@RequestParam String query) {
-        try {
-            List<SearchData> searchResult = siteParseService.getSearchResult(query);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
+//    @GetMapping(value = "/search", params = "query")
+//    public ResponseEntity<?> resultOfSearch(@RequestParam String query) {
+//        try {
+//            List<SearchData> searchResult = siteParseService.getSearchResult(query);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 
 
 

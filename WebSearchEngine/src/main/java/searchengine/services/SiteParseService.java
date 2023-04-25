@@ -49,10 +49,10 @@ public class SiteParseService {
     private final RelevanceRepository relevanceRepository;
     private final CustomoutputRepository customoutputRepository;
 
-    public List<SiteModel> saveSites_toDB(){
+    public List<SiteModel> saveSites_toDB() {
         List<Site> sitesList = sites.getSites();
         List<SiteModel> siteModelList = new ArrayList<>();
-        for(Site site : sitesList){
+        for (Site site : sitesList) {
             String urlSite = site.getUrl();
             SiteModel.Status status = SiteModel.Status.INDEXING;
             String last_error = "";
@@ -70,7 +70,7 @@ public class SiteParseService {
     }
 
 
-    public Set<String> retrievePagesFromSite(SiteModel site){
+    public Set<String> retrievePagesFromSite(SiteModel site) {
         String url = site.getUrl();
         List<String> resultList = new ForkJoinPool().invoke(new LinkGetterWithFJPool(url, site));
         Set<String> allPagesSite = cleanDuplicates(resultList);
@@ -82,9 +82,9 @@ public class SiteParseService {
         boolean containsUrl = false;
         List<Page> pageList = new ArrayList<>();
         List<Site> sitesList = sites.getSites();
-        for(Site site : sitesList){
+        for (Site site : sitesList) {
             String urlSite = site.getUrl();
-            if(url.startsWith(urlSite)){
+            if (url.startsWith(urlSite)) {
                 containsUrl = true;
             }
         }
@@ -95,8 +95,7 @@ public class SiteParseService {
             pageList.add(currentPage);
             saveIndexingData_toDB(pageList);
             return new IndexingResult(true, null);
-        }
-        else {
+        } else {
             return new IndexingResult(false, "Данная страница находится за пределами сайтов, " +
                     "указанных в конфигурационном файле");
         }
@@ -115,14 +114,13 @@ public class SiteParseService {
     public List<Page> saveAllPagesSite_toDB(SiteModel siteModel) throws InterruptedException {
         List<Page> pageList = new ArrayList<>();
         Set<String> allPagesSite = retrievePagesFromSite(siteModel);
-        for(String url : allPagesSite){
+        for (String url : allPagesSite) {
             if (!Thread.currentThread().isInterrupted()) {
                 Page currentPage = (Page) LinkGetterWithFJPool.htmlStore.getOrDefault(url, "No data available");
                 pageList.add(currentPage);
                 pageRepository.save(currentPage);
-            }
-            else {
-                throw new InterruptedException ("Выполнение индексирования прервано!");
+            } else {
+                throw new InterruptedException("Выполнение индексирования прервано!");
             }
         }
         return pageList;
@@ -130,7 +128,7 @@ public class SiteParseService {
 
 
     public void saveIndexingData_toDB(List<Page> pageList) {
-        for(Page page : pageList){
+        for (Page page : pageList) {
             String originalContent = page.getContent();
             String cleanContent = Jsoup.clean(originalContent, Whitelist.none());
 
@@ -143,18 +141,16 @@ public class SiteParseService {
                 page.setLemmatized_content(lemmatized_content);
                 pageRepository.save(page);
                 LOGGER.info(HISTORY_PARSING, "Parsing of the page:  " + page.getPath() + " was performed successfully");
-            //====================================== END insert 'lemmatized_content' field in page table ========<
+                //====================================== END insert 'lemmatized_content' field in page table ========<
                 // we add up separately, the lemmas that need to be updated and which need to be written down
                 writeLemmas_toDB(cleanContent);
                 writeMyIndex_toDB(page, originalContent);
-            }
-            catch (IOException ioe){
+            } catch (IOException ioe) {
                 ioe.printStackTrace();
                 LOGGER.error("Error when parsing ==> " + page.getPath() + " with Exception: " + ioe);
             }
         }
-      }
-
+    }
 
 
     private void writeLemmas_toDB(String cleanContent) throws IOException {
@@ -169,12 +165,11 @@ public class SiteParseService {
         lemmsMapFromPage.forEach((key, value) -> {          // we get lemmas from current Page
             String lemmaStringFromPage = key;
 
-            if(lemmasThatAreInDB.contains(lemmaStringFromPage)) {
+            if (lemmasThatAreInDB.contains(lemmaStringFromPage)) {
                 Lemma receivedLemma = lemmaRepository.findByLemma(lemmaStringFromPage);
                 receivedLemma.setFrequency(receivedLemma.getFrequency() + 1);
                 lemmaRepository.save(receivedLemma);
-            }
-            else{
+            } else {
                 Lemma createNewlemma = new Lemma(lemmaStringFromPage, 1);
                 lemmaRepository.save(createNewlemma);
             }
@@ -205,7 +200,7 @@ public class SiteParseService {
         Map<String, Integer> lemmsInBody = new HashMap<>();
         Map<String, Double> rankOflemms = new HashMap<>();
         try {
-            lemmsInTitle =  Morphology.getSetLemmas(strInTitle).getValue0();
+            lemmsInTitle = Morphology.getSetLemmas(strInTitle).getValue0();
             System.out.println("lemmsInTitle = " + lemmsInTitle);
             LOGGER.info(HISTORY_PARSING, "Parsing of the tags <title> the page:  " + page.getPath() + " was performed successfully");
         } catch (IOException e) {
@@ -214,7 +209,7 @@ public class SiteParseService {
         }
 
         try {
-            lemmsInBody =  Morphology.getSetLemmas(strInBody).getValue0();
+            lemmsInBody = Morphology.getSetLemmas(strInBody).getValue0();
             System.out.println("lemmsInBody = " + lemmsInBody);
             LOGGER.info(HISTORY_PARSING, "Parsing of the tags <body> the page:  " + page.getPath() + " was performed successfully");
         } catch (IOException e) {
@@ -234,10 +229,9 @@ public class SiteParseService {
             String lemmaInBody = key;
             Double rankInBody = Double.valueOf(value);
 
-            if(rankOflemms.containsKey(lemmaInBody)) {
+            if (rankOflemms.containsKey(lemmaInBody)) {
                 rankOflemms.put(lemmaInBody, rankOflemms.get(lemmaInBody) + (rankInBody * rankOfLemmaInBody));
-            }
-            else {
+            } else {
                 rankOflemms.put(lemmaInBody, rankInBody * rankOfLemmaInBody);
             }
         });
@@ -245,14 +239,14 @@ public class SiteParseService {
         rankOflemms.forEach((key, value) -> {
             String current_string_lemma = key;
             Double rankOfLemma = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
-                Lemma current_lemma = lemmaRepository.findByLemma(current_string_lemma);
-                Integer iDlemma = current_lemma.getId();
+            Lemma current_lemma = lemmaRepository.findByLemma(current_string_lemma);
+            Integer iDlemma = current_lemma.getId();
 
-                MyIndex myIndex = new MyIndex();
-                myIndex.setPage_id(page.getId());
-                myIndex.setLemma_id(iDlemma);
-                myIndex.setRankOflemma(rankOfLemma);
-                myIndexRepository.save(myIndex);
+            MyIndex myIndex = new MyIndex();
+            myIndex.setPage_id(page.getId());
+            myIndex.setLemma_id(iDlemma);
+            myIndex.setRankOflemma(rankOfLemma);
+            myIndexRepository.save(myIndex);
         });
     }
 
@@ -287,7 +281,7 @@ public class SiteParseService {
 
         //=================== Let's eliminate the most common lemmas (item 5.2) ===================================>
         for (Lemma lemmaFromQuery : fullSetlemmasInQuery) {
-            Integer numberOfPages =  Streamable.of(pageRepository.findAll()).toList().size();
+            Integer numberOfPages = Streamable.of(pageRepository.findAll()).toList().size();
             int thresholdFrequency = (int) (numberOfPages * 0.8);
 
             if (lemmaFromQuery != null && lemmaFromQuery.getFrequency() < thresholdFrequency) {
@@ -295,11 +289,8 @@ public class SiteParseService {
             }
         }
 //=========================================================================================================<
-
-
         lemmasQueryByFrequency.entrySet().stream().sorted(Map.Entry.<Lemma, Integer>comparingByValue())
                 .forEach(x -> listLemmasInQuery.add(x.getKey()));
-
         // ================= Item 5.6 ======================>
 
         for (Lemma lem : listLemmasInQuery) {
@@ -342,8 +333,6 @@ public class SiteParseService {
                 rev.setRelative_relevance((Double) value.getValue1());
                 relevanceRepository.save(rev);
             });
-
-
 // =================== item 5.7 ====================================>
             List<CustomOutput> customOutputList = new LinkedList<>();
             List<Relevance> relevances = relevanceRepository.findAll();
@@ -395,13 +384,16 @@ public class SiteParseService {
                 }
             }
 
-            list_CustomOutput = session.createQuery("select cop from CustomOutput cop where cop.id IN" +
-                    " (select max(cop.id) as mid from CustomOutput cop group by cop.uri)").getResultList();
+//            list_CustomOutput = session.createQuery("select cop from CustomOutput cop where cop.id IN" +
+//                    " (select max(cop.id) as mid from CustomOutput cop group by cop.uri)").getResultList();
+//
+//
+//
+//            list_CustomOutput = customoutputRepository.select
+
+
         }
         // list_CustomOutput    todo do something further
-
-
-
 
 
     }
