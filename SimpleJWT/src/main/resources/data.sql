@@ -1,2 +1,2 @@
-insert into my_user(login, position, password, role) values('user', '1', 'password', 'USER');
-insert into my_user( login, position, password, role) values('admin', '2', 'password', 'ADMIN');
+insert ignore into my_user(login, position, password, role) values('user', '1', '$2a$10$UwQgkwj6zRmZbG5G6/c4XenaIKhHSz6N3enkTXfKz/eqhVm1WI5PW', 'USER');
+insert ignore into my_user( login, position, password, role) values('admin', '2', '$2a$10$UwQgkwj6zRmZbG5G6/c4XenaIKhHSz6N3enkTXfKz/eqhVm1WI5PW', 'ADMIN');

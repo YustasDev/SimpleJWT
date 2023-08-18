@@ -1,6 +1,7 @@
 package searchengine.controllers;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,8 @@ public class ApiController {
     static volatile boolean startIndexing = false;
     static FutureTask ft;
 
-    public ApiController(StatisticsService statisticsService, SiteParseService siteParseService, PageRepository pageRepository) {
+    @Autowired
+    public ApiController(StatisticsService statisticsService, SiteParseService siteParseService) {
         this.statisticsService = statisticsService;
         this.siteParseService = siteParseService;
     }
@@ -89,7 +91,7 @@ public class ApiController {
                 return ResponseEntity.ok(new IndexingResult(true, null));
             } else {
                 log.info("the 'stopIndexing' task failed");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new IndexingResult(false, "The 'stopIndexing' task failed"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new IndexingResult(false, "The 'stopIndexing' task failed"));
             }
     }
 
