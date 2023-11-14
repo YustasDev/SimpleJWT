@@ -1,44 +1,29 @@
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfPage;
-import com.itextpdf.kernel.pdf.PdfReader;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
-import com.itextpdf.kernel.pdf.canvas.parser.listener.IPdfTextLocation;
-import com.itextpdf.layout.Canvas;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.properties.UnitValue;
-import com.itextpdf.pdfcleanup.PdfCleaner;
-import com.itextpdf.pdfcleanup.autosweep.CompositeCleanupStrategy;
-import com.itextpdf.pdfcleanup.autosweep.RegexBasedCleanupStrategy;
 
-import java.io.FileOutputStream;
+
+import com.diogonunes.jcolor.AnsiFormat;
+import com.diogonunes.jcolor.Attribute;
+import lombok.val;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.*;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.lang.System.out;
+import static com.diogonunes.jcolor.Ansi.colorize;
+import static com.diogonunes.jcolor.Attribute.*;
 import static java.util.Collections.sort;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+//import static org.hamcrest.CoreMatchers.is;
+//import static org.junit.Assert.assertThat;
+//import static org.junit.Assert.fail;
 
 
 public class Main {
@@ -57,14 +42,330 @@ public class Main {
 //        static String searchText = "Луговой С. Н.";
 //        static String insertText = "John Smith";
 
-        public static void main(String[] args) {
+//        static List <Object>этопростосписок;
 
-                Integer start = Integer.MAX_VALUE -1;
-                Integer ss = Integer.MAX_VALUE +1;
-                for (int i = start; i <= start + 1; i++) {
-                        out.println(i);
+//        public Main(){
+//                этопростосписок = new ArrayList<>();
+//        }
+
+
+        public static void main (String[] args) throws IOException, InterruptedException {
+
+                final List<Integer> datum = Collections.unmodifiableList(Arrays.asList(2, 3, 4));
+
+                Main mn = new Main();
+                List<Integer> resList = mn.squareList(datum);
+                System.out.println(resList);
+
+                List<Integer> resList2 = mn.squareDeclarative(datum);
+                System.out.println(resList2);
+
+
+ /*
+                AnsiFormat redF = new AnsiFormat(TEXT_COLOR(160), GREEN_BACK());
+                System.out.println(redF.format("This info message will be red text in green back"));
+
+                AnsiFormat yelCol = new AnsiFormat(BRIGHT_YELLOW_TEXT());
+                System.out.println(yelCol.format("This info message will be yellow"));
+
+                // Use Case 1: use Ansi.colorize() to format inline
+                System.out.println(colorize("This text will be yellow on magenta", YELLOW_TEXT(), MAGENTA_BACK()));
+                System.out.println("\n");
+
+// Use Case 2: compose Attributes to create your desired format
+                Attribute[] myFormat = new Attribute[]{RED_TEXT(), YELLOW_BACK(), BOLD()};
+                System.out.println(colorize("This text will be red on yellow", myFormat));
+                System.out.println("\n");
+
+// Use Case 3: AnsiFormat is syntactic sugar for an array of Attributes
+                AnsiFormat fWarning = new AnsiFormat(GREEN_TEXT(), BLUE_BACK(), BOLD());
+                System.out.println(colorize("AnsiFormat is just a pretty way to declare formats", fWarning));
+                System.out.println(fWarning.format("...and use those formats without calling colorize() directly"));
+                System.out.println("\n");
+
+// Use Case 4: you can define your formats and use them throughout your code
+                AnsiFormat fInfo = new AnsiFormat(CYAN_TEXT());
+                AnsiFormat fError = new AnsiFormat(YELLOW_TEXT(), RED_BACK());
+                System.out.println(fInfo.format("This info message will be cyan"));
+                System.out.println("This normal message will not be formatted");
+                System.out.println(fError.format("This error message will be yellow on red"));
+                System.out.println("\n");
+
+// Use Case 5: we support bright colors
+                AnsiFormat fNormal = new AnsiFormat(MAGENTA_BACK(), YELLOW_TEXT());
+                AnsiFormat fBright = new AnsiFormat(BRIGHT_MAGENTA_BACK(), BRIGHT_YELLOW_TEXT());
+                System.out.println(fNormal.format("You can use normal colors ") + fBright.format(" and bright colors too"));
+
+// Use Case 6: we support 8-bit colors
+                System.out.println("Any 8-bit color (0-255), as long as your terminal supports it:");
+                for (int i = 0; i <= 255; i++) {
+                        Attribute txtColor = TEXT_COLOR(i);
+                        System.out.print(colorize(String.format("%4d", i), txtColor));
                 }
+                System.out.println("\n");
+
+// Use Case 7: we support true colors (RGB)
+                System.out.println("Any TrueColor (RGB), as long as your terminal supports it:");
+                for (int i = 0; i <= 300; i++) {
+                        Attribute bkgColor = BACK_COLOR(255, 255, 0);
+                        System.out.print(colorize("   ", bkgColor));
+                }
+                System.out.println("\n");
+
+// Credits
+                System.out.print("This example used JColor 5.0.0   ");
+                System.out.print(colorize("\tMADE ", BOLD(), BRIGHT_YELLOW_TEXT(), GREEN_BACK()));
+                System.out.println(colorize("IN PORTUGAL\t", BOLD(), BRIGHT_YELLOW_TEXT(), RED_BACK()));
+                System.out.println("I hope you find it useful ;)");
+
+*/
+
+//                WithLombok wl_obj = new WithLombok();
+//                String topSecret = wl_obj.getFinal_secret();
+//                int count = wl_obj.count;
+//                System.out.println("topSecret = " + topSecret);
+//                System.out.println("count = " + count);
+/*
+                Main объект_класса = new Main();
+                объект_класса.прибавить_в_список(этопростосписок, "Элемент номер 0");
+                объект_класса.прибавить_в_список(этопростосписок, "Элемент номер 1");
+                объект_класса.прибавить_в_список(этопростосписок, "Элемент номер 2");
+//                этопростосписок.add("Элемент номер 1");
+//                этопростосписок.add("Элемент номер 2");
+                System.out.println(этопростосписок);
+*/
+
+                /*
+                Process process = null;
+                List<Object> results = new ArrayList<>();
+                ProcessBuilder pb = null;
+                try {
+                     //   process = new ProcessBuilder("java", "-version").start();
+                        pb = new ProcessBuilder("java", "-version");
+                        //pb.inheritIO();
+                        process = pb.start();
+                        //process.waitFor();
+                } catch (IOException e) { e.printStackTrace(); }
+
+                try {
+                        BufferedReader output = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        String s = null;
+                        while ((s = output.readLine()) != null) {
+                                results.add(s);
+                                //System.err.println(s);
+                        }
+                }
+                catch (Exception e){
+                        e.printStackTrace();
+                }
+
+                System.out.println(results);
+                 */
+/*
+                List<String> commands = new ArrayList<String>();
+                commands.add("ls"); // command
+                commands.add("-la"); // command
+                commands.add("/home/progforce");
+
+//                commands.add("java");
+//                commands.add("-version");
+
+                // creating the process
+                ProcessBuilder pb = new ProcessBuilder(commands);
+                //pb.inheritIO();
+
+                // starting the process
+                Process process = pb.start();
+
+                // for reading the output from stream
+                //BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String s = null;
+                while ((s = stdInput.readLine()) != null) {
+                        System.out.println(s);
+                }
+*/
+/*
+                String pyScript = "/home/progforce/Temp/py_script.py";
+                ProcessBuilder Process_Builder = new ProcessBuilder("python3", pyScript);
+
+                Process Demo_Process = Process_Builder.start();
+                Demo_Process.waitFor();
+
+                BufferedReader Buffered_Reader = new BufferedReader(new InputStreamReader(Demo_Process.getInputStream()));
+                String Output_line = "";
+
+                while ((Output_line = Buffered_Reader.readLine()) != null) {
+                        System.out.println(Output_line);
+                }
+
+*/
+
+
+
         }
+
+//        public Response getResponse() {
+//                OkHttpClient client = new OkHttpClient();
+//
+//                MediaType mediaType = MediaType.parse("application/json");
+//                RequestBody body = RequestBody.create(mediaType, "{"categories" : ["category1", "category2"], "model_type": "ocr"}");
+//                Request request = new Request.Builder()
+//                        .url("https://app.nanonets.com/api/v2/OCR/Model/")
+//                        .post(body)
+//                        .addHeader("Content-Type", "application/json")
+//                        .addHeader("Authorization", Credentials.basic("REPLACE_API_KEY", ""))
+//                        .build();
+//
+//                Response response = client.newCall(request).execute();
+//                return response;
+//        }
+
+
+
+        public List<Integer> squareList (final List<Integer> datum) {
+                List result = new ArrayList<Integer>();
+                for (int i = 0; i < datum.size(); i++) {
+                        result.add(i, datum.get(i) * datum.get(i));
+                }
+                return result;
+        }
+
+
+        public List<Integer> squareDeclarative(final List<Integer> datum) {
+                return datum.parallelStream()
+                        .map(i -> i * i)
+                        .collect(Collectors.toList());
+        }
+
+
+        public void прибавить_в_список(List<Object> someList, Object obj){
+                someList.add(obj);
+        }
+
+
+
+//                List <String> list1 = new ArrayList<>();
+//                list1.add("one");
+//                list1.add("two zet");
+//                list1.add("two");
+//                list1.add("five");
+//                String checkIt = "two zet ";
+//                String workflowStateOfProject = "one";
+//                String typeOfProject = "two zet";
+//
+//                if (list1.contains(workflowStateOfProject) && list1.contains(typeOfProject)) {
+//                        System.out.println("It's OK");
+//                }
+
+
+//                Date dataSome = new Date(71, 00, 01, 02,59,59);
+//                Object obj = dataSome.getTime();
+//                String timeData = dataSome.toString();
+//                int z = 0;
+//                Main m = new Main();
+//                m.sameMethod("It's OK");
+
+//                Main example = new Main();
+//                List <String> content = null;
+//                try {
+//                        content = example.readTextResource("test.txt");
+//                } catch (Exception e) {
+//                        e.printStackTrace();
+//                }
+//                System.out.println(content);
+//
+
+
+
+//
+//                Long lg = Long.valueOf(1000001);
+//                double dblPrim = 26.00;
+//                Double dbl = Double.valueOf(dblPrim);
+//
+//
+//
+//                Main m = new Main();
+//                System.out.println(m.getValue("A"));
+//
+
+//           int a = 5;
+//           int b = 6;
+//           a = a + b;
+//           b = a - b;
+//           a = a - b;
+//           out.println( "a = " + a);
+//           out.println( "b = " + b);
+
+
+//           boolean x = true;
+//           boolean y = false;
+//
+//           y = x || y;
+//           x = x ^ y;
+
+//           boolean a = false;
+//           boolean b = true;
+//
+//            a = a ^ b;
+//            b = b ^ a;
+//            a = a ^ b;
+//
+//            out.println( "a = " + a);
+//            out.println( "b = " + b);
+
+//        }
+
+        public void sameMethod(String customTxt){
+                printOK(customTxt);
+        }
+
+        public void printOK(String text){
+                System.out.println(text);
+        }
+
+
+
+        public List<String> readTextResource(String filename) throws Exception {
+                URI uri = getClass().getResource(String.format("/%s", filename)).toURI();
+                return Files.readAllLines(Paths.get(uri));
+        }
+
+
+        public double getValue(String type){
+                String variableZ = "100";
+                String variableNotZ = "10";
+
+                Double j = null;
+                try {
+                        j = type == "A" ? getNeedStr(variableZ) : getNeedStr(variableNotZ);
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+
+                return j;
+        }
+
+        public double getNeedStr(String z){
+                double y = 0.0;
+                if (z.equals("100")){
+                        y = 100.0;
+                }
+                else if (z.equals("10")){
+                        y = 10.0;
+                }
+                else {
+                        throw new RuntimeException();
+                }
+                return y;
+        }
+
+}
+
+
+
+
+
 //                String s = "argument";
 //                int i = s.length();
 //                char symbol = s.charAt(3);
@@ -142,32 +443,32 @@ public class Main {
 //                }
 //
 
-        private Integer factorial(int n) {
-                Integer result = 1;
-
-                if (n < 0) {
-                        System.out.println("Зачем тебе факториал отрицательного числа?");
-                        return null;
-                }
-
-                if (n == 0) {
-                        System.out.print(" = ");
-                        return result;
-                }
-                if (n == 1) {
-                        System.out.print(" * 1 = ");
-                        return result;
-                }
-
-                System.out.print(n);
-                if (n != 2) {
-                        System.out.print(" * ");
-                }
-
-                result = n * factorial(n-1);
-                return result;
-        }
-
+//        private Integer factorial(int n) {
+//                Integer result = 1;
+//
+//                if (n < 0) {
+//                        System.out.println("Зачем тебе факториал отрицательного числа?");
+//                        return null;
+//                }
+//
+//                if (n == 0) {
+//                        System.out.print(" = ");
+//                        return result;
+//                }
+//                if (n == 1) {
+//                        System.out.print(" * 1 = ");
+//                        return result;
+//                }
+//
+//                System.out.print(n);
+//                if (n != 2) {
+//                        System.out.print(" * ");
+//                }
+//
+//                result = n * factorial(n-1);
+//                return result;
+//        }
+//
 
 
 //                Thread4 t4 = new Thread4();
@@ -275,20 +576,20 @@ public class Main {
 //        }
 
 
-        void foo(){
-
-                String m = "Hello";
-                out.println(m);
-                bar(m);
-                out.println(m);
-                m += "World";
-                out.println(m);
-
-        }
-
-        void bar(String m){
-                m += "World";
-        }
+//        void foo(){
+//
+//                String m = "Hello";
+//                out.println(m);
+//                bar(m);
+//                out.println(m);
+//                m += "World";
+//                out.println(m);
+//
+//        }
+//
+//        void bar(String m){
+//                m += "World";
+//        }
 
 //                List<String> ls = new ArrayList<>();
 //                String a = "";
@@ -459,11 +760,11 @@ public class Main {
 //
 //        }
 
-        public static Function<String, Integer> build(String strNum) {
-                int[] count = {1};
-                ++count[0];
-                return t -> Integer.valueOf(strNum + t)+ ++count[0];
-        }
+//        public static Function<String, Integer> build(String strNum) {
+//                int[] count = {1};
+//                ++count[0];
+//                return t -> Integer.valueOf(strNum + t)+ ++count[0];
+//        }
 
 //
 //        public Logger getLogger() {
@@ -708,49 +1009,49 @@ public class Main {
 //                Stream.of(names).filter(predicate).count();
 
 
-
-
-        public static LocalDate from(String s) {
-                return LocalDate.parse(s, new DateTimeFormatterBuilder()
-                        .parseCaseInsensitive()
-                        .appendPattern("dd-MMM-")
-                        .appendValueReduced(ChronoField.YEAR, 2, 2, Year.now().getValue() - 80)
-                        .toFormatter()
-                );
-        }
-
-        public static Date convertToDateViaSqlDate(LocalDate dateToConvert) {
-                return java.sql.Date.valueOf(dateToConvert);
-        }
-
-
-        public static String combine(int x, int y) {
-                String result = "";
-                CompletableFuture<Integer> completableFuture =
-                        CompletableFuture.supplyAsync(() -> x)
-                                .thenCombine(CompletableFuture.supplyAsync(() -> y),
-                                        (n1, n2) -> n1 + n2).handle((val, exc) -> val != null ? val : null);
-                if(completableFuture != null){
-                        try {
-                                result = String.valueOf(completableFuture.get());
-                        } catch (InterruptedException e) {
-                                e.printStackTrace();
-                        } catch (ExecutionException e) {
-                                e.printStackTrace();
-                        }
-                        return result;
-                }
-                else {
-                        result = "Chief, it's all gone!";
-                        return result;
-                }
-        }
-
-        public static CompletableFuture<Integer> addThis (String num){
-                return CompletableFuture.supplyAsync(() -> Integer.parseInt(num))
-                                .handle((val, exc) -> val != null ? val : null);
-        }
-
+//
+//
+//        public static LocalDate from(String s) {
+//                return LocalDate.parse(s, new DateTimeFormatterBuilder()
+//                        .parseCaseInsensitive()
+//                        .appendPattern("dd-MMM-")
+//                        .appendValueReduced(ChronoField.YEAR, 2, 2, Year.now().getValue() - 80)
+//                        .toFormatter()
+//                );
+//        }
+//
+//        public static Date convertToDateViaSqlDate(LocalDate dateToConvert) {
+//                return java.sql.Date.valueOf(dateToConvert);
+//        }
+//
+//
+//        public static String combine(int x, int y) {
+//                String result = "";
+//                CompletableFuture<Integer> completableFuture =
+//                        CompletableFuture.supplyAsync(() -> x)
+//                                .thenCombine(CompletableFuture.supplyAsync(() -> y),
+//                                        (n1, n2) -> n1 + n2).handle((val, exc) -> val != null ? val : null);
+//                if(completableFuture != null){
+//                        try {
+//                                result = String.valueOf(completableFuture.get());
+//                        } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                        } catch (ExecutionException e) {
+//                                e.printStackTrace();
+//                        }
+//                        return result;
+//                }
+//                else {
+//                        result = "Chief, it's all gone!";
+//                        return result;
+//                }
+//        }
+//
+//        public static CompletableFuture<Integer> addThis (String num){
+//                return CompletableFuture.supplyAsync(() -> Integer.parseInt(num))
+//                                .handle((val, exc) -> val != null ? val : null);
+//        }
+//
 
 
 //                String pathToArchive = "/home/progforce/Downloads/Archive";
@@ -865,82 +1166,82 @@ public class Main {
   //      }
 
 
-        private static List<Path> findByFileExtension(Path path, String fileExtension) {
-
-                if (!Files.isDirectory(path)) {
-                        throw new IllegalArgumentException("Path must be a directory!");
-                }
-
-                List<Path> result = null;
-                try (Stream<Path> walk = Files.walk(path)) {
-                        result = walk
-                                .filter(Files::isRegularFile)   // is a file
-                                .filter(p -> p.getFileName().toString().endsWith(fileExtension))
-                                .collect(Collectors.toList());
-                } catch (IOException e) {
-                        e.printStackTrace();
-                }
-                return result;
-
-        }
-        
-
-
-        static Supplier<? extends Integer> getElseRet(){
-              Supplier<Integer> intSupplier = () -> 13;
-              return  intSupplier;
-
-        }
-
-
-        static long fibon(long i) {
-                if (i == 0) return 0;
-                if (i == 1) return 1;
-                long x = fibon(i - 1);
-                long y = fibon(i - 2);
-                long zx;
-                return zx = x + y;
-        }
-
-
-        public static BigInteger fib(long i, Map<Long, BigInteger> cache) {
-                if (i == 0) return BigInteger.ZERO;
-                if (i == 1) return BigInteger.ONE;
-                return cache.computeIfAbsent(i, n -> fib(n - 2, cache).add(fib(n - 1, cache)));
-        }
-
-
-        public static boolean isPrimeMod(int num) {
-                int limit = (int) (Math.sqrt(num) + 1);
-                boolean z;
-                z = num == 2 || num > 1 && IntStream.range(2, limit)
-		                      .noneMatch(divisor -> num % divisor == 0);
-                return z;
-        }
-
-
-
-        public static boolean isPrime(int i)
-        {
-                IntPredicate isDivisible = index -> i % index == 0;
-
-                boolean x = i > 1 && IntStream.range(2, i).noneMatch(isDivisible);
-                return x;
-        }
-
-
-
-
-
-        public static void sumDoublesDivisibleBy3(int start, int end) {
-        IntStream.rangeClosed(start, end)
-                        .peek(n -> {System.out.println("исходное число = " + n);
-                        })
-                        .filter(n -> n % 3 == 0)
-                        .forEach(n -> {System.out.println("на 3 делится => " + n);
-                                });
-        }
-
+//        private static List<Path> findByFileExtension(Path path, String fileExtension) {
+//
+//                if (!Files.isDirectory(path)) {
+//                        throw new IllegalArgumentException("Path must be a directory!");
+//                }
+//
+//                List<Path> result = null;
+//                try (Stream<Path> walk = Files.walk(path)) {
+//                        result = walk
+//                                .filter(Files::isRegularFile)   // is a file
+//                                .filter(p -> p.getFileName().toString().endsWith(fileExtension))
+//                                .collect(Collectors.toList());
+//                } catch (IOException e) {
+//                        e.printStackTrace();
+//                }
+//                return result;
+//
+//        }
+//
+//
+//
+//        static Supplier<? extends Integer> getElseRet(){
+//              Supplier<Integer> intSupplier = () -> 13;
+//              return  intSupplier;
+//
+//        }
+//
+//
+//        static long fibon(long i) {
+//                if (i == 0) return 0;
+//                if (i == 1) return 1;
+//                long x = fibon(i - 1);
+//                long y = fibon(i - 2);
+//                long zx;
+//                return zx = x + y;
+//        }
+//
+//
+//        public static BigInteger fib(long i, Map<Long, BigInteger> cache) {
+//                if (i == 0) return BigInteger.ZERO;
+//                if (i == 1) return BigInteger.ONE;
+//                return cache.computeIfAbsent(i, n -> fib(n - 2, cache).add(fib(n - 1, cache)));
+//        }
+//
+//
+//        public static boolean isPrimeMod(int num) {
+//                int limit = (int) (Math.sqrt(num) + 1);
+//                boolean z;
+//                z = num == 2 || num > 1 && IntStream.range(2, limit)
+//		                      .noneMatch(divisor -> num % divisor == 0);
+//                return z;
+//        }
+//
+//
+//
+//        public static boolean isPrime(int i)
+//        {
+//                IntPredicate isDivisible = index -> i % index == 0;
+//
+//                boolean x = i > 1 && IntStream.range(2, i).noneMatch(isDivisible);
+//                return x;
+//        }
+//
+//
+//
+//
+//
+//        public static void sumDoublesDivisibleBy3(int start, int end) {
+//        IntStream.rangeClosed(start, end)
+//                        .peek(n -> {System.out.println("исходное число = " + n);
+//                        })
+//                        .filter(n -> n % 3 == 0)
+//                        .forEach(n -> {System.out.println("на 3 делится => " + n);
+//                                });
+//        }
+//
 
 
 
@@ -1413,17 +1714,17 @@ public class Main {
 //                checkMap(someMap1);
 
 
-
-
-        public static void checkMap(Map<String, List<Object>> map){
-                if (!map.isEmpty()){
-                        out.printf("Not empty\n");
-                }
-                else {
-                    out.printf("Empty\n");}
-        }
-
-}
+//
+//
+//        public static void checkMap(Map<String, List<Object>> map){
+//                if (!map.isEmpty()){
+//                        out.printf("Not empty\n");
+//                }
+//                else {
+//                    out.printf("Empty\n");}
+//        }
+//
+//}
 
 
 
